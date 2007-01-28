@@ -1,0 +1,63 @@
+package pckUserControl_RT;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'User Control Package 2'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  vcljpg,
+  vcl,
+  rtl,
+  vclactnband,
+  dbrtl,
+  vcldb,
+  pckMD5,
+  pckUCDataConnector,
+  dclIndyCore,
+  IndyProtocols;
+
+contains
+  UCMail in '..\Source\UCMail.pas',
+  UCConsts in '..\Source\UCConsts.pas',
+  IncPerfil_U in '..\Source\IncPerfil_U.pas' {frmIncluirPerfil},
+  IncUser_U in '..\Source\IncUser_U.pas' {frmIncluirUsuario},
+  TrocaSenha_U in '..\Source\TrocaSenha_U.pas',
+  UCBase in '..\Source\UCBase.pas',
+  CadPerfil_U in '..\Source\CadPerfil_U.pas' {frmCadastrarPerfil},
+  SenhaForm_U in '..\Source\SenhaForm_U.pas',
+  CadUser_U in '..\Source\CadUser_U.pas' {frmCadastrarUsuario},
+  EnvMsgForm_U in '..\Source\EnvMsgForm_U.pas',
+  MsgRecForm_U in '..\Source\MsgRecForm_U.pas',
+  MsgsForm_U in '..\Source\MsgsForm_U.pas',
+  UCDataInfo in '..\Source\UCDataInfo.pas',
+  UCMessages in '..\Source\UCMessages.pas',
+  UserPermis_U in '..\Source\UserPermis_U.pas',
+  ViewLog_U in '..\Source\ViewLog_U.pas',
+  UCEMailForm_U in '..\Source\UCEMailForm_U.pas',
+  UCSettings in '..\Source\UCSettings.pas',
+  UsersLogged_U in '..\Source\UsersLogged_U.pas' {frmUsersLogged},
+  LoginWindow_U in '..\Source\LoginWindow_U.pas';
+
+end.
