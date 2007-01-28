@@ -1441,8 +1441,6 @@ var
   Dataset:  TDataset;
   VerifKey: String;
 begin
-  Result := False;
-
   case Self.Criptografia of
     cPadrao: Senha := TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(Password, EncryptKey));
     cMD5: Senha    := TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(Password));
