@@ -1,0 +1,30 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = pckMD5.bpl pckUCDataConnector.bpl pckUserControl_RT.bpl \
+  pckUserControl_DT.bpl
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+pckMD5.bpl: pckMD5.dpk
+  $(DCC)
+
+pckUserControl_RT.bpl: pckUserControl_RT.dpk
+  $(DCC)
+
+pckUserControl_DT.bpl: pckUserControl_DT.dpk
+  $(DCC)
+
+pckUCDataConnector.bpl: pckUCDataConnector.dpk
+  $(DCC)
+
+
