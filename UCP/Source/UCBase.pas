@@ -2217,7 +2217,7 @@ begin
     begin
       if not FProfile then
       begin
-        Encontrado := ADataset.Locate('ObjName', TAction(TActionList(ObjetoAction).Actions[contador]).Name, []);
+        Encontrado := ADataset.Locate('ObjName', TActionList(ObjetoAction).Actions[contador].Name, []);
         KeyField   := ADataset.FindField('UCKey').AsString;
         //verifica key
         if Encontrado then
@@ -2234,7 +2234,7 @@ begin
           TAction(TActionList(ObjetoAction).Actions[contador]).Visible := True;
       end
       else
-        if ADataset.Locate('ObjName', TAction(TActionList(ObjetoAction).Actions[contador]).Name, []) then
+        if ADataset.Locate('ObjName', TActionList(ObjetoAction).Actions[contador].Name, []) then
         begin
           KeyField := ADataset.FindField('UCKey').AsString;
           case Self.Criptografia of
@@ -2496,7 +2496,7 @@ begin
   while Temp <> nil do
   begin
     AddRight(idUser, #1 + 'G' + Temp.Caption);
-    Temp := TActionClientItem(TActionClientItem(Temp).ParentItem);
+    Temp := (TActionClientItem(Temp).ParentItem as TActionClientItem);
   end;
 end;
 
@@ -3669,7 +3669,7 @@ end;
 
 function TUCControls.GetActiveForm: String;
 begin
-  Result := TCustomForm(Owner).Name;
+  Result := Owner.Name;
 end;
 
 function TUCControls.GetAccessType: String;

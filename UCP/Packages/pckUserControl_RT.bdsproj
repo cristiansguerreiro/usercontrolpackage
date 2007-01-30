@@ -173,5 +173,5 @@
 		</VersionInfoKeys>
 	</Delphi.Personality>
 	<StarTeamAssociation></StarTeamAssociation>
-	<StarTeamNonRelativeFiles></StarTeamNonRelativeFiles>
+	<StarTeamNonRelativeFiles></StarTeamNonRelativeFiles>  <ModelSupport>True</ModelSupport>
 </BorlandProject>

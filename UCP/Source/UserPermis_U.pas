@@ -313,7 +313,7 @@ begin
       FreeAndNil(FTempLista);
     FTempLista := TStringList.Create;
     for Contador := 0 to TActionList(FActions).ActionCount - 1 do
-      FTempLista.Append(TAction(TActionList(FActions).Actions[contador]).Category + #1 + TAction(TActionList(FActions).Actions[contador]).Name + #2 + TAction(TActionList(FActions).Actions[contador]).Caption);
+      FTempLista.Append(TActionList(FActions).Actions[contador].Category + #1 + TActionList(FActions).Actions[contador].Name + #2 + TAction(TActionList(FActions).Actions[contador]).Caption);
     FTempLista.Sort;
     Temp := #1;
     for Contador := 0 to FTempLista.Count - 1 do
