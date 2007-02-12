@@ -3992,17 +3992,17 @@ var
 begin
   if not Active then
     Exit;
+
+  if not Assigned (FUserControl.DataConnector) then
+    Exit;
+  
   with FUserControl do
   begin
     SQLStmt := Format('DELETE FROM %s WHERE %s = %s',
       [TableUsersLogged.TableName,
       TableUsersLogged.FieldLogonID,
       QuotedStr(CurrentUser.IdLogon)]);
-    try
       DataConnector.UCExecSQL(SQLStmt);
-    except
-
-    end;
   end;
 end;
 
