@@ -60,6 +60,8 @@ type
     FLockAdmin:            Boolean;
     FDataSetPerfilUsuario: TDataset;
     FfrmIncluirUsuario:    TfrmIncluirUsuario;
+    function GetAveCharSize(Canvas: TCanvas): TPoint;
+    function InputSenha(const ACaption, APrompt: String; var Value: String): Boolean;
   public
     FUserControl:            TUserControl;
     FDataSetCadastroUsuario: TDataset;
@@ -67,7 +69,96 @@ type
 
 implementation
 
+uses
+  Consts;
+
 {$R *.dfm}
+
+function TfrmCadastrarUsuario.GetAveCharSize(Canvas: TCanvas): TPoint;
+var
+  I:      Integer;
+  Buffer: array[0..51] of char;
+begin
+  for I := 0 to 25 do
+    Buffer[I] := Chr(I + Ord('A'));
+  for I := 0 to 25 do
+    Buffer[I + 26] := Chr(I + Ord('a'));
+  GetTextExtentPoint(Canvas.Handle, Buffer, 52, TSize(Result));
+  Result.X := Result.X div 52;
+end;
+
+function TfrmCadastrarUsuario.InputSenha(const ACaption, APrompt: String; var Value: String): Boolean;
+var
+  Form:         TForm;
+  Prompt:       TLabel;
+  Edit:         TEdit;
+  DialogUnits:  TPoint;
+  ButtonTop:    Integer;
+  ButtonHeight: Integer;
+  ButtonWidth:  Integer;
+begin
+  Result := False;
+  Form   := TForm.Create(Application);
+  with Form do
+    try
+      Canvas.Font := Font;
+      DialogUnits := GetAveCharSize(Canvas);
+      BorderStyle := bsDialog;
+      Caption     := ACaption;
+      ClientWidth := MulDiv(180, DialogUnits.X, 4);
+      Position    := Self.FUserControl.Settings.WindowsPosition;
+      Prompt      := TLabel.Create(Form);
+      with Prompt do
+      begin
+        Parent               := Form;
+        Caption              := APrompt;
+        Left                 := MulDiv(8, DialogUnits.X, 4);
+        Top                  := MulDiv(8, DialogUnits.Y, 8);
+        Constraints.MaxWidth := MulDiv(164, DialogUnits.X, 4);
+        WordWrap             := True;
+      end;
+      Edit := TEdit.Create(Form);
+      with Edit do
+      begin
+        Parent       := Form;
+        Left         := Prompt.Left;
+        Top          := Prompt.Top + Prompt.Height + 5;
+        Width        := MulDiv(164, DialogUnits.X, 4);
+        MaxLength    := 255;
+        PasswordChar := '*';
+        Text         := Value;
+        SelectAll;
+      end;
+      ButtonTop    := Edit.Top + Edit.Height + 15;
+      ButtonWidth  := MulDiv(50, DialogUnits.X, 4);
+      ButtonHeight := MulDiv(14, DialogUnits.Y, 8);
+      with TButton.Create(Form) do
+      begin
+        Parent      := Form;
+        Caption     := SMsgDlgOK;
+        ModalResult := mrOk;
+        Default     := True;
+        SetBounds(MulDiv(38, DialogUnits.X, 4), ButtonTop, ButtonWidth, ButtonHeight);
+      end;
+      with TButton.Create(Form) do
+      begin
+        Parent      := Form;
+        Caption     := SMsgDlgCancel;
+        ModalResult := mrCancel;
+        Cancel      := True;
+        Caption     := SMsgDlgCancel;
+        SetBounds(MulDiv(92, DialogUnits.X, 4), Edit.Top + Edit.Height + 15, ButtonWidth, ButtonHeight);
+        Form.ClientHeight := Top + Height + 13;
+      end;
+      if ShowModal = mrOk then
+      begin
+        Value  := Edit.Text;
+        Result := True;
+      end;
+    finally
+      Form.Free;
+    end;
+end;
 
 procedure TfrmCadastrarUsuario.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -164,12 +255,12 @@ end;
 
 procedure TfrmCadastrarUsuario.BtPassClick(Sender: TObject);
 var
-  FNovasenha:         String;
+  FNovasenha: String;
   //Nome, Login, Email: String;
 begin
   if FDataSetCadastroUsuario.IsEmpty then
     Exit;
-  if Inputquery(Format(FUserControl.Settings.ResetPassword.WindowCaption, [FDataSetCadastroUsuario.FieldByName('Login').AsString]), FUserControl.Settings.ResetPassword.LabelPassword, FNovaSenha) then
+  if InputSenha(Format(FUserControl.Settings.ResetPassword.WindowCaption, [FDataSetCadastroUsuario.FieldByName('Login').AsString]), FUserControl.Settings.ResetPassword.LabelPassword, FNovaSenha) then
     FUserControl.ChangePassword(FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger, FNovaSenha);
 (*
   {$IFDEF VER130}
@@ -238,3 +329,4 @@ begin
 end;
 
 end.
+
