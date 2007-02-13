@@ -1,18 +1,16 @@
-#summary One-sentence summary of this page.
+#summary Como Instalar o UCP.
 #labels Phase-Deploy,Phase-Implementation
 
-= Introduction =
+= Introdução =
 
-Como instalar o pacote UCP.
+Roteiro para a instalção do pacote UCP.
 
 
-= Details =
+= Detalhes =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
-
-Dar um *build* em todos os pacotes na seguinte ordem: pckMD5, pckUCConnetor, pckUserControl_RT e por fim pckUserControl_DT.
-Instalar o pacote pckUserControl_DT e os demais pacotes de conectores desejados.
-
+Dar um *build* em todos os pacotes na seguinte ordem:
+  * pckMD5
+  * pckUCConnetor
+  * pckUserControl_RT
+  * pckUserControl_DT
+Instalar o pacote _pckUserControl_DT_ e os demais pacotes de *conectores* desejados.
