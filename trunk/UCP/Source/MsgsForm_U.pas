@@ -212,8 +212,8 @@ begin
   if ListView1.ItemIndex = -1 then
   begin
     //Modfied by fduenas
-    MessageBox(Handle, PChar(TUCApplicationMessage(Owner).UserControl.Settings.AppMessages.MsgsForm_NoMessagesSelected),
-      PChar(TUCApplicationMessage(Owner).UserControl.Settings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption),
+    MessageBox(Handle, PChar(TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages.MsgsForm_NoMessagesSelected),
+      PChar(TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption),
       MB_ICONINFORMATION or mb_OK);
     Exit;
   end;
@@ -259,8 +259,8 @@ begin
   if ListView1.ItemIndex = -1 then
   begin
     //Modfied by fduenas
-    MessageBox(Handle, PChar(TUCApplicationMessage(Owner).UserControl.Settings.AppMessages.MsgsForm_NoMessagesSelected),
-      PChar(TUCApplicationMessage(Owner).UserControl.Settings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption),
+    MessageBox(Handle, PChar(TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages.MsgsForm_NoMessagesSelected),
+      PChar(TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption),
       MB_ICONINFORMATION or mb_OK);
     Exit;
   end;
@@ -295,8 +295,8 @@ begin
   if ListView1.ItemIndex = -1 then
   begin
     //Modfied by fduenas
-    MessageBox(Handle, PChar(TUCApplicationMessage(Owner).UserControl.Settings.AppMessages.MsgsForm_NoMessagesSelected),
-      PChar(TUCApplicationMessage(Owner).UserControl.Settings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption),
+    MessageBox(Handle, PChar(TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages.MsgsForm_NoMessagesSelected),
+      PChar(TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption),
       MB_ICONINFORMATION or mb_OK);
     Exit;
   end;

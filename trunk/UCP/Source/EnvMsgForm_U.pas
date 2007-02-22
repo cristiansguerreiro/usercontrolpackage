@@ -98,7 +98,7 @@ end;
 
 procedure TEnvMsgForm.FormCreate(Sender: TObject);
 begin
-  with TUCApplicationMessage(Owner).UserControl.Settings.AppMessages do
+  with TUCApplicationMessage(Owner).UserControl.UserSettings.AppMessages do
   begin
     Self.Caption       := MsgSend_WindowCaption;
     lbTitulo.Caption   := MsgSend_Title;

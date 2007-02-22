@@ -254,9 +254,9 @@ begin
         Login.AutoLogin.User             := Formulario.edtLoginAutoLoginUser.Text;
         Login.AutoLogin.Password         := Formulario.edtLoginAutoLoginPassword.Text;
         Login.AutoLogin.MessageOnError   := Formulario.ckLoginAutoLoginMessageOnError.Checked;
-        Settings.Login.TopImage          := Formulario.imgTop.Picture;
-        Settings.Login.LeftImage         := Formulario.imgLeft.Picture;
-        Settings.Login.BottomImage       := Formulario.imgBottom.Picture;
+        UserSettings.Login.TopImage      := Formulario.imgTop.Picture;
+        UserSettings.Login.LeftImage     := Formulario.imgLeft.Picture;
+        UserSettings.Login.BottomImage   := Formulario.imgBottom.Picture;
       end;
 
       Modulo := (BorlandIDEServices as IOTAModuleServices).CurrentModule;

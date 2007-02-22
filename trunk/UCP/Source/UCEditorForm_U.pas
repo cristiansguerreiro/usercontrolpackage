@@ -402,9 +402,9 @@ begin
   ckLoginAutologinActive.Checked         := FUserControl.Login.AutoLogin.Active;
   ckLoginAutoLoginMessageOnError.Checked := FUserControl.Login.AutoLogin.MessageOnError;
   // Figuras
-  imgTop.Picture.Bitmap                  := FUserControl.Settings.Login.TopImage.Bitmap;
-  imgLeft.Picture.Bitmap                 := FUserControl.Settings.Login.LeftImage.Bitmap;
-  imgBottom.Picture.Bitmap               := FUserControl.Settings.Login.BottomImage.Bitmap;
+  imgTop.Picture.Bitmap                  := FUserControl.UserSettings.Login.TopImage.Bitmap;
+  imgLeft.Picture.Bitmap                 := FUserControl.UserSettings.Login.LeftImage.Bitmap;
+  imgBottom.Picture.Bitmap               := FUserControl.UserSettings.Login.BottomImage.Bitmap;
 end;
 
 procedure TUCEditorForm.SpeedButton1Click(Sender: TObject);
@@ -418,15 +418,15 @@ begin
       FUserControl      := Self.FUserControl;
       btOK.onClick      := BotoesClickVisualizacao;
       BtCancela.OnClick := BotoesClickVisualizacao;
-      Caption           := Self.FUserControl.Settings.Login.WindowCaption;
-      LbUsuario.Caption := Self.FUserControl.Settings.Login.LabelUser;
-      LbSenha.Caption   := Self.FUserControl.Settings.Login.LabelPassword;
+      Caption           := Self.FUserControl.UserSettings.Login.WindowCaption;
+      LbUsuario.Caption := Self.FUserControl.UserSettings.Login.LabelUser;
+      LbSenha.Caption   := Self.FUserControl.UserSettings.Login.LabelPassword;
       ImgTop.Picture    := Self.ImgTop.Picture;
       imgLeft.Picture   := Self.imgLeft.Picture;
       ImgBottom.Picture := Self.imgBottom.Picture;
-      btOK.Caption      := Self.FUserControl.Settings.Login.BtOk;
-      BtCancela.Caption := Self.FUserControl.Settings.Login.BtCancel;
-      Position          := Self.FUserControl.Settings.WindowsPosition;
+      btOK.Caption      := Self.FUserControl.UserSettings.Login.BtOk;
+      BtCancela.Caption := Self.FUserControl.UserSettings.Login.BtCancel;
+      Position          := Self.FUserControl.UserSettings.WindowsPosition;
       ShowModal;
     end;
   finally
