@@ -95,7 +95,7 @@ end;
 
 procedure TfrmCadastrarPerfil.SetWindow(Adicionar: Boolean);
 begin
-  with TUserControl(owner).Settings.AddChangeProfile do
+  with TUserControl(owner).UserSettings.AddChangeProfile do
   begin
     FIncluirPerfil.Caption := WindowCaption;
     if Adicionar then
@@ -106,7 +106,7 @@ begin
     FIncluirPerfil.lbNome.Caption    := LabelName;
     FIncluirPerfil.btGravar.Caption  := BtSave;
     FIncluirPerfil.btCancela.Caption := BtCancel;
-    FIncluirPerfil.Position          := Self.FUserControl.Settings.WindowsPosition;
+    FIncluirPerfil.Position          := Self.FUserControl.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -149,8 +149,8 @@ begin
     TempDS.Close;
     FreeAndNil(TempDS);
     //changed by fduenas: PromptDelete_WindowCaption
-    if MessageBox(handle, PChar(Format(FUserControl.Settings.UsersProfile.PromptDelete, [FDataSetPerfilUsuario.FieldByName('Nome').AsString])),
-      PChar(FUserControl.Settings.UsersProfile.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) <> idYes then
+    if MessageBox(handle, PChar(Format(FUserControl.UserSettings.UsersProfile.PromptDelete, [FDataSetPerfilUsuario.FieldByName('Nome').AsString])),
+      PChar(FUserControl.UserSettings.UsersProfile.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) <> idYes then
       Exit;
   end;
   TempDS.Close;
@@ -193,7 +193,7 @@ begin
       TableUsers.FieldUserName]));
 
 
-    DBGrid1.Columns[0].Title.Caption := Settings.UsersProfile.ColProfile;
+    DBGrid1.Columns[0].Title.Caption := UserSettings.UsersProfile.ColProfile;
   end;
   DataSource1.Dataset := FDataSetPerfilUsuario;
 end;

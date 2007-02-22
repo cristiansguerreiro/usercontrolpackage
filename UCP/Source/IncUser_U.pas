@@ -99,7 +99,7 @@ begin
     begin // inclui user
       if Self.FUserControl.ExisteUsuario(EditLogin.Text) then
       begin
-        MessageDlg(Format(FUserControl.Settings.CommonMessages.UsuarioExiste, [EditLogin.Text]), mtWarning, [mbOK], 0);
+        MessageDlg(Format(FUserControl.UserSettings.CommonMessages.UsuarioExiste, [EditLogin.Text]), mtWarning, [mbOK], 0);
         Exit;
       end;
 

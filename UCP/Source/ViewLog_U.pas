@@ -82,10 +82,10 @@ procedure TViewLog.FormCreate(Sender: TObject);
 begin
   ComboNivel.Items.Clear;
   //Modified by fduenas
-  ComboNivel.Items.Append(TUserControl(Owner).Settings.Log.OptionLevelLow);        //BGM
-  ComboNivel.Items.Append(TUserControl(Owner).Settings.Log.OptionLevelNormal);     //BGM
-  ComboNivel.Items.Append(TUserControl(Owner).Settings.Log.OptionLevelHigh);       //BGM
-  ComboNivel.Items.Append(TUserControl(Owner).Settings.Log.OptionLevelCritic);     //BGM
+  ComboNivel.Items.Append(TUserControl(Owner).UserSettings.Log.OptionLevelLow);        //BGM
+  ComboNivel.Items.Append(TUserControl(Owner).UserSettings.Log.OptionLevelNormal);     //BGM
+  ComboNivel.Items.Append(TUserControl(Owner).UserSettings.Log.OptionLevelHigh);       //BGM
+  ComboNivel.Items.Append(TUserControl(Owner).UserSettings.Log.OptionLevelCritic);     //BGM
   ComboNivel.ItemIndex := 0;
   ComboUsuario.Items.Clear;
   ListIdUser     := TStringList.Create;
@@ -125,7 +125,7 @@ begin
       TableUsers.FieldTypeRec,
       QuotedStr('U'),
       TableUsers.FieldUserName]));
-  ComboUsuario.Items.Append(TUserControl(Owner).Settings.Log.OptionUserAll);     //BGM,  modified by fduenas
+  ComboUsuario.Items.Append(TUserControl(Owner).UserSettings.Log.OptionUserAll);     //BGM,  modified by fduenas
   ListIdUser.Append('0');
   while not DSCmd.EOF do
   begin
@@ -205,8 +205,8 @@ var
   FTabLog, Temp: String;
 begin
   //modified by fduenas
-  if MessageBox(Handle, PChar(TUserControl(Owner).Settings.Log.PromptDelete),
-    PChar(TUserControl(Owner).Settings.Log.PromptDelete_WindowCaption), mb_YesNo) <> mrYes then
+  if MessageBox(Handle, PChar(TUserControl(Owner).UserSettings.Log.PromptDelete),
+    PChar(TUserControl(Owner).UserSettings.Log.PromptDelete_WindowCaption), mb_YesNo) <> mrYes then
     exit;
 
   btFiltro.Enabled := False;
@@ -228,7 +228,7 @@ begin
 
   //modified by fduenas
   try
-    TUserControl(Owner).Log(Format(TUserControl(Owner).Settings.Log.DeletePerformed, [comboUsuario.Text, DateTimeToStr(Data1.datetime), DateTimeToStr(Data2.datetime), ComboNivel.Text]), 2);
+    TUserControl(Owner).Log(Format(TUserControl(Owner).UserSettings.Log.DeletePerformed, [comboUsuario.Text, DateTimeToStr(Data1.datetime), DateTimeToStr(Data2.datetime), ComboNivel.Text]), 2);
   except;
   end;
 

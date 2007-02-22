@@ -201,7 +201,7 @@ type
   private
     FAutoLogin:        TUCAutoLogin;
     FMaxLoginAttempts: Integer;
-    FLInitialLogin:    TUCInitialLogin;
+    FInitialLogin:     TUCInitialLogin;
     FGetLoginName:     TUCGetLoginName;
   public
     constructor Create(AOwner: TComponent);
@@ -209,7 +209,7 @@ type
     procedure Assign(Source: TPersistent); override;
   published
     property AutoLogin: TUCAutoLogin read FAutoLogin write FAutoLogin;
-    property InitialLogin: TUCInitialLogin read FLInitialLogin write FLInitialLogin;
+    property InitialLogin: TUCInitialLogin read FInitialLogin write FInitialLogin;
     property MaxLoginAttempts: Integer read FMaxLoginAttempts write FMaxLoginAttempts;
     property GetLoginName: TUCGetLoginName read FGetLoginName write FGetLoginName default lnNone;
   end;
@@ -439,7 +439,7 @@ type
     function AddUser(Login, Password, Name, Mail: String; Profile: Integer; PrivUser: Boolean): Integer;
     function ExisteUsuario(Login: String): Boolean;
     property CurrentUser: TUCCurrentUser read FCurrentUser write FCurrentUser;
-    property Settings: TUCUserSettings read FUserSettings write SetUserSettings;
+    property UserSettings: TUCUserSettings read FUserSettings write SetUserSettings;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -777,7 +777,7 @@ begin
     FLoginMonitorList := TList.Create;
   end;
 
-  IniSettings(Settings);
+  IniSettings(UserSettings);
 end;
 
 procedure TUserControl.Loaded;
@@ -941,7 +941,7 @@ end;
 procedure TUserControl.CriaFormPerfilUsuarios;
 begin
   FFormPerfilUsuarios := TfrmCadastrarPerfil.Create(self);
-  with Settings.UsersProfile, TfrmCadastrarPerfil(FFormPerfilUsuarios) do
+  with Self.UserSettings.UsersProfile, TfrmCadastrarPerfil(FFormPerfilUsuarios) do
   begin
     Caption             := WindowCaption;
     lbDescricao.Caption := LabelDescription;
@@ -952,7 +952,7 @@ begin
     BtExit.Caption      := BtClose;
     BtAcess.OnClick     := ActionBtnPermissaoProfile;
     FUserControl        := Self;
-    Position            := Self.Settings.WindowsPosition;
+    Position            := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -969,7 +969,7 @@ end;
 
 procedure TUserControl.SetWindowProfile;
 begin
-  with Settings.Rights do
+  with Self.UserSettings.Rights do
   begin
     UserPermis.Caption             := WindowCaption;
     UserPermis.LbDescricao.Caption := LabelProfile;
@@ -980,14 +980,14 @@ begin
     UserPermis.BtBloqueia.Caption  := BtLock;
     UserPermis.BtGrava.Caption     := BtSave;
     UserPermis.BtCancel.Caption    := BtCancel;
-    UserPermis.Position            := Self.Settings.WindowsPosition;
+    UserPermis.Position            := Self.UserSettings.WindowsPosition;
   end;
 end;
 
 procedure TUserControl.CriaFormCadastroUsuarios;
 begin
   FFormCadastroUsuarios := TfrmCadastrarUsuario.Create(self);
-  with Settings.UsersForm, TfrmCadastrarUsuario(FFormCadastroUsuarios) do
+  with Self.UserSettings.UsersForm, TfrmCadastrarUsuario(FFormCadastroUsuarios) do
   begin
     Caption             := WindowCaption;
     lbDescricao.Caption := LabelDescription;
@@ -999,7 +999,7 @@ begin
     BtExit.Caption      := BtClose;
     BtAcess.OnClick     := Self.ActionBtnPermissao;
     FUserControl        := Self;
-    Position            := Self.Settings.WindowsPosition;
+    Position            := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -1016,7 +1016,7 @@ end;
 
 procedure TUserControl.SetWindow;
 begin
-  with Settings.Rights do
+  with Self.UserSettings.Rights do
   begin
     UserPermis.Caption             := WindowCaption;
     UserPermis.LbDescricao.Caption := LabelUser;
@@ -1027,7 +1027,7 @@ begin
     UserPermis.BtBloqueia.Caption  := BtLOck;
     UserPermis.BtGrava.Caption     := BtSave;
     UserPermis.BtCancel.Caption    := BtCancel;
-    UserPermis.Position            := Self.Settings.WindowsPosition;
+    UserPermis.Position            := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -1083,7 +1083,7 @@ end;
 procedure TUserControl.CriaFormTrocarSenha;
 begin
   FFormTrocarSenha := TTrocaSenha.Create(Self);
-  with Settings.ChangePassword do
+  with Self.UserSettings.ChangePassword do
   begin
     TTrocaSenha(FFormTrocarSenha).Caption             := WindowCaption;
     TTrocaSenha(FFormTrocarSenha).lbDescricao.Caption := LabelDescription;
@@ -1093,7 +1093,7 @@ begin
     TTrocaSenha(FFormTrocarSenha).btGrava.Caption     := BtSave;
     TTrocaSenha(FFormTrocarSenha).btCancel.Caption    := BtCancel;
   end;
-  TTrocaSenha(FFormTrocarSenha).Position        := Self.Settings.WindowsPosition; // Adicionado por Luiz Benevenuto
+  TTrocaSenha(FFormTrocarSenha).Position        := Self.UserSettings.WindowsPosition; // Adicionado por Luiz Benevenuto
   TTrocaSenha(FFormTrocarSenha).btGrava.OnClick := ActionTSBtGrava;
   if CurrentUser.Password = '' then
     TTrocaSenha(FFormTrocarSenha).EditAtu.Enabled := False;
@@ -1118,7 +1118,7 @@ begin
     Position := Self.Settings.WindowsPosition;
   end;
   }
-  TfrmUsersLogged(FFormUsersLogged).Position     := Self.Settings.WindowsPosition;
+  TfrmUsersLogged(FFormUsersLogged).Position     := Self.UserSettings.WindowsPosition;
   TfrmUsersLogged(FFormUsersLogged).FUserControl := Self;
 end;
 
@@ -1126,42 +1126,42 @@ procedure TUserControl.ActionTSBtGrava(Sender: TObject);
 begin
   if CurrentUser.Password <> MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text) then
   begin
-    MessageDlg(Settings.CommonMessages.ChangePasswordError.InvalidCurrentPassword, mtWarning, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidCurrentPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditAtu.SetFocus;
     Exit;
   end;
 
   if TTrocaSenha(FFormTrocarSenha).EditNova.Text <> TTrocaSenha(FFormTrocarSenha).EditConfirma.Text then
   begin
-    MessageDlg(Settings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text) = CurrentUser.Password then
   begin
-    MessageDlg(Settings.CommonMessages.ChangePasswordError.NewEqualCurrent, mtWarning, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.NewEqualCurrent, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if (UserPasswordChange.ForcePassword) and (TTrocaSenha(FFormTrocarSenha).EditNova.Text = '') then
   begin
-    MessageDlg(Settings.CommonMessages.ChangePasswordError.PasswordRequired, mtWarning, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.PasswordRequired, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.Text;
     Exit;
   end;
 
   if Length(TTrocaSenha(FFormTrocarSenha).EditNova.Text) < UserPasswordChange.MinPasswordLength then
   begin
-    MessageDlg(Format(Settings.CommonMessages.ChangePasswordError.MinPasswordLength, [UserPasswordChange.MinPasswordLength]), mtWarning, [mbOK], 0);
+    MessageDlg(Format(UserSettings.CommonMessages.ChangePasswordError.MinPasswordLength, [UserPasswordChange.MinPasswordLength]), mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if Pos(LowerCase(TTrocaSenha(FFormTrocarSenha).EditNova.Text), 'abcdeasdfqwerzxcv1234567890321654987teste' + LowerCase(CurrentUser.UserName) + LowerCase(CurrentUser.UserLogin)) > 0 then
   begin
-    MessageDlg(Settings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
@@ -1172,9 +1172,9 @@ begin
 
   CurrentUser.Password := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
   if CurrentUser.Password = '' then
-    MessageDlg(Format(Settings.CommonMessages.BlankPassword, [CurrentUser.UserLogin]), mtInformation, [mbOK], 0)
+    MessageDlg(Format(UserSettings.CommonMessages.BlankPassword, [CurrentUser.UserLogin]), mtInformation, [mbOK], 0)
   else
-    MessageDlg(Settings.CommonMessages.PasswordChanged, mtInformation, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.PasswordChanged, mtInformation, [mbOK], 0);
 
   {.$IFDEF Indy}
   if (Assigned(MailUserControl)) and (MailUserControl.SenhaTrocada.Ativo) then
@@ -1191,17 +1191,17 @@ end;
 
 procedure TUserControl.SetUserSettings(const Value: TUCUserSettings);
 begin
-  Settings := Value;
+  UserSettings := Value;
 end;
 
 procedure TUserControl.SetfrmLoginWindow(Form: TCustomForm);
 begin
-  with Settings.Login, Form as TfrmLoginWindow do
+  with UserSettings.Login, Form as TfrmLoginWindow do
   begin
     Caption           := WindowCaption;
     LbUsuario.Caption := LabelUser;
     LbSenha.Caption   := LabelPassword;
-    btOK.Caption      := Settings.Login.BtOk;
+    btOK.Caption      := UserSettings.Login.BtOk;
     BtCancela.Caption := BtCancel;
     if LeftImage <> nil then
       ImgLeft.Picture.Assign(LeftImage);
@@ -1217,7 +1217,7 @@ begin
       lbEsqueci.Caption := MailUserControl.EsqueceuSenha.LabelLoginForm;
     end;
     {.$ENDIF}
-    Position := Self.Settings.WindowsPosition;
+    Position := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -1266,7 +1266,7 @@ procedure TUserControl.ActionLog(Sender: TObject);
 begin
   FFormLogControl                       := TViewLog.Create(self);
   TViewLog(FFormLogControl).UCComponent := Self;
-  with TViewLog(FFormLogControl), Settings.Log do
+  with TViewLog(FFormLogControl), UserSettings.Log do
   begin
     Caption             := WindowCaption;
     lbDescricao.Caption := LabelDescription;
@@ -1294,7 +1294,7 @@ begin
       Columns[4].FieldName     := 'DATA';
       Columns[4].Width         := 111;
     end;
-    Position := Self.Settings.WindowsPosition;
+    Position := Self.UserSettings.WindowsPosition;
   end;
   TViewLog(FFormLogControl).ShowModal;
   FreeAndNil(FFormLogControl);
@@ -1414,7 +1414,7 @@ begin
           FieldByName(TableUsers.FieldPassword).AsString,
           FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
       else
-        MessageDlg(Settings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
+        MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
     finally
       Close;
       Free;
@@ -1428,7 +1428,7 @@ begin
   if not VerificaLogin(Login.AutoLogin.User, Login.AutoLogin.Password) then
   begin
     if Login.AutoLogin.MessageOnError then
-      MessageDlg(Settings.CommonMessages.AutoLogonError, mtWarning, [mbOK], 0);
+      MessageDlg(UserSettings.CommonMessages.AutoLogonError, mtWarning, [mbOK], 0);
     ShowLogin;
   end;
 end;
@@ -1649,10 +1649,6 @@ end;
 
 destructor TUserControl.Destroy;
 begin
-(*
-    if not (csDesigning in ComponentState) then;
-      UsersLogged.DelCurrentUser;
-*)
   SysUtils.FreeAndNil(FExtraRights);
   SysUtils.FreeAndNil(FCurrentUser);
   SysUtils.FreeAndNil(FControlRight);
@@ -1963,7 +1959,7 @@ end;
 
 procedure TUserControl.ShowUserManager;
 begin
-  ActionCadUser(self);
+  ActionCadUser(Self);
 end;
 
 procedure TUserControl.AddUCControlMonitor(UCControl: TUCControls);
@@ -2078,11 +2074,11 @@ begin
     TfrmLoginWindow(FFormLogin).Close
   else
   begin
-    MessageDlg(Settings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
+    MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
     Inc(FRetry);
     if (Login.MaxLoginAttempts > 0) and (FRetry = Login.MaxLoginAttempts) then
     begin
-      MessageDlg(Format(Settings.CommonMessages.MaxLoginAttemptsError, [Login.MaxLoginAttempts]), mtError, [mbOK], 0);
+      MessageDlg(Format(UserSettings.CommonMessages.MaxLoginAttemptsError, [Login.MaxLoginAttempts]), mtError, [mbOK], 0);
       Halt;
     end;
   end;
@@ -2621,7 +2617,7 @@ begin
 
   try
     Mensagens := TStringList.Create;
-    Mensagens.Assign(Settings.CommonMessages.InitialMessage);
+    Mensagens.Assign(UserSettings.CommonMessages.InitialMessage);
     Mensagens.Text := StringReplace(Mensagens.Text, ':user', Login.InitialLogin.User, [rfReplaceAll]);
     Mensagens.Text := StringReplace(Mensagens.Text, ':password', Login.InitialLogin.Password, [rfReplaceAll]);
 
@@ -2640,7 +2636,7 @@ end;
 
 procedure TUserControl.ApplySettings(SourceSettings: TUCSettings);
 begin
-  with Settings.CommonMessages do
+  with UserSettings.CommonMessages do
   begin
     BlankPassword         := SourceSettings.CommonMessages.BlankPassword;
     PasswordChanged       := SourceSettings.CommonMessages.PasswordChanged;
@@ -2651,7 +2647,7 @@ begin
     UsuarioExiste         := SourceSettings.CommonMessages.UsuarioExiste; // Luiz Benevenuto 20/04/06
   end;
 
-  with Settings.Login do
+  with UserSettings.Login do
   begin
     BtCancel      := SourceSettings.Login.BtCancel;
     BtOK          := SourceSettings.Login.BtOK;
@@ -2675,7 +2671,7 @@ begin
       BottomImage.Bitmap := nil;
   end;
 
-  with Settings.UsersForm do
+  with UserSettings.UsersForm do
   begin
     WindowCaption              := SourceSettings.UsersForm.WindowCaption;
     LabelDescription           := SourceSettings.UsersForm.LabelDescription;
@@ -2692,7 +2688,7 @@ begin
     PromptDelete_WindowCaption := SourceSettings.UsersForm.PromptDelete_WindowCaption; //added by fduenas
   end;
 
-  with Settings.UsersProfile do
+  with UserSettings.UsersProfile do
   begin
     WindowCaption              := SourceSettings.UsersProfile.WindowCaption;
     LabelDescription           := SourceSettings.UsersProfile.LabelDescription;
@@ -2706,7 +2702,7 @@ begin
     PromptDelete_WindowCaption := SourceSettings.UsersProfile.PromptDelete_WindowCaption; //added by fduenas
   end;
 
-  with Settings.AddChangeUser do
+  with UserSettings.AddChangeUser do
   begin
     WindowCaption   := SourceSettings.AddChangeUser.WindowCaption;
     LabelAdd        := SourceSettings.AddChangeUser.LabelAdd;
@@ -2719,7 +2715,7 @@ begin
     BtCancel        := SourceSettings.AddChangeUser.BtCancel;
   end;
 
-  with Settings.AddChangeProfile do
+  with UserSettings.AddChangeProfile do
   begin
     WindowCaption := SourceSettings.AddChangeProfile.WindowCaption;
     LabelAdd      := SourceSettings.AddChangeProfile.LabelAdd;
@@ -2729,7 +2725,7 @@ begin
     BtCancel      := SourceSettings.AddChangeProfile.BtCancel;
   end;
 
-  with Settings.Rights do
+  with UserSettings.Rights do
   begin
     WindowCaption := SourceSettings.Rights.WindowCaption;
     LabelUser     := SourceSettings.Rights.LabelUser;
@@ -2742,7 +2738,7 @@ begin
     BtCancel      := SourceSettings.Rights.BtCancel;
   end;
 
-  with Settings.ChangePassword do
+  with UserSettings.ChangePassword do
   begin
     WindowCaption        := SourceSettings.ChangePassword.WindowCaption;
     LabelDescription     := SourceSettings.ChangePassword.LabelDescription;
@@ -2753,7 +2749,7 @@ begin
     BtCancel             := SourceSettings.ChangePassword.BtCancel;
   end;
 
-  with Settings.CommonMessages.ChangePasswordError do
+  with UserSettings.CommonMessages.ChangePasswordError do
   begin
     InvalidCurrentPassword := SourceSettings.CommonMessages.ChangePasswordError.InvalidCurrentPassword;
     NewPasswordError       := SourceSettings.CommonMessages.ChangePasswordError.NewPasswordError;
@@ -2763,13 +2759,13 @@ begin
     InvalidNewPassword     := SourceSettings.CommonMessages.ChangePasswordError.InvalidNewPassword;
   end;
 
-  with Settings.ResetPassword do
+  with UserSettings.ResetPassword do
   begin
     WindowCaption := SourceSettings.ResetPassword.WindowCaption;
     LabelPassword := SourceSettings.ResetPassword.LabelPassword;
   end;
 
-  with Settings.Log do
+  with UserSettings.Log do
   begin
     WindowCaption              := SourceSettings.Log.WindowCaption;
     LabelDescription           := SourceSettings.Log.LabelDescription;
@@ -2793,7 +2789,7 @@ begin
     DeletePerformed            := SourceSettings.Log.DeletePerformed; //added by fduenas
   end;
 
-  with Settings.AppMessages do
+  with UserSettings.AppMessages do
   begin
     MsgsForm_BtNew                            := SourceSettings.AppMessages.MsgsForm_BtNew;
     MsgsForm_BtReplay                         := SourceSettings.AppMessages.MsgsForm_BtReplay;
@@ -2828,7 +2824,7 @@ begin
     MsgSend_LabelMessageText := SourceSettings.AppMessages.MsgSend_LabelMessageText; //added by fduenas
   end;
 
-  Settings.WindowsPosition := SourceSettings.WindowsPosition;
+  UserSettings.WindowsPosition := SourceSettings.WindowsPosition;
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
@@ -2996,7 +2992,7 @@ end;
 
 destructor TUCAutoLogin.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
@@ -3025,7 +3021,7 @@ end;
 
 destructor TUCNotAllowedItems.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
@@ -3042,7 +3038,7 @@ end;
 
 destructor TUCLogControl.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 procedure TUCLogControl.Assign(Source: TPersistent);
@@ -3104,7 +3100,7 @@ end;
 
 destructor TUCUser.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 procedure TUCUser.SetAction(const Value: TAction);
@@ -3144,9 +3140,10 @@ end;
 
 destructor TUCLogin.Destroy;
 begin
-  AutoLogin.Free;    //added by fduenas
-  InitialLogin.Free; //added by fduenas
-  inherited;
+  SysUtils.FreeAndNil(Self.FAutoLogin);
+  SysUtils.FreeAndNil(Self.FInitialLogin);
+
+  inherited Destroy;
 end;
 
 procedure TUCLogin.Assign(Source: TPersistent);
@@ -3171,7 +3168,7 @@ end;
 
 destructor TUCUserProfile.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 procedure TUCUserProfile.Assign(Source: TPersistent);
@@ -3231,7 +3228,7 @@ end;
 
 destructor TUCUserPasswordChange.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 procedure TUCUserPasswordChange.SetAction(const Value: TAction);
@@ -3279,8 +3276,9 @@ end;
 
 destructor TUCInitialLogin.Destroy;
 begin
-  FreeAndNil(FInitialRights); //added by fduenas
-  inherited;
+  if Assigned(Self.FInitialRights) then
+    Self.InitialRights.Free;
+  inherited Destroy;
 end;
 
 procedure TUCInitialLogin.SetInitialRights(const Value: TStrings);
@@ -3311,7 +3309,7 @@ end;
 
 destructor TUCControlRight.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 procedure TUCControlRight.SetActionList(const Value: TActionList);
@@ -3428,16 +3426,19 @@ end;
 
 destructor TUCApplicationMessage.Destroy;
 begin
+
   if not (csDesigning in ComponentState) then
     if Assigned(UserControl) then
       Usercontrol.DeleteLoginMonitor(Self);
+
   Self.FVerifThread.Terminate;
+
   inherited Destroy;
 end;
 
 procedure TUCApplicationMessage.DeleteAppMessage(IdMsg: Integer);
 begin
-  if MessageDlg(FUserControl.Settings.AppMessages.MsgsForm_PromptDelete, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+  if MessageDlg(FUserControl.UserSettings.AppMessages.MsgsForm_PromptDelete, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
   UserControl.DataConnector.UCExecSQL('Delete from ' + TableMessages + ' where IdMsg = ' + IntToStr(idMsg));
 end;
@@ -3509,7 +3510,7 @@ procedure TUCApplicationMessage.ShowMessages;
 begin
   try
     MsgsForm := TMsgsForm.Create(self);
-    with FUserControl.Settings.AppMessages do
+    with FUserControl.UserSettings.AppMessages do
     begin
       MsgsForm.Caption              := MsgsForm_WindowCaption;
       MsgsForm.btnova.Caption       := MsgsForm_BtNew;
@@ -3542,7 +3543,7 @@ begin
       ' ORDER BY ' + UserControl.TableUsers.FieldUserName);
     MsgsForm.DSUsuarios.Open;
 
-    MsgsForm.Position := Self.FUserControl.Settings.WindowsPosition;
+    MsgsForm.Position := Self.FUserControl.UserSettings.WindowsPosition;
 
     MsgsForm.ShowModal;
   finally
@@ -3857,7 +3858,8 @@ begin
   if not (csDesigning in ComponentState) then
     if Assigned(UserControl) then
       UserControl.DeleteUCControlMonitor(Self);
-  inherited;
+
+  inherited Destroy;
 end;
 
 procedure TUCControls.SetUserControl(const Value: TUserControl);
@@ -3993,22 +3995,22 @@ begin
   if not Active then
     Exit;
 
-  if not Assigned (FUserControl.DataConnector) then
+  if not Assigned(FUserControl.DataConnector) then
     Exit;
-  
+
   with FUserControl do
   begin
     SQLStmt := Format('DELETE FROM %s WHERE %s = %s',
       [TableUsersLogged.TableName,
       TableUsersLogged.FieldLogonID,
       QuotedStr(CurrentUser.IdLogon)]);
-      DataConnector.UCExecSQL(SQLStmt);
+    DataConnector.UCExecSQL(SQLStmt);
   end;
 end;
 
 destructor TUCUsersLogged.Destroy;
 begin
-  inherited;
+  inherited Destroy;
 end;
 
 procedure TUCUsersLogged.SetAction(const Value: TAction);

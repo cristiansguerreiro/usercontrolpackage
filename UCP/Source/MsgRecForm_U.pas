@@ -62,7 +62,7 @@ begin
   //added by fduenas
   if not (Self.Owner is TUCApplicationMessage) then
     Exit;
-  with TUCApplicationMessage(Self.Owner).UserControl.Settings.AppMessages do
+  with TUCApplicationMessage(Self.Owner).UserControl.UserSettings.AppMessages do
   begin
     Self.Caption       := MsgRec_WindowCaption;
     lbTitulo.Caption   := MsgRec_Title;

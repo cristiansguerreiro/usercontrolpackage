@@ -106,7 +106,7 @@ begin
       BorderStyle := bsDialog;
       Caption     := ACaption;
       ClientWidth := MulDiv(180, DialogUnits.X, 4);
-      Position    := Self.FUserControl.Settings.WindowsPosition;
+      Position    := Self.FUserControl.UserSettings.WindowsPosition;
       Prompt      := TLabel.Create(Form);
       with Prompt do
       begin
@@ -181,7 +181,7 @@ end;
 
 procedure TfrmCadastrarUsuario.SetWindow(Adicionar: Boolean);
 begin
-  with TUserControl(owner).Settings.AddChangeUser do
+  with TUserControl(owner).UserSettings.AddChangeUser do
   begin
     FfrmIncluirUsuario.Caption := WindowCaption;
     if Adicionar then
@@ -196,7 +196,7 @@ begin
     FfrmIncluirUsuario.lbPerfil.Caption       := LabelPerfil;
     FfrmIncluirUsuario.btGravar.Caption       := BtSave;
     FfrmIncluirUsuario.btCancela.Caption      := BtCancel;
-    FfrmIncluirUsuario.Position               := Self.FUserControl.Settings.WindowsPosition;
+    FfrmIncluirUsuario.Position               := Self.FUserControl.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -230,7 +230,7 @@ begin
     Exit;
   TempID := FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger;
   //changed by fduenas: using PromptDelete_WindowCaption and Format functiom
-  if MessageBox(Handle, PChar(Format(FUserControl.Settings.UsersForm.PromptDelete, [FDataSetCadastroUsuario.FieldByName('Login').AsString])), PChar(FUserControl.Settings.UsersForm.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = idYes then
+  if MessageBox(Handle, PChar(Format(FUserControl.UserSettings.UsersForm.PromptDelete, [FDataSetCadastroUsuario.FieldByName('Login').AsString])), PChar(FUserControl.UserSettings.UsersForm.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = idYes then
   begin
     CanDelete := True;
     if Assigned(FUserControl.onDeleteUser) then
@@ -260,7 +260,7 @@ var
 begin
   if FDataSetCadastroUsuario.IsEmpty then
     Exit;
-  if InputSenha(Format(FUserControl.Settings.ResetPassword.WindowCaption, [FDataSetCadastroUsuario.FieldByName('Login').AsString]), FUserControl.Settings.ResetPassword.LabelPassword, FNovaSenha) then
+  if InputSenha(Format(FUserControl.UserSettings.ResetPassword.WindowCaption, [FDataSetCadastroUsuario.FieldByName('Login').AsString]), FUserControl.UserSettings.ResetPassword.LabelPassword, FNovaSenha) then
     FUserControl.ChangePassword(FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger, FNovaSenha);
 (*
   {$IFDEF VER130}
@@ -311,9 +311,9 @@ begin
       TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('U'), TableUsers.FieldLogin]));
 
 
-    DBGrid1.Columns[0].Title.Caption := Settings.UsersForm.ColName;
-    DBGrid1.Columns[1].Title.Caption := Settings.UsersForm.ColLogin;
-    DBGrid1.Columns[2].Title.Caption := Settings.UsersForm.ColEmail;
+    DBGrid1.Columns[0].Title.Caption := UserSettings.UsersForm.ColName;
+    DBGrid1.Columns[1].Title.Caption := UserSettings.UsersForm.ColLogin;
+    DBGrid1.Columns[2].Title.Caption := UserSettings.UsersForm.ColEmail;
 
     FDataSetPerfilUsuario := DataConnector.UCGetSQLDataset(
       Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Tipo from %s Where %s  = %s ORDER BY %s',
