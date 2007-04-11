@@ -101,6 +101,7 @@ type
     DateExpiration: TDateTime;
     Privileged:     Boolean;
   published
+    { TODO 1 -oLuiz -cUpgrade : Terminar a implementação dos DataSets para os Perfis de Usuario Loggado }
     property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;
     property PerfilGrupo: TDataSet read FPerfilGrupo write FPerfilGrupo;
   end;
@@ -764,10 +765,11 @@ begin
     FLoginMode                    := lmActive;
     FCriptografia                 := cPadrao;
     FAutoStart                    := False;
-    UserProfile.Active            := True;
-    LogControl.Active             := True;
-    User.UsePrivilegedField       := False;
-    User.ProtectAdministrator     := True;
+    FUserProfile.Active           := True;
+    FLogControl.Active            := True;
+    FUser.UsePrivilegedField      := False;
+    FUser.ProtectAdministrator    := True;
+    FUsersLogged.Active           := True;
     NotAllowedItems.MenuVisible   := True;
     NotAllowedItems.ActionVisible := True;
   end
@@ -777,7 +779,7 @@ begin
     FLoginMonitorList := TList.Create;
   end;
 
-  IniSettings(UserSettings);
+  UCSettings.IniSettings(UserSettings);
 end;
 
 procedure TUserControl.Loaded;
@@ -4004,7 +4006,9 @@ begin
       [TableUsersLogged.TableName,
       TableUsersLogged.FieldLogonID,
       QuotedStr(CurrentUser.IdLogon)]);
-    DataConnector.UCExecSQL(SQLStmt);
+
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL(SQLStmt);
   end;
 end;
 
