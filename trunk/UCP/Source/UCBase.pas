@@ -3997,7 +3997,7 @@ begin
   if not Active then
     Exit;
 
-  if not Assigned(FUserControl.DataConnector) then
+  if Assigned(FUserControl.DataConnector) = False then
     Exit;
 
   with FUserControl do
