@@ -1683,7 +1683,9 @@ end;
 
 destructor TUserControl.Destroy;
 begin
-  fUsersLogged.DelCurrentUser;
+  if not (csDesigning in ComponentState) then;
+    fUsersLogged.DelCurrentUser;
+
   FCurrentUser.Free;
   FControlRight.Free;
   FLogin.Free;
@@ -1704,6 +1706,7 @@ begin
 
   If Assigned(FLoginMonitorList) then
     FLoginMonitorList.Free;
+
   inherited Destroy;
 end;
 
