@@ -1125,58 +1125,76 @@ begin
 end;
 
 procedure TUserControl.ActionTSBtGrava(Sender: TObject);
+Var AuxPass : String;
 begin
-  if CurrentUser.Password <> MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text) then
+  { Pelo que eu analizei, a gravação da senha no Banco de Dados e feita criptografada
+    Qdo a criptografia e padrão, a funcao RegistraCurrentUser descriptografa a senha atual
+    agora quando criptografia e MD5SUM, devemos criptografar a senha atual vinda do formulario de
+    troca de senha para podemoscomparar com a senha atual da classe TUCCurrentUser
+    Modificação Feita por Vicente Barros Leonel
+  }
+   case Self.Criptografia of     // por Vicente Barros Leonel
+     cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditAtu.Text;
+        cMD5: AuxPass := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text);
+    end;
+
+  if CurrentUser.Password <> AuxPass Then //MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text) then  Vicente Barros Leonel
   begin
-    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidCurrentPassword, mtWarning, [mbOK], 0);
+    MessageDlg(Settings.CommonMessages.ChangePasswordError.InvalidCurrentPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditAtu.SetFocus;
     Exit;
   end;
 
   if TTrocaSenha(FFormTrocarSenha).EditNova.Text <> TTrocaSenha(FFormTrocarSenha).EditConfirma.Text then
   begin
-    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
+    MessageDlg(Settings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text) = CurrentUser.Password then
   begin
-    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.NewEqualCurrent, mtWarning, [mbOK], 0);
+    MessageDlg(Settings.CommonMessages.ChangePasswordError.NewEqualCurrent, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if (UserPasswordChange.ForcePassword) and (TTrocaSenha(FFormTrocarSenha).EditNova.Text = '') then
   begin
-    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.PasswordRequired, mtWarning, [mbOK], 0);
+    MessageDlg(Settings.CommonMessages.ChangePasswordError.PasswordRequired, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.Text;
     Exit;
   end;
 
   if Length(TTrocaSenha(FFormTrocarSenha).EditNova.Text) < UserPasswordChange.MinPasswordLength then
   begin
-    MessageDlg(Format(UserSettings.CommonMessages.ChangePasswordError.MinPasswordLength, [UserPasswordChange.MinPasswordLength]), mtWarning, [mbOK], 0);
+    MessageDlg(Format(Settings.CommonMessages.ChangePasswordError.MinPasswordLength, [UserPasswordChange.MinPasswordLength]), mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if Pos(LowerCase(TTrocaSenha(FFormTrocarSenha).EditNova.Text), 'abcdeasdfqwerzxcv1234567890321654987teste' + LowerCase(CurrentUser.UserName) + LowerCase(CurrentUser.UserLogin)) > 0 then
   begin
-    MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
+    MessageDlg(Settings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
     Exit;
   end;
 
   if Assigned(OnChangePassword) then
     OnChangePassword(Self, CurrentUser.UserID, CurrentUser.UserLogin, CurrentUser.Password, TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+
   ChangePassword(CurrentUser.UserID, TTrocaSenha(FFormTrocarSenha).EditNova.Text);
 
-  CurrentUser.Password := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+  case Self.Criptografia of // Por Vicente Barros Leonel
+    cPadrao: CurrentUser.Password := TTrocaSenha(FFormTrocarSenha).EditNova.Text;
+       cMD5: CurrentUser.Password := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+  end;
+
+
   if CurrentUser.Password = '' then
-    MessageDlg(Format(UserSettings.CommonMessages.BlankPassword, [CurrentUser.UserLogin]), mtInformation, [mbOK], 0)
+    MessageDlg(Format(Settings.CommonMessages.BlankPassword, [CurrentUser.UserLogin]), mtInformation, [mbOK], 0)
   else
-    MessageDlg(UserSettings.CommonMessages.PasswordChanged, mtInformation, [mbOK], 0);
+    MessageDlg(Settings.CommonMessages.PasswordChanged, mtInformation, [mbOK], 0);
 
   {.$IFDEF Indy}
   if (Assigned(MailUserControl)) and (MailUserControl.SenhaTrocada.Ativo) then
@@ -1565,11 +1583,13 @@ begin
     OnAddUser(Self, Login, Password, Name, Mail, Profile, Privuser);
 end;
 
+
 procedure TUserControl.ChangePassword(IDUser: Integer; NewPassword: String);
 var
-  Login: String;
-  Senha: String;
-  Key:   String;
+  cSql ,
+  Login,
+  Senha,
+  Key  : String;
 begin
   inherited;
   with DataConnector.UCGetSQLDataset('Select ' + TableUsers.FieldLogin + ' as login, ' + TableUsers.FieldPassword + ' as senha from ' + TableUsers.TableName + ' where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser)) do
@@ -1591,10 +1611,22 @@ begin
     Close;
     Free;
   end;
-  DataConnector.UCExecSQL('Update ' + TableUsers.TableName +
-    ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
-    ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) + ' where ' +
-    TableUsers.FieldUserID + ' = ' + IntToStr(IdUser));
+
+  case Self.Criptografia of // Por Vicente Barros Leonel
+    cPadrao: cSql := 'Update ' + TableUsers.TableName +
+             ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword,EncryptKey)) +
+             ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
+             ', ' + TableUsers.FieldPassExpired + ' = ' + QuotedStr(FormatDateTime('yyyy-mm-dd',date + PassWordExpired)) + ' where ' +
+             TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
+
+       cMD5: cSql := 'Update ' + TableUsers.TableName +
+                     ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
+                     ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
+                     ', ' + TableUsers.FieldPassExpired + ' = ' + QuotedStr(FormatDateTime('yyyy-mm-dd',date + PassWordExpired)) + ' where ' +
+                     TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
+  end;
+  
+  DataConnector.UCExecSQL( cSql );
 
   if Assigned(onChangePassword) then
     OnChangePassword(Self, IdUser, Login, Senha, NewPassword);
