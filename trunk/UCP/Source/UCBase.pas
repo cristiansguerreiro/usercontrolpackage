@@ -1651,23 +1651,27 @@ end;
 
 destructor TUserControl.Destroy;
 begin
-  SysUtils.FreeAndNil(FExtraRights);
-  SysUtils.FreeAndNil(FCurrentUser);
-  SysUtils.FreeAndNil(FControlRight);
-  SysUtils.FreeAndNil(FLogin);
-  SysUtils.FreeAndNil(FLogControl);
-  SysUtils.FreeAndNil(FUser);
-  SysUtils.FreeAndNil(FUserProfile);
-  SysUtils.FreeAndNil(FUserPasswordChange);
-  SysUtils.FreeAndNil(FUserSettings);
-  SysUtils.FreeAndNil(FNotAllowedItems);
-  SysUtils.FreeAndNil(FControlList);
-  SysUtils.FreeAndNil(FLoginMonitorList);
-  SysUtils.FreeAndNil(FTableUsers);
-  SysUtils.FreeAndNil(FTableRights);
-  SysUtils.FreeAndNil(FTableUsersLogged);
-  SysUtils.FreeAndNil(FUsersLogged);
+  fUsersLogged.DelCurrentUser;
+  FCurrentUser.Free;
+  FControlRight.Free;
+  FLogin.Free;
+  FLogControl.Free;
+  FUser.Free;
+  FUserProfile.Free;
+  FUserPasswordChange.Free;
+  FUsersLogged.Free;
+  FUserSettings.Free;
+  FNotAllowedItems.Free;
+  FExtraRights.Free;
+  FTableUsers.Free;
+  FTableRights.Free;
+  FTableUsersLogged.Free;
 
+  if Assigned( FControlList ) then
+    FControlList.Free;
+
+  If Assigned(FLoginMonitorList) then
+    FLoginMonitorList.Free;
   inherited Destroy;
 end;
 
