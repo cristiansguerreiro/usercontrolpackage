@@ -228,6 +228,7 @@ var
 begin
   if FDataSetCadastroUsuario.IsEmpty then
     Exit;
+
   TempID := FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger;
   //changed by fduenas: using PromptDelete_WindowCaption and Format functiom
   if MessageBox(Handle, PChar(Format(FUserControl.UserSettings.UsersForm.PromptDelete, [FDataSetCadastroUsuario.FieldByName('Login').AsString])), PChar(FUserControl.UserSettings.UsersForm.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = idYes then
@@ -242,7 +243,7 @@ begin
     end;
 
     FUserControl.DataConnector.UCExecSQL('Delete from ' + FUserControl.TableRights.TableName + ' where ' + FUserControl.TableRights.FieldUserID + ' = ' + IntToStr(TempID));
-    FUserControl.DataConnector.UCExecSQL('Delete from ' + FUserControl.TableUsers.TableName + ' where ' + FUserControl.TableRights.FieldUserID + ' = ' + IntToStr(TempID));
+    FUserControl.DataConnector.UCExecSQL('Delete from ' + FUserControl.TableUsers.TableName + ' where ' + FUserControl.TableUsers.FieldUserID + ' = ' + IntToStr(TempID));
     FDataSetCadastroUsuario.Close;
     FDataSetCadastroUsuario.Open;
   end;
