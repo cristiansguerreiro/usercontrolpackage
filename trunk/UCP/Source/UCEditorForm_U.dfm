@@ -1,6 +1,6 @@
 object UCEditorForm: TUCEditorForm
-  Left = 182
-  Top = 174
+  Left = 187
+  Top = 128
   BorderStyle = bsDialog
   Caption = 'User Control Editor'
   ClientHeight = 524
@@ -23,7 +23,6 @@ object UCEditorForm: TUCEditorForm
     Width = 594
     Height = 45
     Align = alBottom
-    BevelKind = bkFlat
     BevelOuter = bvNone
     TabOrder = 0
     object btnOK: TBitBtn
@@ -85,10 +84,6 @@ object UCEditorForm: TUCEditorForm
       TabOrder = 0
       object tabPrincipal: TTabSheet
         Caption = 'Principal'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel5: TPanel
           Left = 0
           Top = 0
@@ -265,10 +260,6 @@ object UCEditorForm: TUCEditorForm
       object tabControlRights: TTabSheet
         Caption = 'Control Rights'
         ImageIndex = 6
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label33: TLabel
           Left = 179
           Top = 117
@@ -346,10 +337,6 @@ object UCEditorForm: TUCEditorForm
       object tabUser: TTabSheet
         Caption = 'User'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label2: TLabel
           Left = 172
           Top = 122
@@ -406,10 +393,6 @@ object UCEditorForm: TUCEditorForm
       object tabUserProfile: TTabSheet
         Caption = 'User Profile'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label3: TLabel
           Left = 174
           Top = 128
@@ -460,10 +443,6 @@ object UCEditorForm: TUCEditorForm
       object tabUserPasswordChange: TTabSheet
         Caption = 'User Password Change'
         ImageIndex = 5
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label4: TLabel
           Left = 126
           Top = 252
@@ -532,10 +511,6 @@ object UCEditorForm: TUCEditorForm
       object tabLogControl: TTabSheet
         Caption = 'Log Control'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label25: TLabel
           Left = 140
           Top = 115
@@ -566,7 +541,6 @@ object UCEditorForm: TUCEditorForm
           Width = 586
           Height = 170
           Align = alBottom
-          BevelKind = bkFlat
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
@@ -756,10 +730,6 @@ object UCEditorForm: TUCEditorForm
       object tabLogin: TTabSheet
         Caption = 'Login'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label14: TLabel
           Left = 115
           Top = 25
