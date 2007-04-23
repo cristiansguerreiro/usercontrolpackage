@@ -1,6 +1,8 @@
 object frmLoginWindow: TfrmLoginWindow
-  Left = 268
-  Top = 282
+  Left = 319
+  Top = 270
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
   Caption = 'Login'
   ClientHeight = 160
   ClientWidth = 350
@@ -12,6 +14,7 @@ object frmLoginWindow: TfrmLoginWindow
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnClose = FormClose
   OnKeyPress = FormKeyPress
   OnShow = FormShow

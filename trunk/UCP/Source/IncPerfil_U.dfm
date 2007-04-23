@@ -1,9 +1,9 @@
 object frmIncluirPerfil: TfrmIncluirPerfil
   Left = 232
   Top = 319
+  Width = 442
+  Height = 159
   Caption = 'Perfil de Usu'#225'rios'
-  ClientHeight = 132
-  ClientWidth = 434
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

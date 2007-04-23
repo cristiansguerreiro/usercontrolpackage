@@ -1,6 +1,6 @@
 object SenhaForm: TSenhaForm
-  Left = 0
-  Top = 0
+  Left = 297
+  Top = 214
   ActiveControl = edtSenha
   BorderStyle = bsDialog
   Caption = 'Digitar Senha...'

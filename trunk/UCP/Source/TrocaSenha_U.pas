@@ -19,7 +19,8 @@ uses
   Messages,
   StdCtrls,
   SysUtils,
-  Windows;
+  Windows,
+  UCBase; { Por Vicente Barros Leonel }
 
 type
   TTrocaSenha = class(TForm)
@@ -38,9 +39,11 @@ type
     EditConfirma: TEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btCancelClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
+    fUsercontrol : TUserControl; { Por Vicente Barros Leonel }
     { Public declarations }
   end;
 
@@ -61,6 +64,13 @@ end;
 procedure TTrocaSenha.btCancelClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TTrocaSenha.FormActivate(Sender: TObject);
+begin
+   EditAtu.CharCase  := Self.FUserControl.Login.CharCasePass;
+   EditNova.CharCase := Self.FUserControl.Login.CharCasePass;
+   EditConfirma.CharCase := Self.FUserControl.Login.CharCasePass; { Por Vicente BArros Leonel }
 end;
 
 end.
