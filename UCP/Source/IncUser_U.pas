@@ -92,7 +92,7 @@ var
   vPrivilegiado:  Boolean;
   vResultado:     TResultado;
 begin
-  btGravar.Enabled := False;
+//  btGravar.Enabled := False; - removido qmd
 
   with FUserControl do
     if not FAltera then
@@ -103,11 +103,11 @@ begin
         Exit;
       end;
 
-      vResultado := TSenhaForm.Senha;
+      vResultado := TSenhaForm.Senha(FUserControl.Login.CharCasePass);
 
       if vResultado.Cancelado then
       begin
-        btGravar.Enabled := True;
+//        btGravar.Enabled := True; - removido qmd
         Exit;
       end;
 
@@ -213,6 +213,7 @@ begin
   ckPrivilegiado.Visible := FUserControl.User.UsePrivilegedField;
   if (FUserControl.User.ProtectAdministrator) and (EditLogin.Text = FUserControl.Login.InitialLogin.User) then
     EditLogin.Enabled := False;
+  EditLogin.CharCase := FUserControl.Login.CharCaseUser; // aproveitar a propriedade CharCaseUser na criacao do usuario - qmd
 end;
 
 end.
