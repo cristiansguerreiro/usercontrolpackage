@@ -1,9 +1,9 @@
 object ViewLog: TViewLog
-  Left = 204
-  Top = 410
+  Left = 167
+  Top = 155
+  Width = 610
+  Height = 472
   Caption = 'Seguran'#231'a'
-  ClientHeight = 445
-  ClientWidth = 602
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,6 @@ object ViewLog: TViewLog
     Top = 35
     Height = 410
     Beveled = True
-    ExplicitHeight = 445
   end
   object Panel1: TPanel
     Left = 0
@@ -386,7 +385,7 @@ object ViewLog: TViewLog
       Width = 145
       Height = 21
       Style = csDropDownList
-      ItemHeight = 0
+      ItemHeight = 13
       TabOrder = 0
       OnChange = ComboUsuarioChange
     end
