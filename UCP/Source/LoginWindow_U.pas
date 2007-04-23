@@ -45,6 +45,7 @@ type
     procedure EditUsuarioChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure BotoesClickVisualizacao(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   public
     FUserControl: TUserControl;
   end;
@@ -56,6 +57,7 @@ implementation
 procedure TfrmLoginWindow.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
+
 end;
 
 procedure TfrmLoginWindow.BotoesClickVisualizacao(Sender: TObject);
@@ -118,6 +120,12 @@ procedure TfrmLoginWindow.FormKeyPress(Sender: TObject; var Key: char);
 begin
   if Key = #13 then
     btOK.Click;
+end;
+
+procedure TfrmLoginWindow.FormActivate(Sender: TObject);
+begin
+ EditUsuario.CharCase := Self.FUserControl.Login.CharCaseUser;
+ EditSenha.CharCase   := Self.FUserControl.Login.CharCasePass; { Por Vicente Barros Leonel }
 end;
 
 end.

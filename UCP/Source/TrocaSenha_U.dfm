@@ -1,7 +1,8 @@
 object TrocaSenha: TTrocaSenha
-  Left = 319
-  Top = 264
+  Left = 559
+  Top = 326
   ActiveControl = EditAtu
+  BorderStyle = bsDialog
   Caption = 'Seguran'#231'a'
   ClientHeight = 163
   ClientWidth = 353
@@ -12,6 +13,7 @@ object TrocaSenha: TTrocaSenha
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13

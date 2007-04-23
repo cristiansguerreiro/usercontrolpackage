@@ -40,8 +40,11 @@ type
     procedure FormShow(Sender: TObject);
     procedure BitRefreshClick(Sender: TObject);
     procedure BitMsgClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     DSUserLogados: TDataset;
+    UCMes : TUCApplicationMessage; // Por Vicente Barros Leonel
   public
     FUserControl: TUserControl;
   end;
@@ -90,8 +93,31 @@ end;
 
 procedure TfrmUsersLogged.BitMsgClick(Sender: TObject);
 begin
-  //Cesar: 25/07/2005
-  //TUserControl(owner).ucappmessage.newmessage;
+  //Vicente Barros Leonel
+  If Assigned( UcMes ) then
+    begin
+      If InputQuery('Mensagem','Digite sua mensagem',Msg) then
+      UcMes.SendAppMessage( dsDados.DataSet.FieldValues['id'],'Mensagem do Sistema',Msg);
+    End;
+end;
+
+procedure TfrmUsersLogged.FormCreate(Sender: TObject);
+Var I : Integer; Form : TForm; { Por Vicente Barros Leonel }
+begin
+  UCMes := nil;
+  Form := Application.MainForm;
+  For I := 0 to Form.ComponentCount - 1 do
+    Begin
+      If ( Form.Components[ I ] is TUCApplicationMessage ) then
+        UCMes :=  TUCApplicationMessage( Form.Components[ I ] );
+    end;
+
+  BitMsg.Visible := UCMES <> Nil;
+end;
+
+procedure TfrmUsersLogged.FormDestroy(Sender: TObject);
+begin { Por Vicente Barros Leonel }
+  UCMes := Nil;
 end;
 
 end.

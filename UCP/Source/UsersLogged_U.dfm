@@ -1,6 +1,7 @@
 object frmUsersLogged: TfrmUsersLogged
   Left = 238
   Top = 239
+  BorderStyle = bsDialog
   Caption = 'Usu'#225'rios logados no Sistema'
   ClientHeight = 311
   ClientWidth = 586
@@ -13,6 +14,8 @@ object frmUsersLogged: TfrmUsersLogged
   OldCreateOrder = False
   Position = poDesktopCenter
   OnClose = FormClose
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -187,6 +190,7 @@ object frmUsersLogged: TfrmUsersLogged
       Top = 6
       Width = 95
       Height = 25
+      Caption = '&Fechar'
       TabOrder = 2
       Kind = bkClose
     end

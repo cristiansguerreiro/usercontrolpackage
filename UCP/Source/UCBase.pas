@@ -43,6 +43,7 @@ uses
   md5,
   Menus,
   SysUtils,
+  StdCtrls,
   UCDataConnector,
   UCDataInfo,
   {.$IFDEF Indy}
@@ -204,6 +205,8 @@ type
     FMaxLoginAttempts: Integer;
     FInitialLogin:     TUCInitialLogin;
     FGetLoginName:     TUCGetLoginName;
+    fCharCaseUser: TEditCharCase;
+    fCharCasePass: TEditCharCase;
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
@@ -213,6 +216,8 @@ type
     property InitialLogin: TUCInitialLogin read FInitialLogin write FInitialLogin;
     property MaxLoginAttempts: Integer read FMaxLoginAttempts write FMaxLoginAttempts;
     property GetLoginName: TUCGetLoginName read FGetLoginName write FGetLoginName default lnNone;
+    property CharCaseUser : TEditCharCase read fCharCaseUser write fCharCaseUser default ecNormal; { By Vicente Barros leonel }
+    property CharCasePass : TEditCharCase read fCharCasePass write fCharCasePass default ecNormal; { By Vicente Barros leonel }
   end;
 
   TUCNotAllowedItems = class(TPersistent) // Ocultar e/ou Desabilitar os itens que o usuario nao tem acesso
@@ -1088,6 +1093,7 @@ begin
   FFormTrocarSenha := TTrocaSenha.Create(Self);
   with Self.UserSettings.ChangePassword do
   begin
+    TTrocaSenha(FFormTrocarSenha).fUsercontrol        := Self;
     TTrocaSenha(FFormTrocarSenha).Caption             := WindowCaption;
     TTrocaSenha(FFormTrocarSenha).lbDescricao.Caption := LabelDescription;
     TTrocaSenha(FFormTrocarSenha).lbSenhaAtu.Caption  := LabelCurrentPassword;

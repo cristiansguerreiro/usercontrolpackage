@@ -37,7 +37,7 @@ type
     function CompararSenhas(Senha, ConfirmaSenha: String): Boolean;
   public
     { Public declarations }
-    class function Senha: TResultado;
+    class function Senha(CharCasePass : TEditCharCase): TResultado;
   end;
 
 implementation
@@ -82,10 +82,12 @@ begin
   edtConfirmaSenha.Clear;
 end;
 
-class function TSenhaForm.Senha: TResultado;
+class function TSenhaForm.Senha( CharCasePass : TEditCharCase ): TResultado;
 begin
   with TSenhaForm.Create(nil) do
     try
+      edtSenha.CharCase := CharCasePass;
+      edtConfirmaSenha.CharCase := CharCasePass;
       ShowModal;
       Result.Cancelado := (ModalResult = mrCancel);
       Result.Senha     := FSenha;
