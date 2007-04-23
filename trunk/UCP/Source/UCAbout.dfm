@@ -1,6 +1,6 @@
 object AboutForm: TAboutForm
-  Left = 299
-  Top = 158
+  Left = 284
+  Top = 142
   BorderStyle = bsNone
   Caption = 'About User Control'
   ClientHeight = 520
@@ -27,7 +27,6 @@ object AboutForm: TAboutForm
     Caption = 'pnlFundo'
     Color = 6435072
     TabOrder = 0
-    ExplicitWidth = 500
     object Image4: TImage
       Left = 1
       Top = 1
@@ -154,8 +153,6 @@ object AboutForm: TAboutForm
       BevelOuter = bvNone
       Color = 6435072
       TabOrder = 0
-      ExplicitLeft = 21
-      ExplicitWidth = 478
       object Panel1: TPanel
         Left = 0
         Top = 2
