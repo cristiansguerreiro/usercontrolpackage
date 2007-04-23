@@ -1,9 +1,9 @@
 object UserPermis: TUserPermis
-  Left = 460
-  Top = 383
+  Left = 254
+  Top = 133
+  Width = 550
+  Height = 549
   Caption = 'Seguran'#231'a'
-  ClientHeight = 522
-  ClientWidth = 542
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -424,10 +424,6 @@ object UserPermis: TUserPermis
     TabOrder = 2
     object PageMenu: TTabSheet
       Caption = 'Itens do Menu'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TreeMenu: TTreeView
         Left = 0
         Top = 0
@@ -451,10 +447,6 @@ object UserPermis: TUserPermis
     object PageAction: TTabSheet
       Caption = 'A'#231#245'es'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TreeAction: TTreeView
         Left = 0
         Top = 0
@@ -477,10 +469,6 @@ object UserPermis: TUserPermis
     object PageControls: TTabSheet
       Caption = 'Controles'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TreeControls: TTreeView
         Left = 0
         Top = 0
