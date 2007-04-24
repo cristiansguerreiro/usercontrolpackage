@@ -12,6 +12,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow

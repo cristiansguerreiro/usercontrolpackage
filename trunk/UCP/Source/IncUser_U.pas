@@ -49,6 +49,7 @@ type
     procedure btlimpaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -72,8 +73,8 @@ end;
 
 procedure TfrmIncluirUsuario.FormCreate(Sender: TObject);
 begin
-  Self.BorderIcons := [];
-  Self.BorderStyle := bsDialog;
+  Self.BorderIcons   := [];
+  Self.BorderStyle   := bsDialog;
 end;
 
 procedure TfrmIncluirUsuario.btCancelaClick(Sender: TObject);
@@ -92,7 +93,7 @@ var
   vPrivilegiado:  Boolean;
   vResultado:     TResultado;
 begin
-//  btGravar.Enabled := False; - removido qmd
+  btGravar.Enabled := False;
 
   with FUserControl do
     if not FAltera then
@@ -103,11 +104,11 @@ begin
         Exit;
       end;
 
-      vResultado := TSenhaForm.Senha(FUserControl.Login.CharCasePass);
+      vResultado := TSenhaForm.Senha( FUserControl.Login.CharCasePass ); { Por Vicente Barros Leonel }
 
       if vResultado.Cancelado then
       begin
-//        btGravar.Enabled := True; - removido qmd
+        btGravar.Enabled := True;
         Exit;
       end;
 
@@ -213,7 +214,11 @@ begin
   ckPrivilegiado.Visible := FUserControl.User.UsePrivilegedField;
   if (FUserControl.User.ProtectAdministrator) and (EditLogin.Text = FUserControl.Login.InitialLogin.User) then
     EditLogin.Enabled := False;
-  EditLogin.CharCase := FUserControl.Login.CharCaseUser; // aproveitar a propriedade CharCaseUser na criacao do usuario - qmd
+end;
+
+procedure TfrmIncluirUsuario.FormActivate(Sender: TObject);
+begin
+  EditLogin.CharCase := Self.FUserControl.Login.CharCaseUser;
 end;
 
 end.
