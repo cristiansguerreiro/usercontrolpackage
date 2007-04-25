@@ -87,6 +87,8 @@ begin
       AutoLogonError := Const_Men_AutoLogonError;
     if UsuarioExiste = '' then
       UsuarioExiste := Const_Men_UsuarioExiste;
+    if PasswordExpired  = '' then
+      PasswordExpired := Const_Men_PasswordExpired; // by vicente barros leonel
   end;
 
   with DestSettings.Login do
@@ -402,6 +404,8 @@ begin
       AutoLogonError := Const_Men_AutoLogonError;
     if UsuarioExiste = '' then
       UsuarioExiste := Const_Men_UsuarioExiste;
+    if PasswordExpired  = '' then
+      PasswordExpired := Const_Men_PasswordExpired; // by vicente barros leonel      
   end;
 
   with DestSettings.Login do

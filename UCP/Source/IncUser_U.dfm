@@ -1,9 +1,9 @@
 object frmIncluirUsuario: TfrmIncluirUsuario
-  Left = 213
-  Top = 250
+  Left = 267
+  Top = 244
   BorderStyle = bsDialog
   Caption = 'Cadastro de Usu'#225'rios'
-  ClientHeight = 214
+  ClientHeight = 230
   ClientWidth = 472
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,7 +12,6 @@ object frmIncluirUsuario: TfrmIncluirUsuario
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
@@ -154,7 +153,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     Left = 375
     Top = 35
     Width = 97
-    Height = 179
+    Height = 195
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -285,7 +284,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     Left = 0
     Top = 35
     Width = 375
-    Height = 179
+    Height = 195
     Align = alClient
     BevelInner = bvRaised
     BevelOuter = bvLowered
@@ -387,7 +386,6 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Top = 47
       Width = 265
       Height = 19
-      CharCase = ecUpperCase
       Ctl3D = False
       MaxLength = 30
       ParentCtl3D = False
@@ -405,8 +403,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     end
     object ckPrivilegiado: TCheckBox
       Left = 73
-      Top = 146
-      Width = 137
+      Top = 161
+      Width = 120
       Height = 17
       Caption = 'Usu'#225'rio privilegiado'
       TabOrder = 4
@@ -422,6 +420,14 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       ListSource = frmCadastrarUsuario.DataSource2
       ParentCtl3D = False
       TabOrder = 3
+    end
+    object ckUserExpired: TCheckBox
+      Left = 73
+      Top = 137
+      Width = 168
+      Height = 17
+      Caption = 'Senha do usu'#225'rio n'#227'o expira'
+      TabOrder = 5
     end
   end
 end

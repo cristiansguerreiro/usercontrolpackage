@@ -1,9 +1,9 @@
 object frmCadastrarUsuario: TfrmCadastrarUsuario
-  Left = 292
-  Top = 399
+  Left = 215
+  Top = 179
+  Width = 594
+  Height = 339
   Caption = 'Seguran'#231'a'
-  ClientHeight = 312
-  ClientWidth = 586
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

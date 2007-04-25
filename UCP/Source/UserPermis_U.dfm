@@ -1,6 +1,6 @@
 object UserPermis: TUserPermis
-  Left = 254
-  Top = 133
+  Left = 460
+  Top = 383
   Width = 550
   Height = 549
   Caption = 'Seguran'#231'a'

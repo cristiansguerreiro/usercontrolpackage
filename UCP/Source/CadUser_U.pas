@@ -215,6 +215,8 @@ begin
     EditEmail.Text         := FDataSetCadastroUsuario.FieldByName('Email').AsString;
     ComboPerfil.KeyValue   := FDataSetCadastroUsuario.FieldByName('Perfil').AsInteger;
     ckPrivilegiado.Checked := StrToBool(FDataSetCadastroUsuario.FieldByName('Privilegiado').AsString);
+    If FDataSetCadastroUsuario.FieldByName('UserNaoExpira').AsInteger = 0 then
+      ckUserExpired.Checked := False else ckUserExpired.Checked := True;
     ShowModal;
   end;
   FreeAndNil(FfrmIncluirUsuario);
@@ -228,7 +230,6 @@ var
 begin
   if FDataSetCadastroUsuario.IsEmpty then
     Exit;
-
   TempID := FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger;
   //changed by fduenas: using PromptDelete_WindowCaption and Format functiom
   if MessageBox(Handle, PChar(Format(FUserControl.UserSettings.UsersForm.PromptDelete, [FDataSetCadastroUsuario.FieldByName('Login').AsString])), PChar(FUserControl.UserSettings.UsersForm.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = idYes then
@@ -243,7 +244,7 @@ begin
     end;
 
     FUserControl.DataConnector.UCExecSQL('Delete from ' + FUserControl.TableRights.TableName + ' where ' + FUserControl.TableRights.FieldUserID + ' = ' + IntToStr(TempID));
-    FUserControl.DataConnector.UCExecSQL('Delete from ' + FUserControl.TableUsers.TableName + ' where ' + FUserControl.TableUsers.FieldUserID + ' = ' + IntToStr(TempID));
+    FUserControl.DataConnector.UCExecSQL('Delete from ' + FUserControl.TableUsers.TableName + ' where ' + FUserControl.TableRights.FieldUserID + ' = ' + IntToStr(TempID));
     FDataSetCadastroUsuario.Close;
     FDataSetCadastroUsuario.Open;
   end;
@@ -307,9 +308,9 @@ begin
   with FUserControl do
   begin
     FDataSetCadastroUsuario := DataConnector.UCGetSQLDataset(
-      Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Email, %s as Perfil, %s as Privilegiado, %s as Tipo, %s as Senha from %s Where %s  = %s ORDER BY %s',
+      Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Email, %s as Perfil, %s as Privilegiado, %s as Tipo, %s as Senha, %s as UserNaoExpira from %s Where %s  = %s ORDER BY %s',
       [TableUsers.FieldUserID, TableUsers.FieldLogin, TableUsers.FieldUserName, TableUsers.FieldEmail, TableUsers.FieldProfile, TableUsers.FieldPrivileged, TableUsers.FieldTypeRec, TableUsers.FieldPassword,
-      TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('U'), TableUsers.FieldLogin]));
+      TableUsers.FieldUserExpired, TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('U'), TableUsers.FieldLogin]));
 
 
     DBGrid1.Columns[0].Title.Caption := UserSettings.UsersForm.ColName;

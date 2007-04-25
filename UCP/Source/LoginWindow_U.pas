@@ -20,7 +20,7 @@ uses
   StdCtrls,
   SysUtils,
   UCBase,
-  Windows;
+  Windows, ComCtrls;
 
 type
   TfrmLoginWindow = class(TForm)
@@ -39,6 +39,7 @@ type
     btOK:        TBitBtn;
     BtCancela:   TBitBtn;
     lbEsqueci:   TLabel;
+    StatusBar: TStatusBar;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtCancelaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -80,6 +81,8 @@ begin
 
   Width  := w;
   Height := h + 28;
+  If FUserControl.Login.MaxLoginAttempts > 0 then
+    Height := h + 19; // by vicente barros leonel
 
   // Topo
   PTop.Height     := ImgTop.Height;

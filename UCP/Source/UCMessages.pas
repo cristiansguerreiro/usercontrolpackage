@@ -117,6 +117,7 @@ type
     FFirstMSG:            TStrings;
     FChangePasswordError: TUCChangePassError;
     FUsuarioExiste:       String;
+    fPasswordExpired: String;
     procedure SetFErroTrocaSenha(const Value: TUCChangePassError);
     procedure SetFFirstMSG(const Value: TStrings);
   protected
@@ -134,6 +135,7 @@ type
     property PasswordChanged: String read FPasswordChanged write FPasswordChanged;
     property BlankPassword: String read FPasswordOFF write FPasswordOFF;
     property UsuarioExiste: String read FUsuarioExiste write FUsuarioExiste;
+    property PasswordExpired : String read fPasswordExpired write fPasswordExpired;
   end;
 
   TUCLoginFormMSG = class(TPersistent)
@@ -564,6 +566,7 @@ begin
     Self.MaxLoginAttemptsError := TUCUserCommonMSG(Source).MaxLoginAttemptsError;
     Self.ChangePasswordError   := TUCUserCommonMSG(Source).ChangePasswordError;
     Self.UsuarioExiste         := TUCUserCommonMSG(Source).UsuarioExiste;
+    Self.PasswordExpired       := TUCUserCommonMSG(Source).PasswordExpired;  {By Vicente Barros Leonelx}
   end
   else
     inherited;

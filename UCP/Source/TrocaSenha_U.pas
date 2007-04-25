@@ -40,10 +40,12 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btCancelClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
   public
     fUsercontrol : TUserControl; { Por Vicente Barros Leonel }
+    ForcarTroca  : Boolean;
     { Public declarations }
   end;
 
@@ -68,9 +70,19 @@ end;
 
 procedure TTrocaSenha.FormActivate(Sender: TObject);
 begin
-   EditAtu.CharCase  := Self.FUserControl.Login.CharCasePass;
-   EditNova.CharCase := Self.FUserControl.Login.CharCasePass;
-   EditConfirma.CharCase := Self.FUserControl.Login.CharCasePass; { Por Vicente BArros Leonel }
+   EditAtu.CharCase      := Self.FUserControl.Login.CharCasePass;
+   EditNova.CharCase     := Self.FUserControl.Login.CharCasePass;
+   EditConfirma.CharCase := Self.FUserControl.Login.CharCasePass; { Por Vicente Barros Leonel }
+end;
+
+procedure TTrocaSenha.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  If ForcarTroca = True then
+     Begin
+       CanClose := False;
+       MessageDlg('Mudança de senha obrigatória',mtWarning, [mbOK], 0);
+     End;
 end;
 
 end.

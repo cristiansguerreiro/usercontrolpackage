@@ -1,10 +1,10 @@
 object frmLoginWindow: TfrmLoginWindow
-  Left = 319
-  Top = 270
+  Left = 343
+  Top = 286
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Login'
-  ClientHeight = 160
+  ClientHeight = 171
   ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -41,7 +41,7 @@ object frmLoginWindow: TfrmLoginWindow
     Left = 0
     Top = 17
     Width = 10
-    Height = 132
+    Height = 124
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -57,7 +57,7 @@ object frmLoginWindow: TfrmLoginWindow
   end
   object PBottom: TPanel
     Left = 0
-    Top = 149
+    Top = 141
     Width = 350
     Height = 11
     Align = alBottom
@@ -76,7 +76,7 @@ object frmLoginWindow: TfrmLoginWindow
     Left = 10
     Top = 17
     Width = 340
-    Height = 132
+    Height = 124
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
@@ -231,5 +231,30 @@ object frmLoginWindow: TfrmLoginWindow
           D400C8D0D400C8D0D400C8D0D400C8D0D400C8D0D400C8D0D400}
       end
     end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Top = 152
+    Width = 350
+    Height = 19
+    Panels = <
+      item
+        Alignment = taRightJustify
+        Text = 'Tentativa: '
+        Width = 60
+      end
+      item
+        Alignment = taCenter
+        Width = 80
+      end
+      item
+        Alignment = taRightJustify
+        Text = 'Limite de Tentativas: '
+        Width = 130
+      end
+      item
+        Alignment = taCenter
+        Width = 50
+      end>
   end
 end

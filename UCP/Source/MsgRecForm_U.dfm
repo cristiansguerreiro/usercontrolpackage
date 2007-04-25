@@ -1,9 +1,9 @@
 object MsgRecForm: TMsgRecForm
   Left = 215
   Top = 162
+  Width = 514
+  Height = 363
   Caption = 'Mensagem'
-  ClientHeight = 336
-  ClientWidth = 493
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -46,7 +46,7 @@ object MsgRecForm: TMsgRecForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 493
+    Width = 506
     Height = 35
     Align = alTop
     BevelOuter = bvLowered
