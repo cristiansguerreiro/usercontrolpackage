@@ -1,4 +1,7 @@
-{-----------------------------------------------------------------------------
+{
+Colocar campo no banco de dados para setar a qtde dias que o usuario deve somar
+na data para expirar a senha 
+-----------------------------------------------------------------------------
  Unit Name: UCBase
  Author:    QmD
  changed:   06-dez-2004
@@ -60,7 +63,7 @@ const
 
 // Version
 const
-  UCVersion = '2.20RC3';
+  UCVersion = '2.20RC4';
 
 type
   // Pensando em usar GUID para gerar a chave das tabelas !!!!
@@ -101,6 +104,7 @@ type
     Email:          String;
     DateExpiration: TDateTime;
     Privileged:     Boolean;
+    UserNotExpired: Boolean;
   published
     { TODO 1 -oLuiz -cUpgrade : Terminar a implementação dos DataSets para os Perfis de Usuario Loggado }
     property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;
@@ -207,6 +211,8 @@ type
     FGetLoginName:     TUCGetLoginName;
     fCharCaseUser: TEditCharCase;
     fCharCasePass: TEditCharCase;
+    fDateExpireActive: Boolean;
+    fDaysOfSunExpired: Word;
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
@@ -215,9 +221,11 @@ type
     property AutoLogin: TUCAutoLogin read FAutoLogin write FAutoLogin;
     property InitialLogin: TUCInitialLogin read FInitialLogin write FInitialLogin;
     property MaxLoginAttempts: Integer read FMaxLoginAttempts write FMaxLoginAttempts;
-    property GetLoginName: TUCGetLoginName read FGetLoginName write FGetLoginName default lnNone;
+    property GetLoginName : TUCGetLoginName read FGetLoginName write FGetLoginName default lnNone;
     property CharCaseUser : TEditCharCase read fCharCaseUser write fCharCaseUser default ecNormal; { By Vicente Barros leonel }
     property CharCasePass : TEditCharCase read fCharCasePass write fCharCasePass default ecNormal; { By Vicente Barros leonel }
+    property ActiveDateExpired : Boolean read fDateExpireActive write fDateExpireActive default false; { By Vicente Barros leonel }
+    property DaysOfSunExpired  : Word read fDaysOfSunExpired write fDaysOfSunExpired default 30; { By Vicente Barros leonel }
   end;
 
   TUCNotAllowedItems = class(TPersistent) // Ocultar e/ou Desabilitar os itens que o usuario nao tem acesso
@@ -432,7 +440,7 @@ type
     procedure ShowProfileManager;
     procedure ShowLogManager;
     procedure ShowChangePassword;
-    procedure ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile: Integer; PrivUser: Boolean);
+    procedure ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile,UserExpired: Integer; PrivUser: Boolean);
     procedure ChangePassword(IDUser: Integer; NewPassword: String);
     procedure AddRight(idUser: Integer; ItemRight: TObject; FullPath: Boolean = True); overload;
     procedure AddRight(idUser: Integer; ItemRight: String); overload;
@@ -442,7 +450,7 @@ type
     function VerificaLogin(User, Password: String): Boolean;
     function GetLocalUserName: String;
     function GetLocalComputerName: String;
-    function AddUser(Login, Password, Name, Mail: String; Profile: Integer; PrivUser: Boolean): Integer;
+    function AddUser(Login, Password, Name, Mail: String; Profile , UserExpired : Integer; PrivUser: Boolean): Integer;
     function ExisteUsuario(Login: String): Boolean;
     property CurrentUser: TUCCurrentUser read FCurrentUser write FCurrentUser;
     property UserSettings: TUCUserSettings read FUserSettings write SetUserSettings;
@@ -723,6 +731,11 @@ begin
         FieldProfile := Const_TableUsers_FieldProfile;
       if FieldKey = '' then
         FieldKey := Const_TableUsers_FieldKey;
+        
+      If FieldDateExpired = '' then
+        FieldDateExpired  := Const_TableUsers_FieldDateExpired; {Vicente Barros Leonel}
+      If FieldUserExpired = '' then
+        FieldUserExpired := Const_TableUser_FieldUserExpired;  {Vicente Barros Leonel}
     end;
 
     with TableRights do
@@ -866,6 +879,12 @@ begin
         Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldKey***');
       if FieldProfile = '' then
         Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldProfile***');
+        
+      if FieldDateExpired = '' then
+        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldDateExpired***');
+
+      If FieldUserExpired = '' then
+        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserExpired***');
     end;
 
     with TableRights do
@@ -1101,6 +1120,7 @@ begin
     TTrocaSenha(FFormTrocarSenha).lbConfirma.Caption  := LabelConfirm;
     TTrocaSenha(FFormTrocarSenha).btGrava.Caption     := BtSave;
     TTrocaSenha(FFormTrocarSenha).btCancel.Caption    := BtCancel;
+    TTrocaSenha(FFormTrocarSenha).ForcarTroca         := False; // Vicente Barros Leonel
   end;
   TTrocaSenha(FFormTrocarSenha).Position        := Self.UserSettings.WindowsPosition; // Adicionado por Luiz Benevenuto
   TTrocaSenha(FFormTrocarSenha).btGrava.OnClick := ActionTSBtGrava;
@@ -1159,7 +1179,12 @@ begin
     Exit;
   end;
 
-  if MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text) = CurrentUser.Password then
+   case Self.Criptografia of     // por Vicente Barros Leonel
+     cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditNova.Text;
+        cMD5: AuxPass := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+    end;
+    
+  if AuxPass = CurrentUser.Password then
   begin
     MessageDlg(UserSettings.CommonMessages.ChangePasswordError.NewEqualCurrent, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
@@ -1213,6 +1238,8 @@ begin
           Log(e.Message, 2);
       end;
   {.$ENDIF}
+  If TTrocaSenha(FFormTrocarSenha).ForcarTroca = True then
+    TTrocaSenha(FFormTrocarSenha).ForcarTroca := False; // Vicente Barros Leonel
   TTrocaSenha(FFormTrocarSenha).Close;
 end;
 
@@ -1236,6 +1263,10 @@ begin
       ImgBottom.Picture.Assign(BottomImage);
     if TopImage <> nil then
       ImgTop.Picture.Assign(TopImage);
+
+     StatusBar.Visible := Login.FMaxLoginAttempts > 0; // by vicente barros leonel
+     StatusBar.Panels[ 1 ].Text := '0'; // by vicente barros leonel
+     StatusBar.Panels[ 3 ].Text := IntToStr( Login.FMaxLoginAttempts ); // by vicente barros leonel
 
     {.$IFDEF Indy}
     if Assigned(MailUserControl) then
@@ -1362,9 +1393,11 @@ var
 begin
   with CurrentUser do
   begin
-    UserID    := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
-    UserName  := Dados.FieldByName(TableUsers.FieldUserName).AsString;
-    UserLogin := Dados.FieldByName(TableUsers.FieldLogin).AsString;
+    UserID         := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
+    UserName       := Dados.FieldByName(TableUsers.FieldUserName).AsString;
+    UserLogin      := Dados.FieldByName(TableUsers.FieldLogin).AsString;
+    DateExpiration := Dados.FieldByName(TableUsers.FieldDateExpired).AsDateTime;
+    UserNotExpired := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
 
     case Self.Criptografia of
       cPadrao: Password := Decrypt(Dados.FieldByName(TableUsers.FieldPassword).AsString, EncryptKey);
@@ -1423,6 +1456,17 @@ begin
 
   ApplyRightsUCControlMonitor;
   NotificationLoginMonitor;
+
+  If ( ( FLogin.fDateExpireActive = true ) and ( Date > CurrentUser.DateExpiration ) and ( CurrentUser.UserNotExpired = False )  ) then
+    Begin { By Vicente Barros Leonel }
+      MessageDlg( UserSettings.CommonMessages.PasswordExpired , mtInformation , [mbOK], 0);
+
+      if FFormTrocarSenha = nil then
+        CriaFormTrocarSenha;
+      TTrocaSenha(FFormTrocarSenha).ForcarTroca := True;
+      FFormTrocarSenha.ShowModal;
+      FreeAndNil(FFormTrocarSenha);
+    end;
 end;
 
 {.$IFDEF Indy}
@@ -1534,7 +1578,7 @@ begin
   ApplyRights;
 end;
 
-function TUserControl.AddUser(Login, Password, Name, Mail: String; Profile: Integer; PrivUser: Boolean): Integer;
+function TUserControl.AddUser(Login, Password, Name, Mail: String; Profile, UserExpired: Integer; PrivUser: Boolean): Integer;
 var
   Key:     String;
   SQLStmt: String;
@@ -1562,7 +1606,7 @@ begin
 
   with TableUsers do
   begin
-    SQLStmt := Format('INSERT INTO %s( %s, %s, %s, %s, %s, %s, %s, %s, %s) VALUES(%d, %s, %s, %s, %s, %s, %d, %s, %s)',
+    SQLStmt := Format('INSERT INTO %s( %s, %s, %s, %s, %s, %s, %s, %s, %s , %s , %s ) VALUES(%d, %s, %s, %s, %s, %s, %d, %s, %s , %s , %d )',
       [TableName,
       FieldUserID,
       FieldUserName,
@@ -1573,6 +1617,8 @@ begin
       FieldProfile,
       FieldTypeRec,
       FieldKey,
+      FieldDateExpired, { By Vicente Barros Leonel }
+      FieldUserExpired,
       Result,
       QuotedStr(Name),
       QuotedStr(Login),
@@ -1581,8 +1627,9 @@ begin
       BoolToStr(PrivUser),
       Profile,
       QuotedStr('U'),
-      QuotedStr(Key)]);
-
+      QuotedStr(Key),
+      QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ), {By vicente Barros Leonel }
+      UserExpired ]); {By vicente Barros Leonel }
     DataConnector.UCExecSQL(SQLStmt);
   end;
 
@@ -1623,11 +1670,13 @@ begin
     cPadrao: cSql := 'Update ' + TableUsers.TableName +
              ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword,EncryptKey)) +
              ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
+             ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ) + // by vicente barros leonel
              ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
 
        cMD5: cSql := 'Update ' + TableUsers.TableName +
                      ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
                      ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
+                     ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ) + // by vicente barros leonel                     
                      ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
   end;
   
@@ -1637,7 +1686,7 @@ begin
     OnChangePassword(Self, IdUser, Login, Senha, NewPassword);
 end;
 
-procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile: Integer; PrivUser: Boolean);
+procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile , UserExpired : Integer; PrivUser: Boolean);
 var
   Key, Password: String;
 begin
@@ -1668,7 +1717,8 @@ begin
       FieldEmail + ' = ' + QuotedStr(Mail) + ', ' +
       FieldPrivileged + ' = ' + BooltoStr(PrivUser) + ', ' +
       FieldProfile + ' = ' + IntToStr(Profile) + ', ' +
-      FieldKey + ' = ' + QuotedStr(Key) +
+      FieldKey + ' = ' + QuotedStr(Key) +  ', ' +
+      FieldUserExpired + ' = ' + IntToStr( UserExpired ) + // vicente barros leonel 
       ' where ' + FieldUserID + ' = ' + IntToStr(IdUser));
   if Assigned(OnChangeUser) then
     OnChangeUser(Self, IdUser, Login, Name, Mail, Profile, PrivUser);
@@ -2122,6 +2172,9 @@ begin
   begin
     MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
     Inc(FRetry);
+    If TfrmLoginWindow(FFormLogin).StatusBar.Visible then
+      TfrmLoginWindow(FFormLogin).StatusBar.Panels[ 1 ].Text := IntToStr( FRetry );
+
     if (Login.MaxLoginAttempts > 0) and (FRetry = Login.MaxLoginAttempts) then
     begin
       MessageDlg(Format(UserSettings.CommonMessages.MaxLoginAttemptsError, [Login.MaxLoginAttempts]), mtError, [mbOK], 0);
@@ -2557,7 +2610,7 @@ var
 begin
   case Self.Criptografia of
     cPadrao: TipoCampo := 'VARCHAR(250)';
-    cMD5: TipoCampo    := 'VARCHAR(32)';
+    cMD5   : TipoCampo := 'VARCHAR(32)';
   end;
 
   if not TableExists then
@@ -2569,6 +2622,8 @@ begin
         '%s varchar(30), ' + // FieldUserName
         '%s varchar(30), ' + // FieldLogin
         '%s %s, ' +          // FieldPassword
+        '%s date, ' +       // FieldDateExpired Vicente Barros Leonel
+        '%s int , ' +       //FieldUserExpired  Vicente Barros Leonel
         '%s varchar(150), ' +
         '%s int, ' +
         '%s char(1), ' +
@@ -2581,6 +2636,8 @@ begin
         FieldLogin,
         FieldPassword,
         TipoCampo,
+        FieldDateExpired,
+        FieldUserExpired,        
         FieldEmail,
         FieldPrivileged,
         FieldTypeRec,
@@ -2603,7 +2660,7 @@ begin
       Login.InitialLogin.Password,
       Login.InitialLogin.User,
       Login.InitialLogin.Email,
-      0,
+      0, 0 , 
       True)
   else
     IDUsuario := DataSetUsuario.FieldByName('idUser').AsInteger;
@@ -2691,6 +2748,7 @@ begin
     InvalidLogin          := SourceSettings.CommonMessages.InvalidLogin;
     AutoLogonError        := SourceSettings.CommonMessages.AutoLogonError;
     UsuarioExiste         := SourceSettings.CommonMessages.UsuarioExiste; // Luiz Benevenuto 20/04/06
+    PasswordExpired       := SourceSettings.CommonMessages.PasswordExpired; // vicente barros leonel
   end;
 
   with UserSettings.Login do
@@ -3182,6 +3240,9 @@ begin
   InitialLogin := TUCInitialLogin.Create(nil);
   if not AutoLogin.MessageOnError then
     AutoLogin.MessageOnError := True;
+
+  fDateExpireActive   := False; { By Vicente Barros Leonel }
+  fDaysOfSunExpired   := 30;  { By Vicente Barros Leonel }
 end;
 
 destructor TUCLogin.Destroy;
@@ -4006,7 +4067,6 @@ end;
 procedure TUCUsersLogged.Assign(Source: TPersistent);
 begin
   inherited;
-
 end;
 
 constructor TUCUsersLogged.Create(AOwner: TComponent);
@@ -4076,8 +4136,5 @@ begin
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
-
-
-{ Por Vicente Barros Leonel }
 end.
 

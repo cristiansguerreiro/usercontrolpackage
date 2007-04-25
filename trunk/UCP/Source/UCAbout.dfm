@@ -1,6 +1,6 @@
 object AboutForm: TAboutForm
-  Left = 284
-  Top = 142
+  Left = 299
+  Top = 158
   BorderStyle = bsNone
   Caption = 'About User Control'
   ClientHeight = 520

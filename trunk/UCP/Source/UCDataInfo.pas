@@ -18,6 +18,8 @@ type
     FLogin:      String;
     FPassword:   String;
     FKey:        String;
+    fDateExpired: String;
+    fUserExpired: String;
   protected
   public
     constructor Create(AOwner: TComponent);
@@ -33,6 +35,8 @@ type
     property FieldTypeRec: String read FTypeRec write FTypeRec;
     property FieldProfile: String read FProfile write FProfile;
     property FieldKey: String read FKey write FKey;
+    property FieldDateExpired: String read fDateExpired write fDateExpired; { By Vicente Barros Leonel }
+    property FieldUserExpired: String read fUserExpired write fUserExpired; { By vicente barros leonel }
     property TableName: String read FTable write FTable;
   end;
 
@@ -119,15 +123,17 @@ procedure TUCTableUsers.Assign(Source: TPersistent);
 begin
   if Source is TUCTableUsers then
   begin
-    Self.FieldUserID     := TUCTableUsers(Source).FieldUserID;
-    Self.FieldUserName   := TUCTableUsers(Source).FieldUserName;
-    Self.FieldLogin      := TUCTableUsers(Source).FieldLogin;
-    Self.FieldPassword   := TUCTableUsers(Source).FieldPassword;
-    Self.FieldEmail      := TUCTableUsers(Source).FieldEmail;
-    Self.FieldPrivileged := TUCTableUsers(Source).FieldPrivileged;
-    Self.FieldProfile    := TUCTableUsers(Source).FieldProfile;
-    Self.FieldKey        := TUCTableUsers(Source).FieldKey;
-    Self.TableName       := TUCTableUsers(Source).TableName;
+    Self.FieldUserID      := TUCTableUsers(Source).FieldUserID;
+    Self.FieldUserName    := TUCTableUsers(Source).FieldUserName;
+    Self.FieldLogin       := TUCTableUsers(Source).FieldLogin;
+    Self.FieldPassword    := TUCTableUsers(Source).FieldPassword;
+    Self.FieldEmail       := TUCTableUsers(Source).FieldEmail;
+    Self.FieldPrivileged  := TUCTableUsers(Source).FieldPrivileged;
+    Self.FieldProfile     := TUCTableUsers(Source).FieldProfile;
+    Self.FieldKey         := TUCTableUsers(Source).FieldKey;
+    Self.FieldDateExpired := TUCTableUsers(Source).FieldDateExpired; {By Vicente Barros Leonel}
+    Self.FieldUserExpired := TUCTableUsers(Source).FieldUserExpired; {By Vicente Barros Leonel}
+    Self.TableName        := TUCTableUsers(Source).TableName;
   end
   else
     inherited;

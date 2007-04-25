@@ -42,6 +42,7 @@ type
     lbPerfil:       TLabel;
     ComboPerfil:    TDBLookupComboBox;
     btlimpa:        TSpeedButton;
+    ckUserExpired: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btCancelaClick(Sender: TObject);
     procedure btGravarClick(Sender: TObject);
@@ -49,7 +50,6 @@ type
     procedure btlimpaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -88,6 +88,7 @@ var
   vNome:          String;
   vLogin:         String;
   vEmail:         String;
+  vUserExpired  : Integer;
   vNovoIDUsuario: Integer;
   vPerfil:        Integer;
   vPrivilegiado:  Boolean;
@@ -118,6 +119,7 @@ begin
       vNome          := EditNome.Text;
       vLogin         := EditLogin.Text;
       vEmail         := EditEmail.Text;
+
       if ComboPerfil.KeyValue = null then
         vPerfil := 0
       else
@@ -125,7 +127,10 @@ begin
 
       vPrivilegiado := ckPrivilegiado.Checked;
 
-      AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vPrivilegiado);
+      If ckUserExpired.Checked = true then
+        vUserExpired := 0 else vUserExpired := 1;
+
+      AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vUserExpired, vPrivilegiado);
 
       { TODO -oLuiz -cUpgrade : Consertar a Senha para poder avisar MD5 }
       if (Assigned(MailUserControl)) and (MailUserControl.AdicionaUsuario.Ativo) then
@@ -147,8 +152,12 @@ begin
         vPerfil := 0
       else
         vPerfil := ComboPerfil.KeyValue;
+        
+      If ckUserExpired.Checked = true then
+        vUserExpired := 0 else vUserExpired := 1;
+
       vPrivilegiado := ckPrivilegiado.Checked;
-      ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil, vPrivilegiado);
+      ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil,vUserExpired , vPrivilegiado);
 
       { TODO -oLuiz -cUpgrade : Consertar a Senha para poder avisar MD5 }
       if (Assigned(MailUserControl)) and (MailUserControl.AlteraUsuario.Ativo) then
@@ -211,14 +220,16 @@ begin
     ComboPerfil.ListSource.DataSet.Close;
     ComboPerfil.ListSource.DataSet.Open;
   end;
-  ckPrivilegiado.Visible := FUserControl.User.UsePrivilegedField;
+  If FUserControl.Login.ActiveDateExpired = true then
+    //Opção de senha so deve aparecer qdo setada como true no componente By Vicente Barros Leonel
+    ckPrivilegiado.Visible := FUserControl.User.UsePrivilegedField
+  else
+    ckUserExpired.Visible := False;
+
+  EditLogin.CharCase     := Self.FUserControl.Login.CharCaseUser;
+
   if (FUserControl.User.ProtectAdministrator) and (EditLogin.Text = FUserControl.Login.InitialLogin.User) then
     EditLogin.Enabled := False;
-end;
-
-procedure TfrmIncluirUsuario.FormActivate(Sender: TObject);
-begin
-  EditLogin.CharCase := Self.FUserControl.Login.CharCaseUser;
 end;
 
 end.

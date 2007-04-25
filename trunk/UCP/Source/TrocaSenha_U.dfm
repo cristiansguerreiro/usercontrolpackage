@@ -15,6 +15,7 @@ object TrocaSenha: TTrocaSenha
   OldCreateOrder = False
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel

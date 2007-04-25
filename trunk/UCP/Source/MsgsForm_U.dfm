@@ -1,9 +1,9 @@
 object MsgsForm: TMsgsForm
   Left = 144
   Top = 150
+  Width = 606
+  Height = 479
   Caption = 'Mensagens do Sistema'
-  ClientHeight = 452
-  ClientWidth = 585
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object MsgsForm: TMsgsForm
   object Splitter1: TSplitter
     Left = 0
     Top = 237
-    Width = 585
+    Width = 598
     Height = 6
     Cursor = crVSplit
     Align = alTop
@@ -28,7 +28,7 @@ object MsgsForm: TMsgsForm
   object ListView1: TListView
     Left = 0
     Top = 52
-    Width = 585
+    Width = 598
     Height = 185
     Align = alTop
     Columns = <
@@ -65,7 +65,7 @@ object MsgsForm: TMsgsForm
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 585
+    Width = 598
     Height = 52
     ButtonHeight = 44
     ButtonWidth = 94
@@ -75,35 +75,35 @@ object MsgsForm: TMsgsForm
     TabOrder = 1
     object btnova: TToolButton
       Left = 0
-      Top = 0
+      Top = 2
       Caption = '&Nova Mensagem'
       ImageIndex = 0
       OnClick = btnovaClick
     end
     object btResponder: TToolButton
       Left = 94
-      Top = 0
+      Top = 2
       Caption = '&Responder'
       ImageIndex = 1
       OnClick = btResponderClick
     end
     object btEncaminhar: TToolButton
       Left = 188
-      Top = 0
+      Top = 2
       Caption = 'E&ncaminhar'
       ImageIndex = 2
       OnClick = btEncaminharClick
     end
     object btExcluir: TToolButton
       Left = 282
-      Top = 0
+      Top = 2
       Caption = '&Excluir'
       ImageIndex = 3
       OnClick = btExcluirClick
     end
     object btClose: TToolButton
       Left = 376
-      Top = 0
+      Top = 2
       Caption = '&Fechar'
       ImageIndex = 4
       OnClick = btCloseClick
@@ -112,7 +112,7 @@ object MsgsForm: TMsgsForm
   object MemoMsg: TMemo
     Left = 0
     Top = 243
-    Width = 585
+    Width = 598
     Height = 209
     Align = alClient
     ReadOnly = True

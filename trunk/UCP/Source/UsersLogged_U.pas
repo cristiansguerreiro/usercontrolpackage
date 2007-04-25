@@ -92,14 +92,13 @@ begin
 end;
 
 procedure TfrmUsersLogged.BitMsgClick(Sender: TObject);
-var
-  Msg : String;
+var Msg : String;
 begin
   //Vicente Barros Leonel
   If Assigned( UcMes ) then
     begin
-      If InputQuery('Mensagem', 'Digite sua mensagem', Msg) then
-        UcMes.SendAppMessage( dsDados.DataSet.FieldValues['id'],'Mensagem do Sistema',Msg);
+      If InputQuery('Mensagem','Digite sua mensagem',Msg) = true then
+      UcMes.SendAppMessage( dsDados.DataSet.FieldValues['id'],'Mensagem do Sistema',Msg);
     End;
 end;
 

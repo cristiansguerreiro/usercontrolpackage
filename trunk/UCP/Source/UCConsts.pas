@@ -77,6 +77,9 @@ const
   Const_Men_LoginInvalido   = 'Usuário ou Senha inválidos!';
   Const_Men_UsuarioExiste   = 'O Usuário "%s" já está cadastrado no sistema !!'; // Luiz Benevenuto 20/04/06
 
+  Const_Men_PasswordExpired = 'Atenção, sua senha expirou, favor troca-la'; { By vicente barros leonel }
+
+
   //group property Settings.Login
   Const_Log_BtCancelar     = '&Cancelar';
   Const_Log_BtOK           = '&OK';
@@ -190,16 +193,18 @@ const
   Const_DefPass_LabelSenha    = 'Senha :';
 
   //Group das tabelas do UC
-  Const_TableUsers_FieldUserID     = 'UCIdUser';
-  Const_TableUsers_FieldUserName   = 'UCUserName';
-  Const_TableUsers_FieldLogin      = 'UCLogin';
-  Const_TableUsers_FieldPassword   = 'UCPassword';
-  Const_TableUsers_FieldEmail      = 'UCEmail';
-  Const_TableUsers_FieldPrivileged = 'UCPrivileged';
-  Const_TableUsers_FieldTypeRec    = 'UCTypeRec';
-  Const_TableUsers_FieldProfile    = 'UCProfile';
-  Const_TableUsers_FieldKey        = 'UCKey';
-  Const_TableUsers_TableName       = 'UCTabUsers';
+  Const_TableUsers_FieldUserID      = 'UCIdUser';
+  Const_TableUsers_FieldUserName    = 'UCUserName';
+  Const_TableUsers_FieldLogin       = 'UCLogin';
+  Const_TableUsers_FieldPassword    = 'UCPassword';
+  Const_TableUsers_FieldEmail       = 'UCEmail';
+  Const_TableUsers_FieldPrivileged  = 'UCPrivileged';
+  Const_TableUsers_FieldTypeRec     = 'UCTypeRec';
+  Const_TableUsers_FieldProfile     = 'UCProfile';
+  Const_TableUsers_FieldKey         = 'UCKey';
+  Const_TableUsers_TableName        = 'UCTabUsers';
+  Const_TableUsers_FieldDateExpired = 'UCPASSEXPIRED'; { By Vicente Barros Leonel }
+  Const_TableUser_FieldUserExpired  = 'UCUserExpired'; { By Vicente Barros Leonel }
 
   Const_TableRights_FieldUserID        = 'UCIdUser';
   Const_TableRights_FieldModule        = 'UCModule';
@@ -214,6 +219,7 @@ const
   Const_TableUsersLogged_FieldMachineName   = 'UCMachineName';
   Const_TableUsersLogged_FieldData          = 'UCData';
   Const_TableUsersLogged_TableName          = 'UCTabUsersLogged';
+
 
 implementation
 

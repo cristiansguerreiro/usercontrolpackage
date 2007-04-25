@@ -6,29 +6,16 @@ uses Classes, UCBase, Dialogs, Windows, Forms, ExtCtrls, Messages; //WM_TIMER ;
 
 type
 
-  TUCIdle = class;
-  TUCIdleTimeLeft = procedure (TimeLeft : Integer) of Object;
-
-  TThUCIdle = class(TThread)
-  private
-    procedure DoIdle;
-    procedure TimeLeftSinc;
-  protected
-    procedure Execute; override;
-  public
-    CurrentMilisec : Integer;
-    UCIdle : TUCIdle;
-  end;
-
   TUCIdle = class(TComponent)
   private
-    FThIdle : TThUCIdle;
     FTimeOut: Integer;
     FOnIdle: TNotifyEvent;
     FUserControl: TUserControl; //changed from FUCComp to FUserControl
     FOnAppMessage : TMessageEvent;
-    FTimeLeftNotify: TUCIdleTimeLeft;
+    FInternalTimer : TTimer;
+    FChanged : Boolean;
     procedure UCAppMessage(var Msg: TMsg; var Handled: Boolean);
+    procedure OnInternalTimer(Sender : TObject);
     procedure SetUserControl(const Value: TUserControl);
   protected
     procedure Loaded; override;
@@ -37,10 +24,10 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure DoIdle;
+//    procedure Create(AOwner: TComponent);override;
   published
     property UserControl : TUserControl read FUserControl write SetUserControl; //changed by fduenas
     property OnIdle : TNotifyEvent read FOnIdle write FOnIdle;
-    property OnTimeLeftNotify : TUCIdleTimeLeft read FTimeLeftNotify write FTimeLeftNotify;
     property Timeout : Integer read FTimeOut write FTimeOut;
   end;
 
@@ -69,10 +56,11 @@ begin
     begin
       if Assigned(Application.OnMessage) then FOnAppMessage := Application.OnMessage;
       Application.OnMessage := UCAppMessage;
-      FThIdle := TThUCIdle.Create(True);
-      FThIdle.CurrentMilisec := 0;
-      FThIdle.UCIdle := Self;
-      FThIdle.Resume;
+      FInternalTimer := TTimer.Create(self);
+      FInternalTimer.Enabled := False;
+      FInternalTimer.Interval := Timeout;
+      FInternalTimer.OnTimer := OnInternalTimer;
+      FInternalTimer.Enabled := True;
     end;
 end;
 
@@ -86,6 +74,12 @@ begin
 
 end;
 
+procedure TUCIdle.OnInternalTimer(Sender: TObject);
+begin
+  if not FChanged then DoIdle
+  else FChanged := False;
+end;
+
 procedure TUCIdle.SetUserControl(const Value: TUserControl);
 begin
   FUserControl := Value;
@@ -95,37 +89,9 @@ end;
 
 procedure TUCIdle.UCAppMessage(var Msg: TMsg; var Handled: Boolean);
 begin
-  if (msg.message = wm_mousemove) or (msg.message = wm_keydown) then FThIdle.CurrentMilisec := 0;
-
+  if (msg.message = wm_mousemove) or (msg.message = wm_keydown) then FChanged := True;
+//  FChanged := (msg.message = wm_mousemove) or (msg.message = wm_keydown);
   if Assigned(FOnAppMessage) then FOnAppMessage(Msg, Handled);
-end;
-
-{ TThUCIdle }
-
-procedure TThUCIdle.DoIdle;
-begin
-  UCIdle.DoIdle;
-end;
-
-procedure TThUCIdle.TimeLeftSinc;
-begin
-  if Assigned(UCIdle.OnTimeLeftNotify) then UCIdle.OnTimeLeftNotify(UCIdle.Timeout - CurrentMilisec);
-end;
-
-procedure TThUCIdle.Execute;
-begin
-  while not Terminated do
-  begin
-    Sleep(1000);
-    if UCIdle.Timeout <= CurrentMilisec then
-    begin
-      CurrentMilisec := 0;
-      Synchronize(DoIdle);
-    end else begin
-      Inc(CurrentMilisec, 1000);
-      Synchronize(TimeLeftSinc);
-    end;
-  end;
 end;
 
 end.
