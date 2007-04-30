@@ -215,8 +215,7 @@ begin
     EditEmail.Text         := FDataSetCadastroUsuario.FieldByName('Email').AsString;
     ComboPerfil.KeyValue   := FDataSetCadastroUsuario.FieldByName('Perfil').AsInteger;
     ckPrivilegiado.Checked := StrToBool(FDataSetCadastroUsuario.FieldByName('Privilegiado').AsString);
-    If FDataSetCadastroUsuario.FieldByName('UserNaoExpira').AsInteger = 0 then
-      ckUserExpired.Checked := False else ckUserExpired.Checked := True;
+    ckUserExpired.Checked  := StrToBool(FDataSetCadastroUsuario.FieldByName('UserNaoExpira').AsString); //Added by Petrus v Breda 28/4/2007
     ShowModal;
   end;
   FreeAndNil(FfrmIncluirUsuario);
@@ -288,16 +287,20 @@ procedure TfrmCadastrarUsuario.FDataSetCadastroUsuarioAfterScroll(DataSet: TData
 begin
   if (FLockAdmin) and (Dataset.FieldByName('Login').AsString = TUserControl(Owner).Login.InitialLogin.User) then
   begin
-    BtExclui.Enabled := False;
-    BtPass.Enabled   := False;
+    BtExclui.Enabled   := False;
+    BtPass.Enabled     := False;
+    Excluir1.Enabled   := False; //Change by Petrus v Breda 28/4/2007
+    Permisses1.Enabled := False; //Change by Petrus v Breda 28/4/2007
     if TUserControl(Owner).CurrentUser.Username <> TUserControl(Owner).Login.InitialLogin.User then
       BtAcess.Enabled := False;
   end
   else
   begin
-    BtExclui.Enabled := True;
-    BtPass.Enabled   := True;
-    BtAcess.Enabled  := True;
+    BtExclui.Enabled   := True;
+    BtPass.Enabled     := True;
+    BtAcess.Enabled    := True;
+    Excluir1.Enabled   := True; //Change by Petrus v Breda 28/4/2007
+    Permisses1.Enabled := True; //Change by Petrus v Breda 28/4/2007
   end;
 end;
 

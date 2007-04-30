@@ -126,9 +126,7 @@ begin
         vPerfil := ComboPerfil.KeyValue;
 
       vPrivilegiado := ckPrivilegiado.Checked;
-
-      If ckUserExpired.Checked = true then
-        vUserExpired := 0 else vUserExpired := 1;
+      vUserExpired := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
 
       AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vUserExpired, vPrivilegiado);
 
@@ -152,10 +150,8 @@ begin
         vPerfil := 0
       else
         vPerfil := ComboPerfil.KeyValue;
-        
-      If ckUserExpired.Checked = true then
-        vUserExpired := 0 else vUserExpired := 1;
 
+      vUserExpired := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
       vPrivilegiado := ckPrivilegiado.Checked;
       ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil,vUserExpired , vPrivilegiado);
 

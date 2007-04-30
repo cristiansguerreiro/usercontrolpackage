@@ -1,6 +1,6 @@
 object ViewLog: TViewLog
-  Left = 204
-  Top = 410
+  Left = 202
+  Top = 147
   Width = 610
   Height = 472
   Caption = 'Seguran'#231'a'
