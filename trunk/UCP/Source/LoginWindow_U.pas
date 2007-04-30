@@ -82,7 +82,7 @@ begin
   Width  := w;
   Height := h + 28;
   If FUserControl.Login.MaxLoginAttempts > 0 then
-    Height := h + 19; // by vicente barros leonel
+    Height := Height + 19; // by vicente barros leonel and Petrus van Breda
 
   // Topo
   PTop.Height     := ImgTop.Height;

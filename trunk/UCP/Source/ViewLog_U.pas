@@ -160,7 +160,7 @@ begin
   if DSLog.IsEmpty then
     Exit;
 
-  if Column.FieldName = 'NIVEL' then
+  if UpperCase(Column.FieldName) = 'NIVEL' then //Done by Petrus v Breda 28/4/2007
   begin
     TempImg := Graphics.TBitmap.Create;
     imagelist1.GetBitmap(Column.Field.AsInteger, TempImg);
@@ -168,7 +168,7 @@ begin
     FreeAndNil(TempImg);
   end
   else
-  if Column.FieldName = 'DATA' then
+  if UpperCase(Column.FieldName) = 'DATA' then //Done by Petrus v Breda 28/4/2007
   begin
     TempData := Column.Field.AsString;
     FData    := EncodeDate(StrToInt(Copy(Tempdata, 1, 4)), StrToInt(Copy(Tempdata, 5, 2)), StrToInt(Copy(Tempdata, 7, 2))) +
