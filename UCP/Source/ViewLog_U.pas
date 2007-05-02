@@ -162,10 +162,16 @@ begin
 
   if UpperCase(Column.FieldName) = 'NIVEL' then //Done by Petrus v Breda 28/4/2007
   begin
-    TempImg := Graphics.TBitmap.Create;
-    imagelist1.GetBitmap(Column.Field.AsInteger, TempImg);
-    DbGrid1.Canvas.Draw((((Rect.Left + Rect.Right) - TempImg.Width) div 2), rect.Top, Tempimg);
-    FreeAndNil(TempImg);
+    If Column.Field.AsInteger <> 0 then  // By Vicente Barros Leonel
+      { No meu banco de dados, qdo não tinha log dava pau pq o TempIMG era null}
+      Begin
+        TempImg := Graphics.TBitmap.Create;
+        imagelist1.GetBitmap(Column.Field.AsInteger, TempImg);
+        DbGrid1.Canvas.Draw((((Rect.Left + Rect.Right) - TempImg.Width) div 2), rect.Top, Tempimg);
+        FreeAndNil(TempImg);
+      End
+    else
+      DbGrid1.Canvas.TextRect(Rect, Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
   end
   else
   if UpperCase(Column.FieldName) = 'DATA' then //Done by Petrus v Breda 28/4/2007
