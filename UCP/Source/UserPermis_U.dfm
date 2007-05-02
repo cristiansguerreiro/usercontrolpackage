@@ -1,6 +1,6 @@
 object UserPermis: TUserPermis
-  Left = 460
-  Top = 383
+  Left = 255
+  Top = 154
   Width = 550
   Height = 549
   Caption = 'Seguran'#231'a'
@@ -418,7 +418,7 @@ object UserPermis: TUserPermis
     Top = 35
     Width = 445
     Height = 487
-    ActivePage = PageMenu
+    ActivePage = PageAction
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 2

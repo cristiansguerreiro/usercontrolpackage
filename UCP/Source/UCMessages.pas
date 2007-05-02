@@ -148,6 +148,8 @@ type
     FBottomImage:   TPicture;
     FLeftImage:     TPicture;
     FTopImage:      TPicture;
+    fLabelTentativas: String;
+    fLabelTentativa: String;
     procedure SetFBottomImage(const Value: TPicture);
     procedure SetFLeftImage(const Value: TPicture);
     procedure SetFTopImage(const Value: TPicture);
@@ -166,6 +168,8 @@ type
     property TopImage: TPicture read FTopImage write SetFTopImage;
     property LeftImage: TPicture read FLeftImage write SetFLeftImage;
     property BottomImage: TPicture read FBottomImage write SetFBottomImage;
+    property LabelTentativa  : String read fLabelTentativa write fLabelTentativa; // by vicente barros leonel
+    property LabelTentativas : String read fLabelTentativas write fLabelTentativas; // by vicente barros leonel
   end;
 
   TUCCadUserFormMSG = class(TPersistent)
@@ -349,6 +353,7 @@ type
     FPageMenu:      String;
     FLabelProfile:  String;
     FLabelUser:     String;
+    fPageControls: string;
   protected
   public
     constructor Create(AOwner: TComponent);
@@ -360,6 +365,7 @@ type
     property LabelProfile: String read FLabelProfile write FLabelProfile;
     property PageMenu: String read FPageMenu write FPageMenu;
     property PageActions: String read FPageActions write FPageActions;
+    property PageControls: string read fPageControls write fPageControls;
     property BtUnlock: String read FBtUnlock write FBtUnlock;
     property BtLock: String read FBtLock write FBtLock;
     property BtSave: String read FBtGrava write FBtGrava;
@@ -727,6 +733,7 @@ begin
       Self.BtLock        := BtLock;
       Self.BtSave        := BtSave;
       Self.BtCancel      := BtCancel;
+      Self.PageControls  := PageControls; // by vicente barros leonel
     end
   else
     inherited;
