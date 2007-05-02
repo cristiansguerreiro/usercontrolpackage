@@ -162,7 +162,7 @@ begin
 
   if UpperCase(Column.FieldName) = 'NIVEL' then //Done by Petrus v Breda 28/4/2007
   begin
-    If Column.Field.AsInteger <> 0 then  // By Vicente Barros Leonel
+    If Column.Field.AsInteger >= 0 then  // By Vicente Barros Leonel
       { No meu banco de dados, qdo não tinha log dava pau pq o TempIMG era null}
       Begin
         TempImg := Graphics.TBitmap.Create;
