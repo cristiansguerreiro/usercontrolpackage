@@ -88,7 +88,7 @@ begin
     if UsuarioExiste = '' then
       UsuarioExiste := Const_Men_UsuarioExiste;
     if PasswordExpired  = '' then
-      PasswordExpired := Const_Men_PasswordExpired; // by vicente barros leonel
+      PasswordExpired := Const_Men_PasswordExpired; 
   end;
 
   with DestSettings.Login do
@@ -103,6 +103,12 @@ begin
       LabelUser := Const_Log_LabelUsuario;
     if WindowCaption = '' then
       WindowCaption := Const_Log_WindowCaption;
+
+    if LabelTentativa = '' then
+      LabelTentativa := Const_Log_LabelTentativa;
+    if LabelTentativas = '' then
+      LabelTentativas := Const_Log_LabelTentativas;
+
 
     try
       Tmp := TBitmap.Create;
@@ -158,7 +164,7 @@ begin
     if BtDelete = '' then
       BtDelete := Const_Prof_BtExcluir;
     if BtRights = '' then
-      BtRights := Const_Prof_BtPermissoes;    //BGM
+      BtRights := Const_Prof_BtPermissoes; 
     if BtClose = '' then
       BtClose := Const_Prof_BtFechar;
     if PromptDelete = '' then
@@ -219,6 +225,8 @@ begin
       PageMenu := Const_Perm_PageMenu;
     if PageActions = '' then
       PageActions := Const_Perm_PageActions;
+    If PageControls = '' then
+      PageControls := Const_Perm_PageControls; // by vicente barros leonel
     if BtUnlock = '' then
       BtUnlock := Const_Perm_BtLibera;
     if BtLock = '' then
@@ -420,6 +428,11 @@ begin
       LabelUser := Const_Log_LabelUsuario;
     if WindowCaption = '' then
       WindowCaption := Const_Log_WindowCaption;
+      
+    if LabelTentativa = '' then
+      LabelTentativa := Const_Log_LabelTentativa;
+    if LabelTentativas = '' then
+      LabelTentativas := Const_Log_LabelTentativas;
 
     try
       Tmp := TBitmap.Create;
@@ -504,6 +517,8 @@ begin
       BtSave := Const_Inc_BtGravar;
     if BtCancel = '' then
       BtCancel := Const_Inc_BtCancelar;
+    if LabelPerfil = '' then
+      LabelPerfil := Const_Inc_LabelPerfil;
   end;
 
   with DestSettings.AddChangeProfile do
@@ -534,6 +549,8 @@ begin
       PageMenu := Const_Perm_PageMenu;
     if PageActions = '' then
       PageActions := Const_Perm_PageActions;
+    If PageControls = '' then
+      PageControls := Const_Perm_PageControls; // by vicente barros leonel
     if BtUnlock = '' then
       BtUnlock := Const_Perm_BtLibera;
     if BtLock = '' then

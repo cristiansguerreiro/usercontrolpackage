@@ -998,16 +998,17 @@ procedure TUserControl.SetWindowProfile;
 begin
   with Self.UserSettings.Rights do
   begin
-    UserPermis.Caption             := WindowCaption;
-    UserPermis.LbDescricao.Caption := LabelProfile;
-    UserPermis.lbUser.Left         := UserPermis.LbDescricao.Left + UserPermis.LbDescricao.Width + 5;
-    UserPermis.PageMenu.Caption    := PageMenu;
-    UserPermis.PageAction.Caption  := PageActions;
-    UserPermis.BtLibera.Caption    := BtUnlock;
-    UserPermis.BtBloqueia.Caption  := BtLock;
-    UserPermis.BtGrava.Caption     := BtSave;
-    UserPermis.BtCancel.Caption    := BtCancel;
-    UserPermis.Position            := Self.UserSettings.WindowsPosition;
+    UserPermis.Caption              := WindowCaption;
+    UserPermis.LbDescricao.Caption  := LabelProfile;
+    UserPermis.lbUser.Left          := UserPermis.LbDescricao.Left + UserPermis.LbDescricao.Width + 5;
+    UserPermis.PageMenu.Caption     := PageMenu;
+    UserPermis.PageAction.Caption   := PageActions;
+    UserPermis.PageControls.Caption := PageControls; // By Vicente Barros Leonel
+    UserPermis.BtLibera.Caption     := BtUnlock;
+    UserPermis.BtBloqueia.Caption   := BtLock;
+    UserPermis.BtGrava.Caption      := BtSave;
+    UserPermis.BtCancel.Caption     := BtCancel;
+    UserPermis.Position             := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -1045,16 +1046,17 @@ procedure TUserControl.SetWindow;
 begin
   with Self.UserSettings.Rights do
   begin
-    UserPermis.Caption             := WindowCaption;
-    UserPermis.LbDescricao.Caption := LabelUser;
-    UserPermis.lbUser.Left         := UserPermis.LbDescricao.Left + UserPermis.LbDescricao.Width + 5;
-    UserPermis.PageMenu.Caption    := PageMenu;
-    UserPermis.PageAction.Caption  := PageActions;
-    UserPermis.BtLibera.Caption    := BtUnlock;
-    UserPermis.BtBloqueia.Caption  := BtLOck;
-    UserPermis.BtGrava.Caption     := BtSave;
-    UserPermis.BtCancel.Caption    := BtCancel;
-    UserPermis.Position            := Self.UserSettings.WindowsPosition;
+    UserPermis.Caption              := WindowCaption;
+    UserPermis.LbDescricao.Caption  := LabelUser;
+    UserPermis.lbUser.Left          := UserPermis.LbDescricao.Left + UserPermis.LbDescricao.Width + 5;
+    UserPermis.PageMenu.Caption     := PageMenu;
+    UserPermis.PageAction.Caption   := PageActions;
+    UserPermis.PageControls.Caption := PageControls; // By Vicente Barros Leonel
+    UserPermis.BtLibera.Caption     := BtUnlock;
+    UserPermis.BtBloqueia.Caption   := BtLOck;
+    UserPermis.BtGrava.Caption      := BtSave;
+    UserPermis.BtCancel.Caption     := BtCancel;
+    UserPermis.Position             := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -3810,7 +3812,7 @@ var
   String1:   String;
   String2:   String;
 begin
-  // Apply Extra Rights
+  // Apply Extra Rights  Verificar aqui
 
   if not Assigned(UserControl) then
     Exit;
@@ -3818,12 +3820,7 @@ begin
   begin
     if (UserControl.LoginMode = lmActive) and (CurrentUser.UserID = 0) then
       Exit;
-    //qmd
-{    if UserControl.LoginMode = lmActive then
-      and
-      repeat
-        Application.ProcessMessages;
-      until CurrentUser.UserID > 0;}
+
     FListObj := TStringList.Create;
     Self.ListComponents(Self.Owner.Name, FListObj);
 
@@ -3837,12 +3834,12 @@ begin
         'WHERE %s = %d AND ' +
         '      %s = %s AND ' +
         '      %s = %s',
-        [TableRights.FieldUserID,
+        [ TableRights.FieldUserID ,
         TableRights.FieldComponentName,
         TableRights.FieldKey,
         TableRights.TableName,
         TableRights.FieldUserID,
-        CurrentUser.UserID,
+        CurrentUser.UserID,    // by vicente barros leonel
         TableRights.FieldModule,
         QuotedStr(ApplicationID),
         TableRights.FieldFormName,

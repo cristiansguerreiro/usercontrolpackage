@@ -82,7 +82,11 @@ begin
   Width  := w;
   Height := h + 28;
   If FUserControl.Login.MaxLoginAttempts > 0 then
-    Height := Height + 19; // by vicente barros leonel and Petrus van Breda
+    Begin
+      Height := Height + 19; // by vicente barros leonel and Petrus van Breda
+      StatusBar.Panels[ 0 ].Text := FUserControl.UserSettings.Login.LabelTentativa;
+      StatusBar.Panels[ 2 ].Text := FUserControl.UserSettings.Login.LabelTentativas;      
+    End;
 
   // Topo
   PTop.Height     := ImgTop.Height;
