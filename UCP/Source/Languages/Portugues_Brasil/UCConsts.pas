@@ -12,10 +12,10 @@ const
   Const_Contr_BtOK           = '&OK';
   Const_Contr_BTCancel       = '&Cancelar';
   Const_Contr_DescCol        = 'Descrição';
-  Const_Contr_BtSellAllHint  = 'Select All';   //added by fduenas
-  Const_Contr_BtSelHint      = 'Select';       //added by fduenas
-  Const_Contr_BtUnSelHint    = 'Unselect';     //added by fduenas
-  Const_Contr_BtUnSelAllHint = 'Unselect All'; //added by fduenas
+  Const_Contr_BtSellAllHint  = 'Selecionar Todos';
+  Const_Contr_BtSelHint      = 'Selecionar';
+  Const_Contr_BtUnSelHint    = 'Desmarcar';
+  Const_Contr_BtUnSelAllHint = 'Desmarcar Todos';
                                                //===================================================================
 
   // group property Settins.AppMsgsForm
@@ -23,15 +23,15 @@ const
   Const_Msgs_BtReplay                         = '&Responder';
   Const_Msgs_BtForward                        = 'E&ncaminhar';
   Const_Msgs_BtDelete                         = '&Excluir';
-  Const_Msgs_BtClose                          = '&Fechar'; //added by fduenas
+  Const_Msgs_BtClose                          = '&Fechar';
   Const_Msgs_WindowCaption                    = 'Mensagens do Sistema';
   Const_Msgs_ColFrom                          = 'Remetente';
   Const_Msgs_ColSubject                       = 'Assunto';
   Const_Msgs_ColDate                          = 'Data';
   Const_Msgs_PromptDelete                     = 'Confirma excluir as mensagens selecionadas ?';
-  Const_Msgs_PromptDelete_WindowCaption       = 'Delete messages'; //added by fduenas
-  Const_Msgs_NoMessagesSelected               = '!No Messages selected¡'; //added by fduenas
-  Const_Msgs_NoMessagesSelected_WindowCaption = 'Information'; //added by fduenas
+  Const_Msgs_PromptDelete_WindowCaption       = 'Apagar mensagens';
+  Const_Msgs_NoMessagesSelected               = 'Não existem mensagens selecionadas';
+  Const_Msgs_NoMessagesSelected_WindowCaption = 'Informação';
 
 
   // group property Settins.AppMsgsRec
@@ -52,8 +52,8 @@ const
   Const_MsgSend_RadioUser        = 'Usuário :';
   Const_MsgSend_RadioAll         = 'Todos';
   Const_MsgSend_GroupMessage     = 'Mensagem';
-  Const_MsgSend_LabelSubject     = 'Subject';      //added by fduenas
-  Const_MsgSend_LabelMessageText = 'Message text'; //added by fduenas
+  Const_MsgSend_LabelSubject     = 'Assunto';
+  Const_MsgSend_LabelMessageText = 'Texto da mensagem';
 
 
   // Run errors
@@ -88,6 +88,8 @@ const
   Const_Log_WindowCaption  = 'Login';
   Const_Log_LbEsqueciSenha = 'Esqueci a senha';                       //new
   Const_Log_MsgMailSend    = 'A senha foi enviada para o seu email.'; //new
+  Const_Log_LabelTentativa = 'Tentativa : ';
+  Const_Log_LabelTentativas = 'Máximo de Tentativas : ';
 
   //group property Settings.Log //new
   Const_LogC_WindowCaption                = 'Segurança';
@@ -104,13 +106,14 @@ const
   Const_LogC_BtExcluir                    = '&Excluir Log';
   Const_LogC_BtFechar                     = '&Fechar';
   Const_LogC_ConfirmaExcluir              = 'Confirma excluir todos os registros de log selecionados ?';
-  Const_LogC_ConfirmaDelete_WindowCaption = 'Delete confirmation';   //added by fduenas
-  Const_LogC_Todos                        = 'All';                   //BGM
+  Const_LogC_ConfirmaDelete_WindowCaption = 'Confirma exclusão';   //added by fduenas
+  Const_LogC_Todos                        = 'Todos';                   //BGM
   Const_LogC_Low                          = 'Baixo';                 //BGM
   Const_LogC_Normal                       = 'Normal';                //BGM
   Const_LogC_High                         = 'Alto';                  //BGM
   Const_LogC_Critic                       = 'Crítico';              //BGM
-  Const_LogC_ExcluirEfectuada             = 'Deletion of system log done: User = "%s" | Date = %s a %s | Level <= %s'; //added by fduenas
+  Const_LogC_ExcluirEfectuada             = 'Exclusão de log´s do sistema : Usuário = "%s" | Data = %s a %s | Nível <= %s'; //added by fduenas
+
 
   //group property Settings.CadastroUsuarios
   Const_Cad_WindowCaption                = 'Segurança';
@@ -166,6 +169,7 @@ const
   Const_Perm_LabelPerfil   = 'Permissões do Perfil :';
   Const_Perm_PageMenu      = 'Itens do Menu';
   Const_Perm_PageActions   = 'Ações';
+  Const_Perm_PageControls  = 'Controles'; // by vicente barros leonel  
   Const_Perm_BtLibera      = '&Liberar';
   Const_Perm_BtBloqueia    = '&Bloquear';
   Const_Perm_BtGravar      = '&Gravar';
