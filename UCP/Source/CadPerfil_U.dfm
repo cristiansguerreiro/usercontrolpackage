@@ -1,9 +1,11 @@
 object frmCadastrarPerfil: TfrmCadastrarPerfil
-  Left = 264
-  Top = 184
-  Width = 398
-  Height = 267
+  Left = 407
+  Top = 193
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
   Caption = 'Seguranca'
+  ClientHeight = 240
+  ClientWidth = 390
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

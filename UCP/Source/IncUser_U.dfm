@@ -1,9 +1,9 @@
 object frmIncluirUsuario: TfrmIncluirUsuario
-  Left = 267
-  Top = 244
+  Left = 323
+  Top = 236
   BorderStyle = bsDialog
   Caption = 'Cadastro de Usu'#225'rios'
-  ClientHeight = 230
+  ClientHeight = 254
   ClientWidth = 472
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -153,7 +153,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     Left = 375
     Top = 35
     Width = 97
-    Height = 195
+    Height = 219
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -284,13 +284,13 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     Left = 0
     Top = 35
     Width = 375
-    Height = 195
+    Height = 219
     Align = alClient
     BevelInner = bvRaised
     BevelOuter = bvLowered
     TabOrder = 0
     object lbNome: TLabel
-      Left = 36
+      Left = 52
       Top = 18
       Width = 34
       Height = 13
@@ -298,7 +298,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Caption = 'Nome :'
     end
     object lbLogin: TLabel
-      Left = 38
+      Left = 54
       Top = 50
       Width = 32
       Height = 13
@@ -306,7 +306,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Caption = 'Login :'
     end
     object lbEmail: TLabel
-      Left = 38
+      Left = 54
       Top = 82
       Width = 32
       Height = 13
@@ -314,7 +314,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Caption = 'EMail :'
     end
     object lbPerfil: TLabel
-      Left = 41
+      Left = 57
       Top = 114
       Width = 29
       Height = 13
@@ -322,7 +322,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Caption = 'Perfil :'
     end
     object btlimpa: TSpeedButton
-      Left = 319
+      Left = 335
       Top = 111
       Width = 19
       Height = 19
@@ -371,8 +371,24 @@ object frmIncluirUsuario: TfrmIncluirUsuario
         0000000000000000000000000000000000000000000000000000}
       OnClick = btlimpaClick
     end
+    object LabelExpira: TLabel
+      Left = 31
+      Top = 148
+      Width = 55
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Expira em : '
+    end
+    object LabelDias: TLabel
+      Left = 331
+      Top = 148
+      Width = 19
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'dias'
+    end
     object EditNome: TEdit
-      Left = 73
+      Left = 89
       Top = 15
       Width = 265
       Height = 19
@@ -382,7 +398,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       TabOrder = 0
     end
     object EditLogin: TEdit
-      Left = 73
+      Left = 89
       Top = 47
       Width = 265
       Height = 19
@@ -392,7 +408,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       TabOrder = 1
     end
     object EditEmail: TEdit
-      Left = 73
+      Left = 89
       Top = 79
       Width = 265
       Height = 19
@@ -402,15 +418,15 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       TabOrder = 2
     end
     object ckPrivilegiado: TCheckBox
-      Left = 73
-      Top = 161
+      Left = 89
+      Top = 193
       Width = 120
       Height = 17
       Caption = 'Usu'#225'rio privilegiado'
       TabOrder = 4
     end
     object ComboPerfil: TDBLookupComboBox
-      Left = 73
+      Left = 89
       Top = 111
       Width = 242
       Height = 19
@@ -422,12 +438,23 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       TabOrder = 3
     end
     object ckUserExpired: TCheckBox
-      Left = 73
-      Top = 137
-      Width = 168
+      Left = 89
+      Top = 169
+      Width = 160
       Height = 17
       Caption = 'Senha do usu'#225'rio n'#227'o expira'
       TabOrder = 5
+      OnClick = ckUserExpiredClick
+    end
+    object SpinExpira: TSpinEdit
+      Left = 88
+      Top = 140
+      Width = 241
+      Height = 22
+      MaxValue = 100
+      MinValue = 10
+      TabOrder = 6
+      Value = 10
     end
   end
 end

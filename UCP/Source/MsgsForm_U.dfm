@@ -1,9 +1,10 @@
 object MsgsForm: TMsgsForm
   Left = 144
   Top = 150
-  Width = 606
-  Height = 479
+  BorderStyle = bsDialog
   Caption = 'Mensagens do Sistema'
+  ClientHeight = 452
+  ClientWidth = 598
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

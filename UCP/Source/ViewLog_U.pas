@@ -52,7 +52,6 @@ type
     ImageList1:   TImageList;
     btfecha:      TBitBtn;
     btexclui:     TBitBtn;
-    procedure DBGrid1TitleClick(Column: TColumn);
     procedure FormCreate(Sender: TObject);
     procedure ComboNivelDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
     procedure FormShow(Sender: TObject);
@@ -91,12 +90,6 @@ begin
   ListIdUser     := TStringList.Create;
   data1.Date     := EncodeDate(StrToInt(FormatDateTime('yyyy', Date)), 1, 1);
   data2.DateTime := Now;
-
-  with Self do
-  begin
-    Width  := 800;
-    Height := 600;
-  end;
 end;
 
 procedure TViewLog.ComboNivelDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
@@ -149,6 +142,7 @@ begin
   end;
   DataSource1.Dataset := DSLog;
   btexclui.Enabled    := not DsLog.IsEmpty; //added by fduenas
+  try Position := poScreenCenter; except end;
 end;
 
 procedure TViewLog.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -183,11 +177,6 @@ begin
   end
   else
     DbGrid1.Canvas.TextRect(Rect, Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
-end;
-
-procedure TViewLog.DBGrid1TitleClick(Column: TColumn);
-begin
-  ShowMessage(IntToStr(Column.Width));
 end;
 
 procedure TViewLog.ComboUsuarioChange(Sender: TObject);

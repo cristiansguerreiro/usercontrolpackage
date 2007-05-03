@@ -1,6 +1,6 @@
 object TrocaSenha: TTrocaSenha
-  Left = 559
-  Top = 326
+  Left = 398
+  Top = 263
   ActiveControl = EditAtu
   BorderStyle = bsDialog
   Caption = 'Seguran'#231'a'

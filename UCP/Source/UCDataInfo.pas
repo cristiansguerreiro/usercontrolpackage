@@ -20,6 +20,7 @@ type
     FKey:        String;
     fDateExpired: String;
     fUserExpired: String;
+    fFieldUserDaysSun: String;
   protected
   public
     constructor Create(AOwner: TComponent);
@@ -37,6 +38,7 @@ type
     property FieldKey: String read FKey write FKey;
     property FieldDateExpired: String read fDateExpired write fDateExpired; { By Vicente Barros Leonel }
     property FieldUserExpired: String read fUserExpired write fUserExpired; { By vicente barros leonel }
+    property FieldUserDaysSun: String read fFieldUserDaysSun write fFieldUserDaysSun; { By vicente barros leonel }
     property TableName: String read FTable write FTable;
   end;
 
@@ -133,6 +135,7 @@ begin
     Self.FieldKey         := TUCTableUsers(Source).FieldKey;
     Self.FieldDateExpired := TUCTableUsers(Source).FieldDateExpired; {By Vicente Barros Leonel}
     Self.FieldUserExpired := TUCTableUsers(Source).FieldUserExpired; {By Vicente Barros Leonel}
+    Self.FieldUserDaysSun := TUCTableUsers(Source).FieldUserDaysSun; { By vicente barros leonel }
     Self.TableName        := TUCTableUsers(Source).TableName;
   end
   else

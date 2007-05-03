@@ -209,6 +209,7 @@ const
   Const_TableUsers_TableName        = 'UCTabUsers';
   Const_TableUsers_FieldDateExpired = 'UCPASSEXPIRED'; { By Vicente Barros Leonel }
   Const_TableUser_FieldUserExpired  = 'UCUserExpired'; { By Vicente Barros Leonel }
+  Const_TableUser_FieldUserDaysSun  = 'UCUserDaysSun'; { By Vicente Barros Leonel }
 
   Const_TableRights_FieldUserID        = 'UCIdUser';
   Const_TableRights_FieldModule        = 'UCModule';

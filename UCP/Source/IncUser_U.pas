@@ -21,7 +21,7 @@ uses
   StdCtrls,
   SysUtils,
   UCBase,
-  Windows;
+  Windows, Spin;
 
 type
   TfrmIncluirUsuario = class(TForm)
@@ -43,6 +43,9 @@ type
     ComboPerfil:    TDBLookupComboBox;
     btlimpa:        TSpeedButton;
     ckUserExpired: TCheckBox;
+    LabelExpira: TLabel;
+    SpinExpira: TSpinEdit;
+    LabelDias: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btCancelaClick(Sender: TObject);
     procedure btGravarClick(Sender: TObject);
@@ -50,6 +53,7 @@ type
     procedure btlimpaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure ckUserExpiredClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -126,9 +130,9 @@ begin
         vPerfil := ComboPerfil.KeyValue;
 
       vPrivilegiado := ckPrivilegiado.Checked;
-      vUserExpired := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
+      vUserExpired  := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
 
-      AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vUserExpired, vPrivilegiado);
+      AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vUserExpired, SpinExpira.Value, vPrivilegiado);
 
       { TODO -oLuiz -cUpgrade : Consertar a Senha para poder avisar MD5 }
       if (Assigned(MailUserControl)) and (MailUserControl.AdicionaUsuario.Ativo) then
@@ -153,7 +157,7 @@ begin
 
       vUserExpired := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
       vPrivilegiado := ckPrivilegiado.Checked;
-      ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil,vUserExpired , vPrivilegiado);
+      ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil,vUserExpired , SpinExpira.Value, vPrivilegiado);
 
       { TODO -oLuiz -cUpgrade : Consertar a Senha para poder avisar MD5 }
       if (Assigned(MailUserControl)) and (MailUserControl.AlteraUsuario.Ativo) then
@@ -216,16 +220,25 @@ begin
     ComboPerfil.ListSource.DataSet.Close;
     ComboPerfil.ListSource.DataSet.Open;
   end;
-  If FUserControl.Login.ActiveDateExpired = true then
-    //Opção de senha so deve aparecer qdo setada como true no componente By Vicente Barros Leonel
+
+  If FUserControl.Login.ActiveDateExpired = true then    //Opção de senha so deve aparecer qdo setada como true no componente By Vicente Barros Leonel
     ckPrivilegiado.Visible := FUserControl.User.UsePrivilegedField
   else
     ckUserExpired.Visible := False;
 
   EditLogin.CharCase     := Self.FUserControl.Login.CharCaseUser;
 
+  SpinExpira.Visible     := ckUserExpired.Visible;
+  LabelExpira.Visible    := ckUserExpired.Visible;
+  LabelDias.Visible      := ckUserExpired.Visible;
+
   if (FUserControl.User.ProtectAdministrator) and (EditLogin.Text = FUserControl.Login.InitialLogin.User) then
     EditLogin.Enabled := False;
+end;
+
+procedure TfrmIncluirUsuario.ckUserExpiredClick(Sender: TObject);
+begin
+  SpinExpira.Enabled := ckUserExpired.Checked;
 end;
 
 end.
