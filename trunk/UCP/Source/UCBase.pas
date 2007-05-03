@@ -105,6 +105,7 @@ type
     DateExpiration: TDateTime;
     Privileged:     Boolean;
     UserNotExpired: Boolean;
+    UserDaysExpired: Integer;
   published
     { TODO 1 -oLuiz -cUpgrade : Terminar a implementação dos DataSets para os Perfis de Usuario Loggado }
     property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;
@@ -424,6 +425,10 @@ type
     procedure CriaTabelaMsgs(const TableName: String);
     // -----
 
+    // Atualiza Versao
+    procedure AtualizarVersao;
+    //--------
+
     procedure TryAutoLogon;
     procedure AddUCControlMonitor(UCControl: TUCControls);
     procedure DeleteUCControlMonitor(UCControl: TUCControls);
@@ -440,7 +445,7 @@ type
     procedure ShowProfileManager;
     procedure ShowLogManager;
     procedure ShowChangePassword;
-    procedure ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile,UserExpired: Integer; PrivUser: Boolean);
+    procedure ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile,UserExpired,UserDaysSun: Integer; PrivUser: Boolean);
     procedure ChangePassword(IDUser: Integer; NewPassword: String);
     procedure AddRight(idUser: Integer; ItemRight: TObject; FullPath: Boolean = True); overload;
     procedure AddRight(idUser: Integer; ItemRight: String); overload;
@@ -450,7 +455,7 @@ type
     function VerificaLogin(User, Password: String): Boolean;
     function GetLocalUserName: String;
     function GetLocalComputerName: String;
-    function AddUser(Login, Password, Name, Mail: String; Profile , UserExpired : Integer; PrivUser: Boolean): Integer;
+    function AddUser(Login, Password, Name, Mail: String; Profile , UserExpired , DaysExpired : Integer; PrivUser: Boolean): Integer;
     function ExisteUsuario(Login: String): Boolean;
     property CurrentUser: TUCCurrentUser read FCurrentUser write FCurrentUser;
     property UserSettings: TUCUserSettings read FUserSettings write SetUserSettings;
@@ -734,8 +739,12 @@ begin
         
       If FieldDateExpired = '' then
         FieldDateExpired  := Const_TableUsers_FieldDateExpired; {Vicente Barros Leonel}
+
       If FieldUserExpired = '' then
         FieldUserExpired := Const_TableUser_FieldUserExpired;  {Vicente Barros Leonel}
+
+      if FieldUserDaysSun = '' then
+        FieldUserDaysSun := Const_TableUser_FieldUserDaysSun; { Vicente Barros leoenl }
     end;
 
     with TableRights do
@@ -885,6 +894,9 @@ begin
 
       If FieldUserExpired = '' then
         Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserExpired***');
+
+      If FieldUserDaysSun = '' then
+        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserDaysSun***');
     end;
 
     with TableRights do
@@ -1395,11 +1407,12 @@ var
 begin
   with CurrentUser do
   begin
-    UserID         := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
-    UserName       := Dados.FieldByName(TableUsers.FieldUserName).AsString;
-    UserLogin      := Dados.FieldByName(TableUsers.FieldLogin).AsString;
-    DateExpiration := Dados.FieldByName(TableUsers.FieldDateExpired).AsDateTime;
-    UserNotExpired := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
+    UserID          := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
+    UserName        := Dados.FieldByName(TableUsers.FieldUserName).AsString;
+    UserLogin       := Dados.FieldByName(TableUsers.FieldLogin).AsString;
+    DateExpiration  := Dados.FieldByName(TableUsers.FieldDateExpired).AsDateTime;
+    UserNotExpired  := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
+    UserDaysExpired := Dados.FieldByName(TableUsers.FieldUserDaysSun).AsInteger;
 
     case Self.Criptografia of
       cPadrao: Password := Decrypt(Dados.FieldByName(TableUsers.FieldPassword).AsString, EncryptKey);
@@ -1580,7 +1593,7 @@ begin
   ApplyRights;
 end;
 
-function TUserControl.AddUser(Login, Password, Name, Mail: String; Profile, UserExpired: Integer; PrivUser: Boolean): Integer;
+function TUserControl.AddUser(Login, Password, Name, Mail: String; Profile, UserExpired, DaysExpired : Integer; PrivUser: Boolean): Integer;
 var
   Key:     String;
   SQLStmt: String;
@@ -1608,7 +1621,7 @@ begin
 
   with TableUsers do
   begin
-    SQLStmt := Format('INSERT INTO %s( %s, %s, %s, %s, %s, %s, %s, %s, %s , %s , %s ) VALUES(%d, %s, %s, %s, %s, %s, %d, %s, %s , %s , %d )',
+    SQLStmt := Format('INSERT INTO %s( %s, %s, %s, %s, %s, %s, %s, %s, %s , %s , %s , %s  ) VALUES(%d, %s, %s, %s, %s, %s, %d, %s, %s , %s , %d , %d )',
       [TableName,
       FieldUserID,
       FieldUserName,
@@ -1621,6 +1634,7 @@ begin
       FieldKey,
       FieldDateExpired, { By Vicente Barros Leonel }
       FieldUserExpired,
+      FieldUserDaysSun,
       Result,
       QuotedStr(Name),
       QuotedStr(Login),
@@ -1631,7 +1645,8 @@ begin
       QuotedStr('U'),
       QuotedStr(Key),
       QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ), {By vicente Barros Leonel }
-      UserExpired ]); {By vicente Barros Leonel }
+      UserExpired,
+      DaysExpired ]); {By vicente Barros Leonel }
     DataConnector.UCExecSQL(SQLStmt);
   end;
 
@@ -1672,13 +1687,13 @@ begin
     cPadrao: cSql := 'Update ' + TableUsers.TableName +
              ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword,EncryptKey)) +
              ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-             ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ) + // by vicente barros leonel
+             ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
              ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
 
        cMD5: cSql := 'Update ' + TableUsers.TableName +
                      ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
                      ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-                     ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ) + // by vicente barros leonel                     
+                     ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
                      ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
   end;
   
@@ -1688,7 +1703,7 @@ begin
     OnChangePassword(Self, IdUser, Login, Senha, NewPassword);
 end;
 
-procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile , UserExpired : Integer; PrivUser: Boolean);
+procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile , UserExpired , UserDaysSun : Integer; PrivUser: Boolean);
 var
   Key, Password: String;
 begin
@@ -1720,7 +1735,8 @@ begin
       FieldPrivileged + ' = ' + BooltoStr(PrivUser) + ', ' +
       FieldProfile + ' = ' + IntToStr(Profile) + ', ' +
       FieldKey + ' = ' + QuotedStr(Key) +  ', ' +
-      FieldUserExpired + ' = ' + IntToStr( UserExpired ) + // vicente barros leonel 
+      FieldUserExpired + ' = ' + IntToStr( UserExpired ) + // vicente barros leonel
+      FieldUserDaysSun + ' = ' + IntToStr( UserDaysSun ) +
       ' where ' + FieldUserID + ' = ' + IntToStr(IdUser));
   if Assigned(OnChangeUser) then
     OnChangeUser(Self, IdUser, Login, Name, Mail, Profile, PrivUser);
@@ -1805,6 +1821,10 @@ begin
 
     CriaTabelaUsuarios(DataConnector.UCFindTable(FTableUsers.TableName));
 
+    //Atualizador de Versoes  By vicente barros leonel
+    AtualizarVersao;
+
+
     // testa campo KEY qmd 28-02-2005
     if FCheckValidationKey then
       DoCheckValidationField;
@@ -1816,6 +1836,34 @@ begin
         TryAutoLogon;
     ApplyRights;
   end;
+end;
+
+procedure TUserControl.AtualizarVersao; // by vicente barros leonel
+Var Sql : String; DataSet : TDataSet;
+begin
+ { Procura o campo FieldUserDaysSun na tabela de usuarios se o mesmo não existi cria }
+ try
+   Sql     := Format('select * from %s',[FTableUsers.TableName ] );
+   DataSet := DataConnector.UCGetSQLDataset( SQL );
+
+   
+   If DataSet.FindField( FTableUsers.FieldUserDaysSun ) = nil then
+     Begin // Cria campo  setado no FieldUserDaysSun na tabela de usuarios
+       Sql := Format('alter table %s add %s integer',
+              [ FTableUsers.TableName,
+                FTableUsers.FieldUserDaysSun] );
+       DataConnector.UCExecSQL( Sql );
+       Sql := Format('update %s set %s = 30 where %s = ''U''',
+             [ FTableUsers.TableName,
+               FTableUsers.FieldUserDaysSun,
+               FTableUsers.FieldTypeRec ] );
+       DataConnector.UCExecSQL( Sql );
+     End;
+
+ Finally
+   FreeAndNil( DataSet );
+ end;
+
 end;
 
 procedure TUserControl.DoCheckValidationField;
@@ -2626,6 +2674,7 @@ begin
         '%s %s, ' +          // FieldPassword
         '%s date, ' +       // FieldDateExpired Vicente Barros Leonel
         '%s int , ' +       //FieldUserExpired  Vicente Barros Leonel
+        '%s int , ' +      //FieldUserDaysSun   Vicente Barros Leonel
         '%s varchar(150), ' +
         '%s int, ' +
         '%s char(1), ' +
@@ -2639,7 +2688,8 @@ begin
         FieldPassword,
         TipoCampo,
         FieldDateExpired,
-        FieldUserExpired,        
+        FieldUserExpired,
+        FieldUserDaysSun,       
         FieldEmail,
         FieldPrivileged,
         FieldTypeRec,
@@ -2662,7 +2712,7 @@ begin
       Login.InitialLogin.Password,
       Login.InitialLogin.User,
       Login.InitialLogin.Email,
-      0, 0 , 
+      0, 0 , Login.DaysOfSunExpired,  
       True)
   else
     IDUsuario := DataSetUsuario.FieldByName('idUser').AsInteger;

@@ -1,9 +1,10 @@
 object ViewLog: TViewLog
   Left = 202
   Top = 147
-  Width = 610
-  Height = 472
+  BorderStyle = bsDialog
   Caption = 'Seguran'#231'a'
+  ClientHeight = 573
+  ClientWidth = 792
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +12,7 @@ object ViewLog: TViewLog
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDefault
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
@@ -19,13 +21,13 @@ object ViewLog: TViewLog
   object Splitter1: TSplitter
     Left = 177
     Top = 35
-    Height = 410
+    Height = 538
     Beveled = True
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 602
+    Width = 792
     Height = 35
     Align = alTop
     BevelOuter = bvNone
@@ -158,7 +160,7 @@ object ViewLog: TViewLog
     Left = 0
     Top = 35
     Width = 177
-    Height = 410
+    Height = 538
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -429,19 +431,19 @@ object ViewLog: TViewLog
   object Panel3: TPanel
     Left = 180
     Top = 35
-    Width = 422
-    Height = 410
+    Width = 612
+    Height = 538
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     DesignSize = (
-      422
-      410)
+      612
+      538)
     object DBGrid1: TDBGrid
       Left = 3
       Top = 6
-      Width = 418
-      Height = 401
+      Width = 608
+      Height = 529
       Anchors = [akLeft, akTop, akRight, akBottom]
       Ctl3D = False
       DataSource = DataSource1
@@ -456,7 +458,6 @@ object ViewLog: TViewLog
       TitleFont.Name = 'MS Sans Serif'
       TitleFont.Style = []
       OnDrawColumnCell = DBGrid1DrawColumnCell
-      OnTitleClick = DBGrid1TitleClick
       Columns = <
         item
           Expanded = False

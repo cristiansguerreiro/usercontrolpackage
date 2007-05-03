@@ -1,6 +1,6 @@
 object AboutForm: TAboutForm
-  Left = 299
-  Top = 158
+  Left = 296
+  Top = 71
   BorderStyle = bsNone
   Caption = 'About User Control'
   ClientHeight = 520
@@ -748,7 +748,7 @@ object AboutForm: TAboutForm
         TabOrder = 2
         object Label9: TLabel
           Left = 6
-          Top = 14
+          Top = 9
           Width = 163
           Height = 13
           Caption = 'Cr'#233'ditos e agradecimentos :'
@@ -761,7 +761,7 @@ object AboutForm: TAboutForm
         end
         object Label6: TLabel
           Left = 77
-          Top = 255
+          Top = 271
           Width = 154
           Height = 13
           Cursor = crHandPoint
@@ -776,7 +776,7 @@ object AboutForm: TAboutForm
         end
         object Label7: TLabel
           Left = 6
-          Top = 255
+          Top = 271
           Width = 68
           Height = 13
           Caption = 'Site oficial :'
@@ -789,9 +789,9 @@ object AboutForm: TAboutForm
         end
         object MemoAgrd: TMemo
           Left = 6
-          Top = 32
+          Top = 24
           Width = 463
-          Height = 216
+          Height = 228
           Ctl3D = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
@@ -814,7 +814,8 @@ object AboutForm: TAboutForm
             'Rodrigo Palhano (WertherOO)'
             'Ronald Marconi  '
             'Sergiy Sekela (Dr.Web)'
-            'Stefan Nawrath')
+            'Stefan Nawrath'
+            'Vicente Barros Leonel [ Fknyght ]')
           ParentCtl3D = False
           ParentFont = False
           ReadOnly = True

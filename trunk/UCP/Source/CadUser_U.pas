@@ -207,7 +207,7 @@ begin
   FfrmIncluirUsuario              := TfrmIncluirUsuario.Create(Self);
   FfrmIncluirUsuario.FUserControl := Self.FUserControl;
   SetWindow(False);
-  with FfrmIncluirUsuario do
+  with FfrmIncluirUsuario do    
   begin
     FAltera                := True;
     EditNome.Text          := FDataSetCadastroUsuario.FieldByName('Nome').AsString;
@@ -216,6 +216,7 @@ begin
     ComboPerfil.KeyValue   := FDataSetCadastroUsuario.FieldByName('Perfil').AsInteger;
     ckPrivilegiado.Checked := StrToBool(FDataSetCadastroUsuario.FieldByName('Privilegiado').AsString);
     ckUserExpired.Checked  := StrToBool(FDataSetCadastroUsuario.FieldByName('UserNaoExpira').AsString); //Added by Petrus v Breda 28/4/2007
+    SpinExpira.Value       := FDataSetCadastroUsuario.FieldByName('DaysOfExpire').AsInteger;
     ShowModal;
   end;
   FreeAndNil(FfrmIncluirUsuario);
@@ -311,9 +312,9 @@ begin
   with FUserControl do
   begin
     FDataSetCadastroUsuario := DataConnector.UCGetSQLDataset(
-      Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Email, %s as Perfil, %s as Privilegiado, %s as Tipo, %s as Senha, %s as UserNaoExpira from %s Where %s  = %s ORDER BY %s',
+      Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Email, %s as Perfil, %s as Privilegiado, %s as Tipo, %s as Senha, %s as UserNaoExpira, %s as DaysOfExpire from %s Where %s  = %s ORDER BY %s',
       [TableUsers.FieldUserID, TableUsers.FieldLogin, TableUsers.FieldUserName, TableUsers.FieldEmail, TableUsers.FieldProfile, TableUsers.FieldPrivileged, TableUsers.FieldTypeRec, TableUsers.FieldPassword,
-      TableUsers.FieldUserExpired, TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('U'), TableUsers.FieldLogin]));
+      TableUsers.FieldUserExpired, TableUsers.FieldUserDaysSun, TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('U'), TableUsers.FieldLogin]));
 
 
     DBGrid1.Columns[0].Title.Caption := UserSettings.UsersForm.ColName;

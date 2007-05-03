@@ -1,9 +1,10 @@
 object UserPermis: TUserPermis
   Left = 255
   Top = 154
-  Width = 550
-  Height = 549
+  BorderStyle = bsDialog
   Caption = 'Seguran'#231'a'
+  ClientHeight = 522
+  ClientWidth = 542
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

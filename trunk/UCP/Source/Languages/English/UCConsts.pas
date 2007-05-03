@@ -214,6 +214,7 @@ const
   Const_TableUsers_TableName        = 'UCTabUsers';
   Const_TableUsers_FieldDateExpired = 'UCPassExpired';
   Const_TableUser_FieldUserExpired  = 'UCUserExpired';
+  Const_TableUser_FieldUserDaysSun  = 'UCUserDaysSun';  
   
   Const_TableRights_FieldUserID        = 'UCIdUser';
   Const_TableRights_FieldModule        = 'UCModule';

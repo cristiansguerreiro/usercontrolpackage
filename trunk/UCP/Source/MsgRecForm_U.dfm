@@ -1,9 +1,10 @@
 object MsgRecForm: TMsgRecForm
   Left = 215
   Top = 162
-  Width = 514
-  Height = 363
+  BorderStyle = bsDialog
   Caption = 'Mensagem'
+  ClientHeight = 336
+  ClientWidth = 506
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
