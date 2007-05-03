@@ -3812,7 +3812,7 @@ var
   String1:   String;
   String2:   String;
 begin
-  // Apply Extra Rights  Verificar aqui
+  // Apply Extra Rights 
 
   if not Assigned(UserControl) then
     Exit;
@@ -3839,7 +3839,7 @@ begin
         TableRights.FieldKey,
         TableRights.TableName,
         TableRights.FieldUserID,
-        CurrentUser.UserID,    // by vicente barros leonel
+        CurrentUser.UserID,
         TableRights.FieldModule,
         QuotedStr(ApplicationID),
         TableRights.FieldFormName,
@@ -3851,7 +3851,8 @@ begin
       begin
         UnlockEX(TCustomForm(Self.Owner), FListObj[Contador]);
 
-        ExisteObj := (not TempDS.Locate('ObjName', FListObj[Contador], []));
+//        ExisteObj := (not TempDS.Locate('ObjName', FListObj[Contador], [])); by vicente barros leonel
+        ExisteObj := (TempDS.Locate('ObjName', FListObj[Contador], []));
 
         case Self.UserControl.Criptografia of
           cPadrao:
@@ -3867,7 +3868,8 @@ begin
         end;
 
         if not ExisteObj or (String1 <> String2) then
-          LockEX(TCustomForm(Self.Owner), FListObj[Contador], NotAllowed = naDisabled);
+          LockEX(TCustomForm(Self.Owner), FListObj[Contador], NotAllowed = naInvisible);
+//          LockEX(TCustomForm(Self.Owner), FListObj[Contador], NotAllowed = naDisabled ); // by vicente barros leonel
       end;
       TempDS.Close;
 
