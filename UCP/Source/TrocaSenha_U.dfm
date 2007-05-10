@@ -317,8 +317,8 @@ object TrocaSenha: TTrocaSenha
       Left = 103
       Top = 24
       Width = 121
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 10
       ParentCtl3D = False
       PasswordChar = '*'
@@ -328,8 +328,8 @@ object TrocaSenha: TTrocaSenha
       Left = 103
       Top = 54
       Width = 121
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 10
       ParentCtl3D = False
       PasswordChar = '*'
@@ -339,8 +339,8 @@ object TrocaSenha: TTrocaSenha
       Left = 103
       Top = 85
       Width = 121
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 10
       ParentCtl3D = False
       PasswordChar = '*'

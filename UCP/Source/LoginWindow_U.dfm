@@ -123,9 +123,9 @@ object frmLoginWindow: TfrmLoginWindow
         Left = 82
         Top = 7
         Width = 225
-        Height = 19
+        Height = 21
         CharCase = ecUpperCase
-        Ctl3D = False
+        Ctl3D = True
         MaxLength = 15
         ParentCtl3D = False
         TabOrder = 0
@@ -135,8 +135,8 @@ object frmLoginWindow: TfrmLoginWindow
         Left = 82
         Top = 39
         Width = 225
-        Height = 19
-        Ctl3D = False
+        Height = 21
+        Ctl3D = True
         MaxLength = 10
         ParentCtl3D = False
         PasswordChar = '*'

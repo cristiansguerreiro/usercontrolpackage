@@ -70,7 +70,7 @@ type
 implementation
 
 uses
-  Consts;
+  Consts, UCMessages;
 
 {$R *.dfm}
 
@@ -197,6 +197,10 @@ begin
     FfrmIncluirUsuario.btGravar.Caption       := BtSave;
     FfrmIncluirUsuario.btCancela.Caption      := BtCancel;
     FfrmIncluirUsuario.Position               := Self.FUserControl.UserSettings.WindowsPosition;
+    FfrmIncluirUsuario.LabelExpira.Caption    := ExpiredIn;
+    FfrmIncluirUsuario.LabelDias.Caption      := Day;
+    FfrmIncluirUsuario.ckUserExpired.Caption  := CheckExpira;
+
   end;
 end;
 

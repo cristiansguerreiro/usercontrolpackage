@@ -5,6 +5,7 @@ interface
 {.$I 'UserControl.inc'}
 
 uses
+  Messages,
   Buttons,
   Classes,
   Controls,
@@ -46,6 +47,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+  procedure WMNChitTest(var M: TWMNchitTest);message WM_NCHITTEST;
     { Private declarations }
   public
     { Public declarations }
@@ -100,6 +102,13 @@ procedure TAboutForm.FormShow(Sender: TObject);
 begin
 //  pnlComponentes.Top  := Round((pnlFundo.Height - pnlComponentes.Height) / 2);
 //  pnlComponentes.Left := Round((pnlFundo.Width - pnlComponentes.Width) / 2);
+end;
+
+procedure TAboutForm.WMNChitTest(var M: TWMNchitTest);
+begin
+  inherited;
+  if M.result = htclient then
+  M.result := htCaption;
 end;
 
 end.

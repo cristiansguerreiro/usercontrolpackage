@@ -23,7 +23,7 @@ object frmCadastrarUsuario: TfrmCadastrarUsuario
     Width = 489
     Height = 277
     Align = alClient
-    Ctl3D = False
+    Ctl3D = True
     DataSource = DataSource1
     Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     ParentCtl3D = False

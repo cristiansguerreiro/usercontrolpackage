@@ -417,8 +417,8 @@ begin
     with frmLogin do
     begin
       FUserControl      := Self.FUserControl;
-      btOK.onClick      := BotoesClickVisualizacao;
-      BtCancela.OnClick := BotoesClickVisualizacao;
+//      btOK.onClick      := BotoesClickVisualizacao;
+//      BtCancela.OnClick := BotoesClickVisualizacao;
       Caption           := Self.FUserControl.UserSettings.Login.WindowCaption;
       LbUsuario.Caption := Self.FUserControl.UserSettings.Login.LabelUser;
       LbSenha.Caption   := Self.FUserControl.UserSettings.Login.LabelPassword;

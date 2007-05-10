@@ -297,8 +297,8 @@ object frmIncluirPerfil: TfrmIncluirPerfil
       Left = 73
       Top = 39
       Width = 249
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
       TabOrder = 0

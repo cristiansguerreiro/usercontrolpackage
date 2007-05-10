@@ -67,6 +67,7 @@ const
   MsgExceptConnection    = 'Done not informed the Connection, Transaction or Database component %s';
   MsgExceptTransaction   = 'Done not informed the Transaction component %s';
   MsgExceptDatabase      = 'Done not informed the Database do component %s';
+  MsgExceptPropriedade   = 'Inform the property %s';  
   MsgExceptUserMngMenu   = 'Inform in the property UsersForm.MenuItem or UsersForm.Action the item responsible for the users control';
   MsgExceptUserProfile   = 'Inform in the property UsersProfile.MenuItem or UsersProfile.Action the Item  responsible for the control of users Profile ';
   MsgExceptChagePassMenu = 'Inform in the property ChangePasswordForm.MenuItem or .Action the Item that allows to a user to alter his password';
@@ -159,6 +160,9 @@ const
   Const_Inc_CheckPrivilegiado = 'Privileged user ';
   Const_Inc_BtGravar          = '&Save';
   Const_Inc_BtCancelar        = 'Cancel';
+  Const_Inc_CheckEspira       = 'Password do not expired';
+  Const_Inc_Dia               = 'Day';
+  Const_Inc_ExpiraEm          = 'Expired in';
 
   //group property Settings.IncAltPerfil
   Const_PInc_WindowCaption  = 'Profile the Users';
@@ -196,6 +200,7 @@ const
   Const_ErrPass_SenhaObrigatoria   = 'The password is compulsory ';
   Const_ErrPass_SenhaMinima        = 'The password must contain at least %d characters ';
   Const_ErrPass_SenhaInvalida      = 'When to use password was prohibited you obviate !';
+  Const_ErrPass_ForcaTrocaSenha    = 'Compulsory change password';
 
   //group property Settings.DefineSenha
   Const_DefPass_WindowCaption = 'Define Password of the user  : "%s"';
