@@ -191,10 +191,18 @@ begin
       LabelPerfil := Const_Inc_LabelPerfil;
     if CheckPrivileged = '' then
       CheckPrivileged := Const_Inc_CheckPrivilegiado;
+      
     if BtSave = '' then
       BtSave := Const_Inc_BtGravar;
     if BtCancel = '' then
       BtCancel := Const_Inc_BtCancelar;
+
+    if CheckExpira = '' then
+      CheckExpira := Const_Inc_CheckEspira;
+    If Day = '' then
+      Day := Const_Inc_Dia;
+    If ExpiredIn = '' then
+      ExpiredIn := Const_Inc_ExpiraEm;
   end;
 
   with DestSettings.AddChangeProfile do
@@ -519,6 +527,13 @@ begin
       BtCancel := Const_Inc_BtCancelar;
     if LabelPerfil = '' then
       LabelPerfil := Const_Inc_LabelPerfil;
+
+    if CheckExpira = '' then
+      CheckExpira := Const_Inc_CheckEspira;
+    If Day = '' then
+      Day := Const_Inc_Dia;
+    If ExpiredIn = '' then
+      ExpiredIn := Const_Inc_ExpiraEm;
   end;
 
   with DestSettings.AddChangeProfile do
@@ -728,6 +743,7 @@ begin
   begin
     Self.CommonMessages.Assign(TUCUserSettings(Source).CommonMessages); //modified by fduenas
     Self.AppMessages.Assign(TUCUserSettings(Source).AppMessages); //modified by fduenas
+    Self.WindowsPosition := WindowsPosition;
   end
   else
     inherited;

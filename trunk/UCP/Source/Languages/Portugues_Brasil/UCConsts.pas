@@ -60,6 +60,7 @@ const
   MsgExceptConnection    = 'Não informado o Connection, Transaction ou Database do componente %s';
   MsgExceptTransaction   = 'Não informado o Transaction do componente %s';
   MsgExceptDatabase      = 'Não informado o Database do componente %s';
+  MsgExceptPropriedade   = 'Favor informar a propriedade %s';
   MsgExceptUserMngMenu   = 'Informe na propriedade UsersForm.MenuItem ou UsersForm.Action o Item responsável pelo controle de usuários';
   MsgExceptUserProfile   = 'Informe na propriedade UsersProfile.MenuItem ou UsersProfile.Action o Item responsável pelo controle de Perfil de usuários';
   MsgExceptChagePassMenu = 'Informe na propriedade ChangePasswordForm.MenuItem or .Action o Item que permite ao usuário alterar sua senha';
@@ -154,6 +155,9 @@ const
   Const_Inc_CheckPrivilegiado = 'Usuário privilegiado';
   Const_Inc_BtGravar          = '&Gravar';
   Const_Inc_BtCancelar        = 'Cancelar';
+  Const_Inc_CheckEspira       = 'Senha do usuário não expira';
+  Const_Inc_Dia               = 'Dias';
+  Const_Inc_ExpiraEm          = 'Expira em';
 
   //group property Settings.IncAltPerfil
   Const_PInc_WindowCaption  = 'Perfil de Usuários';
@@ -191,6 +195,7 @@ const
   Const_ErrPass_SenhaObrigatoria   = 'A Senha é obrigatória';
   Const_ErrPass_SenhaMinima        = 'A senha deve conter no mínimo %d caracteres';
   Const_ErrPass_SenhaInvalida      = 'Proibido utilizar senhas obvias!';
+  Const_ErrPass_ForcaTrocaSenha    = 'Mudança de senha obrigatória';
 
   //group property Settings.DefineSenha
   Const_DefPass_WindowCaption = 'Definir senha do usuário : "%s"';

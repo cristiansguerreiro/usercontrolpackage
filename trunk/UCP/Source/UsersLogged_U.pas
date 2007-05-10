@@ -81,7 +81,6 @@ end;
 
 procedure TfrmUsersLogged.BitRefreshClick(Sender: TObject);
 begin
-  //Cesar: 25/07/2005
   try
     Screen.Cursor := crHourGlass;
     dsDados.DataSet.Close;

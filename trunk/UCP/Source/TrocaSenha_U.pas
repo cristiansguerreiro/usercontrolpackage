@@ -20,6 +20,7 @@ uses
   StdCtrls,
   SysUtils,
   Windows,
+  UCConsts,
   UCBase; { Por Vicente Barros Leonel }
 
 type
@@ -81,7 +82,7 @@ begin
   If ForcarTroca = True then
      Begin
        CanClose := False;
-       MessageDlg('Mudança de senha obrigatória',mtWarning, [mbOK], 0);
+       MessageDlg(Const_ErrPass_ForcaTrocaSenha,mtWarning, [mbOK], 0);
      End;
 end;
 

@@ -1,6 +1,4 @@
 {
-Colocar campo no banco de dados para setar a qtde dias que o usuario deve somar
-na data para expirar a senha 
 -----------------------------------------------------------------------------
  Unit Name: UCBase
  Author:    QmD
@@ -63,7 +61,7 @@ const
 
 // Version
 const
-  UCVersion = '2.20RC4';
+  UCVersion = '2.20RC5';
 
 type
   // Pensando em usar GUID para gerar a chave das tabelas !!!!
@@ -165,6 +163,21 @@ type
     property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
     property ForcePassword: Boolean read FForcePassword write FForcePassword default False;
     property MinPasswordLength: Integer read FMinPasswordLength write FMinPasswordLength default 0;
+  end;
+
+  TUCUserLogoff = class(TPersistent) // armazenar menuitem ou action responsavel pelo logoff
+  private
+    FAction:            TAction;
+    FMenuItem:          TMenuItem;
+    procedure SetAction(const Value: TAction);
+    procedure SetMenuItem(const Value: TMenuItem);
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Action: TAction read FAction write SetAction;
+    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
   end;
 
   TUCAutoLogin = class(TPersistent) // armazenar configuracao de Auto-Logon
@@ -361,6 +374,7 @@ type
     FCriptografia:            TUCCriptografia;
     FUsersLogged:             TUCUsersLogged;
     FTableUsersLogged:        TUCTableUsersLogged;
+    fUsersLogoff: TUCUserLogoff;
     procedure SetExtraRights(Value: TUCExtraRights);
     procedure SetWindow;
     procedure SetWindowProfile;
@@ -472,6 +486,7 @@ type
     property UserProfile: TUCUserProfile read FUserProfile write FUserProfile;
     property UserPasswordChange: TUCUserPasswordChange read FUserPasswordChange write FUserPasswordChange;
     property UsersLogged: TUCUsersLogged read FUsersLogged write FUsersLogged;
+    property UsersLogoff: TUCUserLogoff read fUsersLogoff write fUsersLogoff; //by vicente barros leonel
     property LogControl: TUCLogControl read FLogControl write FLogControl;
 
     property EncryptKey: Word read FEncrytKey write FEncrytKey;
@@ -705,6 +720,7 @@ begin
   FUserProfile        := TUCUserProfile.Create(Self);
   FUserPasswordChange := TUCUserPasswordChange.Create(Self);
   FUsersLogged        := TUCUsersLogged.Create(Self);
+  fUsersLogoff        := TUCUserLogoff.Create(Self);
   FUserSettings       := TUCUserSettings.Create(Self);
   FNotAllowedItems    := TUCNotAllowedItems.Create(Self);
   FExtraRights        := TUCExtraRights.Create(Self);
@@ -784,11 +800,11 @@ begin
     if ApplicationID = '' then
       ApplicationID := 'ProjetoNovo';
     if Login.InitialLogin.User = '' then
-      Login.InitialLogin.User := 'ADMIN';
+      Login.InitialLogin.User := 'admin';
     if Login.InitialLogin.Password = '' then
-      Login.InitialLogin.Password := '#siffra';
+      Login.InitialLogin.Password := '123mudar';
     if Login.InitialLogin.Email = '' then
-      Login.InitialLogin.Email := 'siffra@siffra.com';
+      Login.InitialLogin.Email := 'usercontrol@usercontrol.net';
 
     FLoginMode                    := lmActive;
     FCriptografia                 := cPadrao;
@@ -833,6 +849,9 @@ begin
     if Assigned(User.Action) and (not Assigned(User.Action.OnExecute)) then
       User.Action.OnExecute := ActionCadUser;
 
+    If ( ( Not Assigned(User.Action) ) and ( not Assigned( User.MenuItem) ) ) then
+      raise Exception.Create(Format(MsgExceptPropriedade,['User']));
+
     if UserProfile.Active then
     begin
       if Assigned(UserProfile.MenuItem) and (not Assigned(UserProfile.MenuItem.OnClick)) then
@@ -840,6 +859,9 @@ begin
 
       if Assigned(UserProfile.Action) and (not Assigned(UserProfile.Action.OnExecute)) then
         UserProfile.Action.OnExecute := ActionUserProfile;
+
+      If ( ( Not Assigned(UserProfile.Action) ) and ( not Assigned( UserProfile.MenuItem) ) ) then
+        raise Exception.Create(Format(MsgExceptPropriedade,['UserProfile']));
     end;
 
     if UsersLogged.Active then
@@ -849,6 +871,10 @@ begin
 
       if Assigned(UsersLogged.Action) and (not Assigned(UsersLogged.Action.OnExecute)) then
         UsersLogged.Action.OnExecute := ActionUsersLogged;
+
+      If ( ( Not Assigned(UsersLogged.Action) ) and ( not Assigned( UsersLogged.MenuItem) ) ) then
+        raise Exception.Create(Format(MsgExceptPropriedade,['UsersLogged']));
+
     end;
 
     if Assigned(UserPasswordChange.MenuItem) and (not Assigned(UserPasswordChange.MenuItem.OnClick)) then
@@ -857,6 +883,20 @@ begin
     if Assigned(UserPasswordChange.Action) and (not Assigned(UserPasswordChange.Action.OnExecute)) then
       UserPasswordChange.Action.OnExecute := ActionTrocaSenha;
 
+    { By Vicente Barros Leonel }
+    if Assigned(UsersLogoff.MenuItem) and (not Assigned(UsersLogoff.MenuItem.OnClick)) then
+      UsersLogoff.MenuItem.OnClick := ActionLogoff;
+
+    if Assigned(UsersLogoff.Action) and (not Assigned(UsersLogoff.Action.OnExecute)) then
+      UsersLogoff.Action.OnExecute := ActionLogoff;
+
+    If ( ( Not Assigned(UserPasswordChange.Action) ) and ( not Assigned( UserPasswordChange.MenuItem) ) ) then
+      raise Exception.Create(Format(MsgExceptPropriedade,['UserPasswordChange']));
+
+    If ( ( Not Assigned(UsersLogoff.Action) ) and ( not Assigned( UsersLogoff.MenuItem) ) ) then
+      raise Exception.Create(Format(MsgExceptPropriedade,['UsersLogoff']));
+
+
     if (LogControl.Active) then
     begin
       if Assigned(LogControl.MenuItem) and (not Assigned(LogControl.MenuItem.OnClick)) then
@@ -864,6 +904,9 @@ begin
 
       if Assigned(LogControl.Action) and (not Assigned(LogControl.Action.OnExecute)) then
         LogControl.Action.OnExecute := ActionLog;
+
+      If ( ( Not Assigned(LogControl.Action) ) and ( not Assigned( LogControl.MenuItem) ) ) then
+        raise Exception.Create(Format(MsgExceptPropriedade,['LogControl']));
     end;
 
     with TableUsers do
@@ -1137,6 +1180,7 @@ begin
     TTrocaSenha(FFormTrocarSenha).ForcarTroca         := False; // Vicente Barros Leonel
   end;
   TTrocaSenha(FFormTrocarSenha).Position        := Self.UserSettings.WindowsPosition; // Adicionado por Luiz Benevenuto
+ 
   TTrocaSenha(FFormTrocarSenha).btGrava.OnClick := ActionTSBtGrava;
   if CurrentUser.Password = '' then
     TTrocaSenha(FFormTrocarSenha).EditAtu.Enabled := False;
@@ -1145,22 +1189,6 @@ end;
 procedure TUserControl.CriaFormUsersLogged;
 begin
   FFormUsersLogged := TfrmUsersLogged.Create(Self);
-
-  {
-  with Settings.UserLogon, TUserLogado(FormUserLogado) do
-  begin
-    Caption := WindowCaption;
-    lbDescricao.Caption := LabelDescription;
-    BtExit.Caption := BtClose;
-    BitRefresh.Caption := BtRefresh;
-    BitMsg.Caption := BtMsg;
-    DbGrid.Columns[0].Title.Caption := ColName;
-    DbGrid.Columns[1].Title.Caption := ColLogin;
-    DbGrid.Columns[2].Title.Caption := ColPC;
-    DbGrid.Columns[3].Title.Caption := ColDate;
-    Position := Self.Settings.WindowsPosition;
-  end;
-  }
   TfrmUsersLogged(FFormUsersLogged).Position     := Self.UserSettings.WindowsPosition;
   TfrmUsersLogged(FFormUsersLogged).FUserControl := Self;
 end;
@@ -1289,7 +1317,7 @@ begin
       lbEsqueci.Caption := MailUserControl.EsqueceuSenha.LabelLoginForm;
     end;
     {.$ENDIF}
-    Position := Self.UserSettings.WindowsPosition;
+    Position   := Self.UserSettings.WindowsPosition;
   end;
 end;
 
@@ -1309,6 +1337,14 @@ begin
       UserPasswordChange.Action := nil;
     if AComponent = UserPasswordChange.MenuItem then
       UserPasswordChange.MenuItem := nil;
+
+    { By Vicente Barros Leonel }
+    If AComponent = UsersLogoff.Action then
+      UsersLogoff.Action := Nil;
+    if AComponent = UsersLogoff.MenuItem then
+      UsersLogoff.MenuItem := Nil;
+
+
     if AComponent = ControlRight.MainMenu then
       ControlRight.MainMenu := nil;
     if AComponent = ControlRight.ActionList then
@@ -1366,7 +1402,7 @@ begin
       Columns[4].FieldName     := 'DATA';
       Columns[4].Width         := 111;
     end;
-    Position := Self.UserSettings.WindowsPosition;
+    Position   := Self.UserSettings.WindowsPosition;
   end;
   TViewLog(FFormLogControl).ShowModal;
   FreeAndNil(FFormLogControl);
@@ -1735,7 +1771,7 @@ begin
       FieldPrivileged + ' = ' + BooltoStr(PrivUser) + ', ' +
       FieldProfile + ' = ' + IntToStr(Profile) + ', ' +
       FieldKey + ' = ' + QuotedStr(Key) +  ', ' +
-      FieldUserExpired + ' = ' + IntToStr( UserExpired ) + // vicente barros leonel
+      FieldUserExpired + ' = ' + IntToStr( UserExpired ) + ' , ' + // vicente barros leonel
       FieldUserDaysSun + ' = ' + IntToStr( UserDaysSun ) +
       ' where ' + FieldUserID + ' = ' + IntToStr(IdUser));
   if Assigned(OnChangeUser) then
@@ -1766,6 +1802,7 @@ begin
   FUser.Free;
   FUserProfile.Free;
   FUserPasswordChange.Free;
+  fUsersLogoff.Free;
   FUsersLogged.Free;
   FUserSettings.Free;
   FNotAllowedItems.Free;
@@ -1846,7 +1883,33 @@ begin
    Sql     := Format('select * from %s',[FTableUsers.TableName ] );
    DataSet := DataConnector.UCGetSQLDataset( SQL );
 
-   
+   If DataSet.FindField( FTableUsers.FieldDateExpired ) = nil then
+     Begin
+       Sql := Format('alter table %s add %s date',
+              [ FTableUsers.TableName,
+                FTableUsers.FieldDateExpired] );
+       DataConnector.UCExecSQL( Sql );
+       Sql := Format('update %s set %s = %s where %s = ''U''',
+             [ FTableUsers.TableName,
+               FTableUsers.FieldDateExpired,
+               QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired ) ),
+               FTableUsers.FieldTypeRec ] );
+       DataConnector.UCExecSQL( Sql );
+     End;
+
+   If DataSet.FindField( FTableUsers.FieldUserExpired  ) = nil then
+     Begin
+       Sql := Format('alter table %s add %s Integer',
+              [ FTableUsers.TableName,
+                FTableUsers.FieldUserExpired] );
+       DataConnector.UCExecSQL( Sql );
+       Sql := Format('update %s set %s = 1 where %s = ''U''',
+             [ FTableUsers.TableName,
+               FTableUsers.FieldUserExpired,
+               FTableUsers.FieldTypeRec ] );
+       DataConnector.UCExecSQL( Sql );
+     End;
+
    If DataSet.FindField( FTableUsers.FieldUserDaysSun ) = nil then
      Begin // Cria campo  setado no FieldUserDaysSun na tabela de usuarios
        Sql := Format('alter table %s add %s integer',
@@ -1859,6 +1922,7 @@ begin
                FTableUsers.FieldTypeRec ] );
        DataConnector.UCExecSQL( Sql );
      End;
+
 
  Finally
    FreeAndNil( DataSet );
@@ -2745,6 +2809,9 @@ begin
   AddRight(IDUsuario, UserPasswordChange.MenuItem);
   AddRight(IDUsuario, UserPasswordChange.Action);
 
+  AddRight(IDUsuario, UsersLogoff.MenuItem);
+  AddRight(IDUsuario, UsersLogoff.Action);  
+
   {.$IFDEF UCACTMANAGER}
   if Assigned(ControlRight.ActionMainMenuBar) then
     IncPermissActMenuBar(IDUsuario, User.Action);
@@ -2753,6 +2820,7 @@ begin
   if Assigned(ControlRight.ActionMainMenuBar) then
     IncPermissActMenuBar(IDUsuario, UserPasswordChange.Action);
   {.$ENDIF}
+
   if LogControl.Active then
   begin
     AddRight(IDUsuario, LogControl.MenuItem);
@@ -2869,6 +2937,9 @@ begin
     CheckPrivileged := SourceSettings.AddChangeUser.CheckPrivileged;
     BtSave          := SourceSettings.AddChangeUser.BtSave;
     BtCancel        := SourceSettings.AddChangeUser.BtCancel;
+    CheckExpira     := SourceSettings.AddChangeUser.CheckExpira;
+    Day             := SourceSettings.AddChangeUser.Day;
+    ExpiredIn       := SourceSettings.AddChangeUser.ExpiredIn;
   end;
 
   with UserSettings.AddChangeProfile do
@@ -3366,6 +3437,7 @@ end;
 {$IFDEF DELPHI9_UP} {$REGION 'TTrocarSenha'} {$ENDIF}
 
 { TTrocarSenha }
+
 procedure TUCUserPasswordChange.Assign(Source: TPersistent);
 begin
   if Source is TUCUserPasswordChange then
@@ -3702,8 +3774,7 @@ begin
       ' ORDER BY ' + UserControl.TableUsers.FieldUserName);
     MsgsForm.DSUsuarios.Open;
 
-    MsgsForm.Position := Self.FUserControl.UserSettings.WindowsPosition;
-
+    MsgsForm.Position   := Self.FUserControl.UserSettings.WindowsPosition;
     MsgsForm.ShowModal;
   finally
   (*
@@ -4185,5 +4256,53 @@ begin
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
+
+{ TUCUserLogoff Por Vicente Barros Leonel }
+
+{$IFDEF DELPHI9_UP} {$REGION 'TUCUserLogoff'} {$ENDIF}
+
+procedure TUCUserLogoff.Assign(Source: TPersistent);
+begin
+  if Source is TUCUserLogoff then
+  begin
+    Self.MenuItem          := TUCUserLogoff(Source).MenuItem;
+    Self.Action            := TUCUserLogoff(Source).Action;
+  end
+  else
+    inherited;
+end;
+
+constructor TUCUserLogoff.Create(AOwner: TComponent);
+begin
+  inherited Create;
+end;
+
+destructor TUCUserLogoff.Destroy;
+begin
+  inherited Destroy;
+end;
+
+procedure TUCUserLogoff.SetAction(const Value: TAction);
+begin
+  FAction := Value;
+  if Value <> nil then
+  begin
+    Self.MenuItem := nil;
+    Value.FreeNotification(Self.Action);
+  end;
+end;
+
+procedure TUCUserLogoff.SetMenuItem(const Value: TMenuItem);
+begin
+  FMenuItem := Value;
+  if Value <> nil then
+  begin
+    Self.Action := nil;
+    Value.FreeNotification(Self.MenuItem);
+  end;
+end;
+
+{$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
+
 end.
 

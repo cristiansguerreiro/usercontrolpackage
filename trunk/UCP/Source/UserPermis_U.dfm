@@ -419,7 +419,7 @@ object UserPermis: TUserPermis
     Top = 35
     Width = 445
     Height = 487
-    ActivePage = PageAction
+    ActivePage = PageMenu
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 2
@@ -431,7 +431,7 @@ object UserPermis: TUserPermis
         Width = 437
         Height = 456
         Align = alClient
-        Ctl3D = False
+        Ctl3D = True
         Images = ImageList1
         Indent = 19
         ParentCtl3D = False
@@ -454,7 +454,7 @@ object UserPermis: TUserPermis
         Width = 437
         Height = 456
         Align = alClient
-        Ctl3D = False
+        Ctl3D = True
         Images = ImageList1
         Indent = 19
         ParentCtl3D = False
@@ -476,7 +476,7 @@ object UserPermis: TUserPermis
         Width = 437
         Height = 456
         Align = alClient
-        Ctl3D = False
+        Ctl3D = True
         Images = ImageList1
         Indent = 19
         ParentCtl3D = False

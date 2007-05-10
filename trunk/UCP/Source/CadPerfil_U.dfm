@@ -23,7 +23,7 @@ object frmCadastrarPerfil: TfrmCadastrarPerfil
     Width = 293
     Height = 205
     Align = alClient
-    Ctl3D = False
+    Ctl3D = True
     DataSource = DataSource1
     Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     ParentCtl3D = False

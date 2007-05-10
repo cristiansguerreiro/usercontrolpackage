@@ -445,7 +445,7 @@ object ViewLog: TViewLog
       Width = 608
       Height = 529
       Anchors = [akLeft, akTop, akRight, akBottom]
-      Ctl3D = False
+      Ctl3D = True
       DataSource = DataSource1
       DefaultDrawing = False
       Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit]

@@ -23,8 +23,8 @@ object SenhaForm: TSenhaForm
     Left = 7
     Top = 15
     Width = 200
-    Height = 19
-    Ctl3D = False
+    Height = 21
+    Ctl3D = True
     ParentCtl3D = False
     PasswordChar = '*'
     TabOrder = 0
@@ -34,8 +34,8 @@ object SenhaForm: TSenhaForm
     Left = 7
     Top = 43
     Width = 200
-    Height = 19
-    Ctl3D = False
+    Height = 21
+    Ctl3D = True
     ParentCtl3D = False
     PasswordChar = '*'
     TabOrder = 1

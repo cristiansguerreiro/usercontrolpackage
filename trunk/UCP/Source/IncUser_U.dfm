@@ -391,8 +391,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 89
       Top = 15
       Width = 265
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
       TabOrder = 0
@@ -401,8 +401,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 89
       Top = 47
       Width = 265
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
       TabOrder = 1
@@ -411,8 +411,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 89
       Top = 79
       Width = 265
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       MaxLength = 150
       ParentCtl3D = False
       TabOrder = 2
@@ -429,8 +429,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 89
       Top = 111
       Width = 242
-      Height = 19
-      Ctl3D = False
+      Height = 21
+      Ctl3D = True
       KeyField = 'IDUser'
       ListField = 'Nome'
       ListSource = frmCadastrarUsuario.DataSource2

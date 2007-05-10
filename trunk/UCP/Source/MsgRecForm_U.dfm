@@ -38,7 +38,7 @@ object MsgRecForm: TMsgRecForm
     Caption = 'Mensagem'
   end
   object lbData: TLabel
-    Left = 331
+    Left = 360
     Top = 57
     Width = 23
     Height = 13
@@ -179,7 +179,7 @@ object MsgRecForm: TMsgRecForm
   object stDe: TStaticText
     Left = 64
     Top = 56
-    Width = 249
+    Width = 289
     Height = 17
     AutoSize = False
     BorderStyle = sbsSunken
@@ -188,7 +188,7 @@ object MsgRecForm: TMsgRecForm
   object stAssunto: TStaticText
     Left = 64
     Top = 88
-    Width = 401
+    Width = 431
     Height = 17
     AutoSize = False
     BorderStyle = sbsSunken
@@ -197,7 +197,7 @@ object MsgRecForm: TMsgRecForm
   object MemoMsg: TMemo
     Left = 16
     Top = 144
-    Width = 449
+    Width = 481
     Height = 145
     MaxLength = 255
     ReadOnly = True
@@ -251,7 +251,7 @@ object MsgRecForm: TMsgRecForm
     NumGlyphs = 2
   end
   object stData: TStaticText
-    Left = 368
+    Left = 397
     Top = 56
     Width = 97
     Height = 17

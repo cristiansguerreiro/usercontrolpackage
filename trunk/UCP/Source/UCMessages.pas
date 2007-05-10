@@ -305,6 +305,9 @@ type
     FBtSave:        String;
     FBtCancelar:    String;
     FLabelPerfil:   String;
+    fCheckExpira: String;
+    fExpiredIn: string;
+    fDay: String;
   protected
 
   public
@@ -322,6 +325,9 @@ type
     property CheckPrivileged: String read FCheckPriv write FCheckPriv;
     property BtSave: String read FBtSave write FBtSave;
     property BtCancel: String read FBtCancelar write FBtCancelar;
+    property CheckExpira: String read fCheckExpira write fCheckExpira;
+    property Day : String read fDay write fDay;
+    property ExpiredIn :  string read fExpiredIn write fExpiredIn;
   end;
 
   TUCAddProfileFormMSG = class(TPersistent)
@@ -489,7 +495,6 @@ end;
 
 destructor TUCUserSettings.Destroy;
 begin
-  // QmD 19/04/2005
   SysUtils.FreeAndNil(FAppMessagesMSG);
   SysUtils.FreeAndNil(FLoginFormMSG);
   SysUtils.FreeAndNil(FUserCommomMSG);
@@ -702,6 +707,9 @@ begin
       Self.CheckPrivileged := CheckPrivileged;
       Self.BtSave          := BtSave;
       Self.BtCancel        := BtCancel;
+      Self.CheckExpira     := CheckExpira;
+      Self.Day             := Day;
+      Self.ExpiredIn       := ExpiredIn;
     end
   else
     inherited;

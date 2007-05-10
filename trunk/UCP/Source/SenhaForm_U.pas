@@ -66,7 +66,7 @@ begin
     CanClose := CompararSenhas(edtSenha.Text, edtConfirmaSenha.Text);
     if not CanClose then
     begin
-      ShowMessage('As senhas não são iguais...!');
+      MessageDlg('Atenção, as senhas digitadas não são iguais', mtWarning, [mbOK], 0);
       edtSenha.Clear;
       edtConfirmaSenha.Clear;
       edtSenha.SetFocus;
@@ -86,7 +86,7 @@ class function TSenhaForm.Senha( CharCasePass : TEditCharCase ): TResultado;
 begin
   with TSenhaForm.Create(nil) do
     try
-      edtSenha.CharCase := CharCasePass;
+      edtSenha.CharCase         := CharCasePass;
       edtConfirmaSenha.CharCase := CharCasePass;
       ShowModal;
       Result.Cancelado := (ModalResult = mrCancel);
