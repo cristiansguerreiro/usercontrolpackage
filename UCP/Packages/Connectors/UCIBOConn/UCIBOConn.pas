@@ -17,10 +17,11 @@ uses
   IB_Components,
   IBODataset,
   SysUtils,
-  UCBase;
+  UCDataConnector;
+//  UCBase;
 
 type
-  TUCIBOConn = class(TUCDataConn)
+  TUCIBOConn = class(TUCDataConnector)
   private
     FConnection: TIBODatabase;
     procedure SetIBOConnection(const Value: TIBODatabase);
