@@ -1780,7 +1780,7 @@ end;
 
 procedure TUserControl.CriaTabelaMsgs(const TableName: String);
 begin
-  DataConnector.UCExecSQL('Create Table ' + TableName + ' ( ' +
+  DataConnector.UCExecSQL('CREATE TABLE ' + TableName + ' ( ' +
     'IdMsg int ,' +
     'UsrFrom int, ' +
     'UsrTo int, ' +
@@ -2730,7 +2730,7 @@ begin
 //  if not TableExists then
     with TableUsers do
     begin
-      SQLStmt := Format('Create Table %s ' + // TableName
+      SQLStmt := Format('CREATE TABLE %s ' + // TableName
         '( ' +
         '%s int, ' +         // FieldUserID
         '%s varchar(30), ' + // FieldUserName
