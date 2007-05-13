@@ -1856,7 +1856,7 @@ begin
       if not DataConnector.UCFindTable(LogControl.TableLog) then
         CriaTabelaLog;
 
-    CriaTabelaUsuarios(DataConnector.UCFindTable(FTableUsers.TableName));
+    CriaTabelaUsuarios(DataConnector.UCFindTable(FTableUsers.TableName) ) ;
 
     //Atualizador de Versoes  By vicente barros leonel
     AtualizarVersao;
@@ -2727,7 +2727,7 @@ begin
     cMD5   : TipoCampo := 'VARCHAR(32)';
   end;
 
-  if not TableExists then
+//  if not TableExists then
     with TableUsers do
     begin
       SQLStmt := Format('Create Table %s ' + // TableName
@@ -2753,7 +2753,7 @@ begin
         TipoCampo,
         FieldDateExpired,
         FieldUserExpired,
-        FieldUserDaysSun,       
+        FieldUserDaysSun,
         FieldEmail,
         FieldPrivileged,
         FieldTypeRec,
@@ -2776,7 +2776,7 @@ begin
       Login.InitialLogin.Password,
       Login.InitialLogin.User,
       Login.InitialLogin.Email,
-      0, 0 , Login.DaysOfSunExpired,  
+      0, 0 , Login.DaysOfSunExpired,
       True)
   else
     IDUsuario := DataSetUsuario.FieldByName('idUser').AsInteger;
@@ -2810,7 +2810,7 @@ begin
   AddRight(IDUsuario, UserPasswordChange.Action);
 
   AddRight(IDUsuario, UsersLogoff.MenuItem);
-  AddRight(IDUsuario, UsersLogoff.Action);  
+  AddRight(IDUsuario, UsersLogoff.Action);
 
   {.$IFDEF UCACTMANAGER}
   if Assigned(ControlRight.ActionMainMenuBar) then
@@ -3777,11 +3777,7 @@ begin
     MsgsForm.Position   := Self.FUserControl.UserSettings.WindowsPosition;
     MsgsForm.ShowModal;
   finally
-  (*
-        if Assigned (MsgsForm) then
-          SysUtils.FreeAndNil(MsgsForm);
-  
-  *)  end;
+  end;
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
@@ -3972,7 +3968,6 @@ begin
       begin
         UnlockEX(TCustomForm(Self.Owner), FListObj[Contador]);
 
-//        ExisteObj := (not TempDS.Locate('ObjName', FListObj[Contador], [])); by vicente barros leonel
         ExisteObj := (TempDS.Locate('ObjName', FListObj[Contador], []));
 
         case Self.UserControl.Criptografia of
@@ -3990,7 +3985,6 @@ begin
 
         if not ExisteObj or (String1 <> String2) then
           LockEX(TCustomForm(Self.Owner), FListObj[Contador], NotAllowed = naInvisible);
-//          LockEX(TCustomForm(Self.Owner), FListObj[Contador], NotAllowed = naDisabled ); // by vicente barros leonel
       end;
       TempDS.Close;
 

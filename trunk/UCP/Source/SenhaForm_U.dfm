@@ -1,11 +1,11 @@
 object SenhaForm: TSenhaForm
-  Left = 297
-  Top = 214
+  Left = 355
+  Top = 241
   ActiveControl = edtSenha
   BorderStyle = bsDialog
   Caption = 'Digitar Senha...'
-  ClientHeight = 115
-  ClientWidth = 213
+  ClientHeight = 145
+  ClientWidth = 244
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,41 +17,54 @@ object SenhaForm: TSenhaForm
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object LabelSenha: TLabel
+    Left = 16
+    Top = 7
+    Width = 30
+    Height = 13
+    Caption = 'Senha'
+  end
+  object LabelConfirma: TLabel
+    Left = 16
+    Top = 51
+    Width = 30
+    Height = 13
+    Caption = 'Senha'
+  end
   object edtSenha: TEdit
-    Left = 7
-    Top = 15
-    Width = 200
+    Left = 16
+    Top = 23
+    Width = 217
     Height = 21
     Ctl3D = True
     ParentCtl3D = False
     PasswordChar = '*'
     TabOrder = 0
-    Text = 'edtSenha'
   end
   object edtConfirmaSenha: TEdit
-    Left = 7
-    Top = 43
-    Width = 200
+    Left = 16
+    Top = 67
+    Width = 217
     Height = 21
     Ctl3D = True
     ParentCtl3D = False
     PasswordChar = '*'
     TabOrder = 1
-    Text = 'edtConfirmaSenha'
   end
   object btnOK: TBitBtn
     Left = 44
-    Top = 76
+    Top = 108
     Width = 75
     Height = 25
     TabOrder = 2
     Kind = bkOK
   end
-  object BitBtn1: TBitBtn
-    Left = 132
-    Top = 76
+  object BtCancel: TBitBtn
+    Left = 124
+    Top = 108
     Width = 75
     Height = 25
     TabOrder = 3
