@@ -60,8 +60,7 @@ type
     FLockAdmin:            Boolean;
     FDataSetPerfilUsuario: TDataset;
     FfrmIncluirUsuario:    TfrmIncluirUsuario;
-    function GetAveCharSize(Canvas: TCanvas): TPoint;
-    function InputSenha(const ACaption, APrompt: String; var Value: String): Boolean;
+    FormSenha : TCustomForm;
   public
     FUserControl:            TUserControl;
     FDataSetCadastroUsuario: TDataset;
@@ -70,95 +69,9 @@ type
 implementation
 
 uses
-  Consts, UCMessages;
+  Consts, UCMessages,SenhaForm_U;
 
 {$R *.dfm}
-
-function TfrmCadastrarUsuario.GetAveCharSize(Canvas: TCanvas): TPoint;
-var
-  I:      Integer;
-  Buffer: array[0..51] of char;
-begin
-  for I := 0 to 25 do
-    Buffer[I] := Chr(I + Ord('A'));
-  for I := 0 to 25 do
-    Buffer[I + 26] := Chr(I + Ord('a'));
-  GetTextExtentPoint(Canvas.Handle, Buffer, 52, TSize(Result));
-  Result.X := Result.X div 52;
-end;
-
-function TfrmCadastrarUsuario.InputSenha(const ACaption, APrompt: String; var Value: String): Boolean;
-var
-  Form:         TForm;
-  Prompt:       TLabel;
-  Edit:         TEdit;
-  DialogUnits:  TPoint;
-  ButtonTop:    Integer;
-  ButtonHeight: Integer;
-  ButtonWidth:  Integer;
-begin
-  Result := False;
-  Form   := TForm.Create(Application);
-  with Form do
-    try
-      Canvas.Font := Font;
-      DialogUnits := GetAveCharSize(Canvas);
-      BorderStyle := bsDialog;
-      Caption     := ACaption;
-      ClientWidth := MulDiv(180, DialogUnits.X, 4);
-      Position    := Self.FUserControl.UserSettings.WindowsPosition;
-      Prompt      := TLabel.Create(Form);
-      with Prompt do
-      begin
-        Parent               := Form;
-        Caption              := APrompt;
-        Left                 := MulDiv(8, DialogUnits.X, 4);
-        Top                  := MulDiv(8, DialogUnits.Y, 8);
-        Constraints.MaxWidth := MulDiv(164, DialogUnits.X, 4);
-        WordWrap             := True;
-      end;
-      Edit := TEdit.Create(Form);
-      with Edit do
-      begin
-        Parent       := Form;
-        Left         := Prompt.Left;
-        Top          := Prompt.Top + Prompt.Height + 5;
-        Width        := MulDiv(164, DialogUnits.X, 4);
-        MaxLength    := 255;
-        PasswordChar := '*';
-        Text         := Value;
-        SelectAll;
-      end;
-      ButtonTop    := Edit.Top + Edit.Height + 15;
-      ButtonWidth  := MulDiv(50, DialogUnits.X, 4);
-      ButtonHeight := MulDiv(14, DialogUnits.Y, 8);
-      with TButton.Create(Form) do
-      begin
-        Parent      := Form;
-        Caption     := SMsgDlgOK;
-        ModalResult := mrOk;
-        Default     := True;
-        SetBounds(MulDiv(38, DialogUnits.X, 4), ButtonTop, ButtonWidth, ButtonHeight);
-      end;
-      with TButton.Create(Form) do
-      begin
-        Parent      := Form;
-        Caption     := SMsgDlgCancel;
-        ModalResult := mrCancel;
-        Cancel      := True;
-        Caption     := SMsgDlgCancel;
-        SetBounds(MulDiv(92, DialogUnits.X, 4), Edit.Top + Edit.Height + 15, ButtonWidth, ButtonHeight);
-        Form.ClientHeight := Top + Height + 13;
-      end;
-      if ShowModal = mrOk then
-      begin
-        Value  := Edit.Text;
-        Result := True;
-      end;
-    finally
-      Form.Free;
-    end;
-end;
 
 procedure TfrmCadastrarUsuario.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -260,32 +173,17 @@ begin
 end;
 
 procedure TfrmCadastrarUsuario.BtPassClick(Sender: TObject);
-var
-  FNovasenha: String;
-  //Nome, Login, Email: String;
 begin
   if FDataSetCadastroUsuario.IsEmpty then
     Exit;
-  if InputSenha(Format(FUserControl.UserSettings.ResetPassword.WindowCaption, [FDataSetCadastroUsuario.FieldByName('Login').AsString]), FUserControl.UserSettings.ResetPassword.LabelPassword, FNovaSenha) then
-    FUserControl.ChangePassword(FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger, FNovaSenha);
-(*
-  {$IFDEF VER130}
-  {$ELSE}
-    if (Assigned(FUserControl.MailUserControl)) and (FUserControl.MailUserControl.SenhaForcada.Ativo) then
-      try
-        with FDataSetCadastroUsuario do
-        begin
-          Nome  := FieldByName('nome').AsString;
-          Login := FieldByName('login').AsString;
-          Email := FieldByName('email').AsString;
-        end;
-        FUserControl.MailUserControl.EnviaEmailSenhaForcada(Nome, Login, FNovasenha, Email, '');
-      except
-        on E: Exception do
-          FUserControl.Log(E.Message, llMedio);
-      end;
-  {$ENDIF}
-*)
+
+  FormSenha := TSenhaForm.Create( Self );
+  TSenhaForm(FormSenha).Position     := fUserControl.UserSettings.WindowsPosition;
+  TSenhaForm(FormSenha).fUserControl := fUserControl;
+  TSenhaForm(FormSenha).Caption      := Format(FUserControl.UserSettings.ResetPassword.WindowCaption, [ FDataSetCadastroUsuario.FieldByName('Login').AsString ]);
+  If TSenhaForm(FormSenha).ShowModal = mrok then
+    FUserControl.ChangePassword(FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger, TSenhaForm(FormSenha).edtSenha.Text );
+  FreeAndNil( FormSenha );
 end;
 
 procedure TfrmCadastrarUsuario.FDataSetCadastroUsuarioAfterScroll(DataSet: TDataSet);
@@ -294,8 +192,8 @@ begin
   begin
     BtExclui.Enabled   := False;
     BtPass.Enabled     := False;
-    Excluir1.Enabled   := False; //Change by Petrus v Breda 28/4/2007
-    Permisses1.Enabled := False; //Change by Petrus v Breda 28/4/2007
+    Excluir1.Enabled   := False;
+    Permisses1.Enabled := False;
     if TUserControl(Owner).CurrentUser.Username <> TUserControl(Owner).Login.InitialLogin.User then
       BtAcess.Enabled := False;
   end
@@ -304,8 +202,8 @@ begin
     BtExclui.Enabled   := True;
     BtPass.Enabled     := True;
     BtAcess.Enabled    := True;
-    Excluir1.Enabled   := True; //Change by Petrus v Breda 28/4/2007
-    Permisses1.Enabled := True; //Change by Petrus v Breda 28/4/2007
+    Excluir1.Enabled   := True;
+    Permisses1.Enabled := True;
   end;
 end;
 

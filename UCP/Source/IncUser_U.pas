@@ -21,7 +21,8 @@ uses
   StdCtrls,
   SysUtils,
   UCBase,
-  Windows, Spin;
+  Windows,
+  Spin;
 
 type
   TfrmIncluirUsuario = class(TForm)
@@ -55,6 +56,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure ckUserExpiredClick(Sender: TObject);
   private
+    FormSenha : TCustomForm;
     { Private declarations }
   public
     { Public declarations }
@@ -96,7 +98,6 @@ var
   vNovoIDUsuario: Integer;
   vPerfil:        Integer;
   vPrivilegiado:  Boolean;
-  vResultado:     TResultado;
 begin
   btGravar.Enabled := False;
 
@@ -109,20 +110,21 @@ begin
         Exit;
       end;
 
-      vResultado := TSenhaForm.Senha( FUserControl.Login.CharCasePass ); { Por Vicente Barros Leonel }
-
-      if vResultado.Cancelado then
-      begin
-        btGravar.Enabled := True;
-        Exit;
-      end;
-
-      vNovaSenha := vResultado.Senha;
-
+      FormSenha := TSenhaForm.Create( Self );
+      TSenhaForm(FormSenha).Position     := UserSettings.WindowsPosition;      
+      TSenhaForm(FormSenha).fUserControl := fUserControl;
+      TSenhaForm(FormSenha).Caption      := Format(FUserControl.UserSettings.ResetPassword.WindowCaption, [ EditLogin.Text ]);
+      If TSenhaForm(FormSenha).ShowModal <> mrok then
+        Begin
+          btGravar.Enabled := True;
+          Exit;
+        End;
+      vNovaSenha := TSenhaForm(FormSenha).edtSenha.Text;
       vNovoIDUsuario := GetNewIdUser;
       vNome          := EditNome.Text;
       vLogin         := EditLogin.Text;
       vEmail         := EditEmail.Text;
+      FreeAndNil( FormSenha );
 
       if ComboPerfil.KeyValue = null then
         vPerfil := 0
@@ -130,7 +132,7 @@ begin
         vPerfil := ComboPerfil.KeyValue;
 
       vPrivilegiado := ckPrivilegiado.Checked;
-      vUserExpired  := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
+      vUserExpired  := StrToInt(BoolToStr(ckUserExpired.Checked));
 
       AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vUserExpired, SpinExpira.Value, vPrivilegiado);
 

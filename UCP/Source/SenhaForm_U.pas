@@ -15,29 +15,27 @@ uses
   StdCtrls,
   SysUtils,
   Variants,
-  Windows;
+  Windows,
+  UCBase;
 
 type
-  TResultado = record
-    Senha:     String;
-    Cancelado: Boolean;
-  end;
-
   TSenhaForm = class(TForm)
     edtSenha:         TEdit;
     edtConfirmaSenha: TEdit;
     btnOK:            TBitBtn;
-    BitBtn1:          TBitBtn;
+    BtCancel: TBitBtn;
+    LabelSenha: TLabel;
+    LabelConfirma: TLabel;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
-    FSenha: String;
     function CompararSenhas(Senha, ConfirmaSenha: String): Boolean;
   public
+    fUserControl : TUserControl;
     { Public declarations }
-    class function Senha(CharCasePass : TEditCharCase): TResultado;
   end;
 
 implementation
@@ -48,10 +46,19 @@ implementation
 
 function TSenhaForm.CompararSenhas(Senha, ConfirmaSenha: String): Boolean;
 begin
-  if (Senha = '') or (ConfirmaSenha = '') then
-    Result := False
-  else
-    Result := (Senha = ConfirmaSenha);
+  Result := False;
+  With fUserControl do
+    begin
+      if ( UserPasswordChange.ForcePassword ) and ( senha = '' ) then
+        MessageDlg(UserSettings.CommonMessages.ChangePasswordError.PasswordRequired, mtWarning, [mbOK], 0)
+      else if Length( Senha ) < UserPasswordChange.MinPasswordLength then
+        MessageDlg(Format(UserSettings.CommonMessages.ChangePasswordError.MinPasswordLength, [UserPasswordChange.MinPasswordLength]), mtWarning, [mbOK], 0)
+      else if Pos(LowerCase(senha), 'abcdeasdfqwerzxcv1234567890321654987teste' + LowerCase(CurrentUser.UserName) + LowerCase(CurrentUser.UserLogin)) > 0 then
+        MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0)
+      else if  ( senha <> confirmasenha ) then
+        MessageDlg( UserSettings.CommonMessages.ChangePasswordError.NewPasswordError , mtWarning, [mbOK], 0)
+      else result := true;
+    End;
 end;
 
 procedure TSenhaForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -65,14 +72,7 @@ begin
   begin
     CanClose := CompararSenhas(edtSenha.Text, edtConfirmaSenha.Text);
     if not CanClose then
-    begin
-      MessageDlg('Atenção, as senhas digitadas não são iguais', mtWarning, [mbOK], 0);
-      edtSenha.Clear;
-      edtConfirmaSenha.Clear;
       edtSenha.SetFocus;
-    end
-    else
-      FSenha := edtSenha.Text;
   end;
 end;
 
@@ -82,18 +82,14 @@ begin
   edtConfirmaSenha.Clear;
 end;
 
-class function TSenhaForm.Senha( CharCasePass : TEditCharCase ): TResultado;
+procedure TSenhaForm.FormShow(Sender: TObject);
 begin
-  with TSenhaForm.Create(nil) do
-    try
-      edtSenha.CharCase         := CharCasePass;
-      edtConfirmaSenha.CharCase := CharCasePass;
-      ShowModal;
-      Result.Cancelado := (ModalResult = mrCancel);
-      Result.Senha     := FSenha;
-    finally
-      Free;
-    end;
+  edtSenha.CharCase         := fUserControl.Login.CharCasePass;
+  edtConfirmaSenha.CharCase := fUserControl.Login.CharCasePass;
+  LabelSenha.Caption        := fUserControl.UserSettings.Login.LabelPassword;
+  LabelConfirma.Caption     := fUserControl.UserSettings.ChangePassword.LabelConfirm;
+  btnOK.Caption             := fUserControl.UserSettings.Login.BtOk;
+  BtCancel.Caption          := fUserControl.UserSettings.Login.BtCancel;
 end;
 
 end.
