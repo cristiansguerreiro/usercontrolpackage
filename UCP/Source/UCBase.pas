@@ -2727,7 +2727,7 @@ begin
     cMD5   : TipoCampo := 'VARCHAR(32)';
   end;
 
-//  if not TableExists then
+  if not TableExists then
     with TableUsers do
     begin
       SQLStmt := Format('CREATE TABLE %s ' + // TableName
