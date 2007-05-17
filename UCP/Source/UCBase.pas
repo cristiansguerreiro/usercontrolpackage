@@ -3549,9 +3549,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.ActionList);
-    ActionManager     := nil;
-    ActionMainMenuBar := nil;
-    MainMenu          := nil;
+   // ActionManager     := nil;
+   // ActionMainMenuBar := nil;
+   // MainMenu          := nil;
   end;
 end;
 
@@ -3562,9 +3562,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.ActionMainMenuBar);
-    ActionList    := nil;
-    ActionManager := nil;
-    MainMenu      := nil;
+  //  ActionList    := nil;
+  //  ActionManager := nil;
+  //  MainMenu      := nil;
   end;
 end;
 
@@ -3574,9 +3574,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.ActionManager);
-    ActionList        := nil;
-    ActionMainMenuBar := nil;
-    MainMenu          := nil;
+    //ActionList        := nil;
+   // ActionMainMenuBar := nil;
+  //  MainMenu          := nil;
   end;
 end;
 
@@ -3588,9 +3588,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.MainMenu);
-    ActionList        := nil;
-    ActionMainMenuBar := nil;
-    ActionManager     := nil;
+   // ActionList        := nil;
+  //  ActionMainMenuBar := nil;
+  //  ActionManager     := nil;
   end;
 end;
 
