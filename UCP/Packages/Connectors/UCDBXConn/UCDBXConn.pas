@@ -102,7 +102,8 @@ end;
 
 procedure TUCDBXConn.UCExecSQL(FSQL: String);
 begin
-  FConnection.Execute(FSQL, nil);
+//  FConnection.Execute(FSQL, nil);
+  FConnection.ExecuteDirect(FSQL);
 end;
 
 function TUCDBXConn.UCGetSQLDataset(FSQL: String): TDataset;

@@ -106,6 +106,8 @@ begin
     Connection := FConnection;
     SQL.Text   := FSQL;
     ExecSQL;
+    if FConnection.AutoCommit = False then
+      FConnection.Commit;
     Free;
   end;
 end;
