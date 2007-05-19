@@ -1446,7 +1446,7 @@ begin
     UserID          := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
     UserName        := Dados.FieldByName(TableUsers.FieldUserName).AsString;
     UserLogin       := Dados.FieldByName(TableUsers.FieldLogin).AsString;
-    DateExpiration  := Dados.FieldByName(TableUsers.FieldDateExpired).AsDateTime;
+    DateExpiration  := StrToDateDef(Dados.FieldByName(TableUsers.FieldDateExpired).AsString,Date);
     UserNotExpired  := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
     UserDaysExpired := Dados.FieldByName(TableUsers.FieldUserDaysSun).AsInteger;
 
@@ -1680,7 +1680,7 @@ begin
       Profile,
       QuotedStr('U'),
       QuotedStr(Key),
-      QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired) ), {By vicente Barros Leonel }
+      QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FLogin.fDaysOfSunExpired) ), {By vicente Barros Leonel }
       UserExpired,
       DaysExpired ]); {By vicente Barros Leonel }
     DataConnector.UCExecSQL(SQLStmt);
@@ -1723,13 +1723,13 @@ begin
     cPadrao: cSql := 'Update ' + TableUsers.TableName +
              ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword,EncryptKey)) +
              ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-             ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
+             ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
              ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
 
        cMD5: cSql := 'Update ' + TableUsers.TableName +
                      ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
                      ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-                     ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
+                     ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
                      ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
   end;
   
@@ -1885,14 +1885,14 @@ begin
 
    If DataSet.FindField( FTableUsers.FieldDateExpired ) = nil then
      Begin
-       Sql := Format('alter table %s add %s date',
+       Sql := Format('alter table %s add %s char(10)',
               [ FTableUsers.TableName,
                 FTableUsers.FieldDateExpired] );
        DataConnector.UCExecSQL( Sql );
        Sql := Format('update %s set %s = %s where %s = ''U''',
              [ FTableUsers.TableName,
                FTableUsers.FieldDateExpired,
-               QuotedStr( FormatDateTime('yyyy-mm-dd',Date + FLogin.fDaysOfSunExpired ) ),
+               QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FLogin.fDaysOfSunExpired ) ),
                FTableUsers.FieldTypeRec ] );
        DataConnector.UCExecSQL( Sql );
      End;
@@ -2736,7 +2736,7 @@ begin
         '%s varchar(30), ' + // FieldUserName
         '%s varchar(30), ' + // FieldLogin
         '%s %s, ' +          // FieldPassword
-        '%s date, ' +       // FieldDateExpired Vicente Barros Leonel
+        '%s char(10), ' +    // FieldDateExpired Vicente Barros Leonel
         '%s int , ' +       //FieldUserExpired  Vicente Barros Leonel
         '%s int , ' +      //FieldUserDaysSun   Vicente Barros Leonel
         '%s varchar(150), ' +
