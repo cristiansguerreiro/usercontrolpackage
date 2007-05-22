@@ -41,13 +41,13 @@ type
     function GetValue: String; override;
   end;
 
-  {$IFDEF DELPHI7}
+  {.$IFDEF DELPHI7}
   TUCAboutXpStyleVarProperty = class(TStringProperty)
     function GetAttributes: TPropertyAttributes; override;
     procedure Edit; override;
     function GetValue: String; override;
   end;
-  {$ENDIF}
+  {.$ENDIF}
 
 procedure Register;
 procedure ShowControlsEditor(Componente: TUCControls);
@@ -62,10 +62,10 @@ uses
   UCAbout,
   UCIdle,
   UCObjSel_U,
-  {$IFDEF DELPHI7}
+  {.$IFDEF DELPHI7}
   UCAboutXPStyle_U,
   UCXPStyle,
-  {$ENDIF}
+  {.$ENDIF}
   UCEditorForm_U,
   {.$IFDEF Indy}
   UCMail,
@@ -89,14 +89,14 @@ begin
     {.$IFDEF Indy}
     , TMailUserControl
     {.$ENDIF}
-    {$IFDEF DELPHI7}
+    {.$IFDEF DELPHI7}
     , TUCXPStyle
-    {$ENDIF}
+    {.$ENDIF}
     ]);
 
-  {$IFDEF DELPHI7}
+  {.$IFDEF DELPHI7}
   RegisterPropertyEditor(TypeInfo(TUCAboutXpStyleVar), nil, '', TUCAboutXpStyleVarProperty);
-  {$ENDIF}
+  {.$ENDIF}
 
   RegisterPropertyEditor(TypeInfo(TUCAboutVar), TUserControl, 'About', TUCAboutVarProperty);
   RegisterPropertyEditor(TypeInfo(TUCComponentsVar), TUserControl, 'Components', TUCComponentsVarProperty);
@@ -321,7 +321,7 @@ begin
     end;
 end;
 
-{$IFDEF DELPHI7}
+{.$IFDEF DELPHI7}
  { TUCAboutXpStyleVarProperty }
 
 procedure TUCAboutXpStyleVarProperty.Edit;
@@ -342,7 +342,7 @@ function TUCAboutXpStyleVarProperty.GetValue: String;
 begin
   Result := 'About...';
 end;
-{$ENDIF}
+{.$ENDIF}
 
 {TUCControlsEditor}
 procedure TUCControlsEditor.Edit;
