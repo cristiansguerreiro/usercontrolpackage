@@ -60,7 +60,8 @@ requires
   pckMD5,
   pckUCDataConnector,
   dclIndyCore,
-  IndyProtocols;
+  IndyProtocols,
+  VclSmp;
 
 contains
   UCMail in '..\Source\UCMail.pas',
