@@ -90,6 +90,36 @@ type
     property TableName: String read FTableName write FTableName;
   end;
 
+ TUCTableHistorico = class(TPersistent)
+  private
+    FTable: String;
+    FApplicationID: String;
+    FUserID: String;
+    fDateEvent: String;
+    fFieldForm: String;
+    fFieldEvent: String;
+    fFieldObs: String;
+    fCaptionForm: string;
+    fEventTime: String;
+    fFieldTableName: String;
+  protected
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property TableName          : String read FTable write FTable; // nome da tabela
+    property FieldApplicationID : String read FApplicationID write FApplicationID;
+    property FieldUserID        : String read FUserID write FUserID;
+    property FieldEventDate     : String read fDateEvent write fDateEvent;
+    property FieldEventTime     : String read fEventTime Write fEventTime;
+    property FieldForm          : String read fFieldForm write fFieldForm;
+    property FieldCaptionForm   : string read fCaptionForm write fCaptionForm;
+    Property FieldEvent         : String read fFieldEvent write fFieldEvent;
+    property FieldObs           : String read fFieldObs write fFieldObs;
+    property FieldTableName     : String read fFieldTableName write fFieldTableName; // grava o nome da tabela monitorada
+  end;
+
 implementation
 
 { TUCTableRights }
@@ -176,7 +206,37 @@ end;
 
 destructor TUCTableUsersLogged.Destroy;
 begin
+  inherited;
+end;
 
+{ TUCTableHistorico }
+
+procedure TUCTableHistorico.Assign(Source: TPersistent);
+begin
+  if Source is TUCTableHistorico then
+  begin
+    Self.FieldApplicationID := TUCTableHistorico(Source).FieldApplicationID;
+    Self.FieldUserID        := TUCTableHistorico(Source).FieldUserID;
+    Self.FieldEventDate     := TUCTableHistorico(Source).FieldEventDate;
+    Self.TableName          := TUCTableHistorico(Source).TableName;
+    Self.FieldForm          := TUCTableHistorico(Source).FieldForm;
+    Self.FieldEvent         := TUCTableHistorico(Source).FieldEvent;
+    Self.FieldObs           := TUCTableHistorico(Source).FieldObs;
+    Self.FieldCaptionForm   := TUCTableHistorico(Source).FieldCaptionForm;
+    Self.FieldEventTime     := TUCTableHistorico(Source).FieldEventTime;
+    Self.FieldTableName     := TUCTableHistorico(Source).FieldTableName;
+  end
+  else
+    inherited;
+end;
+
+constructor TUCTableHistorico.Create(AOwner: TComponent);
+begin
+  inherited Create;
+end;
+
+destructor TUCTableHistorico.Destroy;
+begin
   inherited;
 end;
 

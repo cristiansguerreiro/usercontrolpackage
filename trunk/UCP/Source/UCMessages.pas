@@ -408,7 +408,6 @@ type
     FWindowCaption: String;
     FLabelPassword: String;
   protected
-
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
@@ -416,6 +415,75 @@ type
   published
     property WindowCaption: String read FWindowCaption write FWindowCaption;
     property LabelPassword: String read FLabelPassword write FLabelPassword;
+  end;
+
+
+ TUCHistoryMSG = class(TPersistent) // by vicente barros leonel
+  private
+    fEvento_edit: String;
+    fEvento_NewRecord: String;
+    fEvento_Insert: String;
+    fEvento_delete: String;
+    fLabelTabela: String;
+    fMsg_LogEmptyHistory: String;
+    fMsg_MensConfirma: String;
+    fLabelDescricao: String;
+    fHist_BtnExcluir: String;
+    fHist_BtnFiltro: String;
+    fLabelForm: String;
+    fHist_BtnFechar: String;
+    fLabelDataEvento: String;
+    fLabelEvento: String;
+    fMsg_NewRecord: String;
+    fHist_All: String;
+    fMsg_LimpHistorico: String;
+    fLabelHoraEvento: String;
+    fLabelUser: String;
+    fHist_MsgExceptPropr: String;
+  protected
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;  
+  published
+    Property Evento_Insert       : String read fEvento_Insert write fEvento_Insert;
+    Property Evento_Delete       : String read fEvento_delete write fEvento_delete;
+    Property Evento_Edit         : String read fEvento_edit write fEvento_edit;
+    Property Evento_NewRecord    : String read fEvento_NewRecord write fEvento_NewRecord;
+    Property Hist_All            : String read fHist_All Write fHist_All ;
+    Property Msg_LimpHistorico   : String read fMsg_LimpHistorico Write fMsg_LimpHistorico ;
+    Property Msg_MensConfirma    : String read fMsg_MensConfirma Write fMsg_MensConfirma ;
+    Property Msg_LogEmptyHistory : String read fMsg_LogEmptyHistory Write fMsg_LogEmptyHistory;
+    Property LabelDescricao      : String read fLabelDescricao Write fLabelDescricao ;
+    Property LabelUser           : String read fLabelUser Write fLabelUser;
+    Property LabelForm           : String read fLabelForm Write fLabelForm ;
+    Property LabelEvento         : String read fLabelEvento Write fLabelEvento;
+    Property LabelTabela         : String read fLabelTabela Write fLabelTabela;
+    Property LabelDataEvento     : String read fLabelDataEvento Write fLabelDataEvento;
+    Property LabelHoraEvento     : String read fLabelHoraEvento Write fLabelHoraEvento;
+    Property Msg_NewRecord       : String read fMsg_NewRecord Write fMsg_NewRecord;
+    Property Hist_MsgExceptPropr : String read fHist_MsgExceptPropr write fHist_MsgExceptPropr;
+    Property Hist_BtnFiltro      : String read fHist_BtnFiltro write fHist_BtnFiltro;
+    Property Hist_BtnExcluir     : String read fHist_BtnExcluir write fHist_BtnExcluir;
+    Property Hist_BtnFechar      : String read fHist_BtnFechar write fHist_BtnFechar;
+  end;
+
+  TUCFieldType = class(TPersistent) // classe serve para controlar os tipos de campos
+                                    // no comando sql de create e alter table
+  private
+    fTypeChar: String;
+    fTypeVarChar: String;
+    fTypeInt: String;
+    fTypeMemo: String;
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    Property Type_VarChar   : String read fTypeVarChar write fTypeVarChar;
+    property Type_Char      : String read fTypeChar write fTypeChar;
+    property Type_Int       : String read fTypeInt write fTypeInt;
+    Property Type_MemoField : String read fTypeMemo write fTypeMemo;
   end;
 
   TUCUserSettings = class(TPersistent)
@@ -432,11 +500,14 @@ type
     FLogControlFormMSG:  TUCLogControlFormMSG;
     FAppMessagesMSG:     TUCAppMessagesMSG;
     FPosition:           TPosition;
+    fHistory: TUCHistoryMSG;
+    fTypeFields: TUCFieldType;
     procedure SetFResetPassword(const Value: TUCResetPassword);
     procedure SetFProfileUserFormMSG(const Value: TUCProfileUserFormMSG);
     procedure SetFAddProfileFormMSG(const Value: TUCAddProfileFormMSG);
     procedure SetFLogControlFormMSG(const Value: TUCLogControlFormMSG);
     procedure SetAppMessagesMSG(const Value: TUCAppMessagesMSG);
+    procedure SetfHistory(const Value: TUCHistoryMSG);
   protected
     procedure SetFUserCommonMsg(const Value: TUCUserCommonMSG);
     procedure SetFFormLoginMsg(const Value: TUCLoginFormMSG);
@@ -461,8 +532,11 @@ type
     property Rights: TUCPermissFormMSG read FPermissFormMSG write SetFPermissFormMSG;
     property ChangePassword: TUCTrocaSenhaFormMSG read FTrocaSenhaFormMSG write SetFTrocaSenhaFormMSG;
     property ResetPassword: TUCResetPassword read FResetPassword write SetFResetPassword;
+    property History : TUCHistoryMSG read fHistory write SetfHistory;
     property WindowsPosition: TPosition read FPosition write FPosition;
+    Property TypeFieldsDB : TUCFieldType read fTypeFields write fTypeFields;
   end;
+
 
 implementation
 
@@ -491,6 +565,8 @@ begin
   FResetPassword      := TUCResetPassword.Create(nil);
   FLogControlFormMSG  := TUCLogControlFormMSG.Create(nil);
   FPosition           := poMainFormCenter;
+  fHistory            := TUCHistoryMsg.Create(Nil);
+  fTypeFields         := TUCFieldType.Create(Nil);
 end;
 
 destructor TUCUserSettings.Destroy;
@@ -506,6 +582,8 @@ begin
   SysUtils.FreeAndNil(FTrocaSenhaFormMSG);
   SysUtils.FreeAndNil(FResetPassword);
   SysUtils.FreeAndNil(FLogControlFormMSG);
+  SysUtils.FreeAndNil(fHistory);
+  SysUtils.FreeAndNil(fTypeFields);
   inherited;
 end;
 
@@ -532,6 +610,11 @@ end;
 procedure TUCUserSettings.SetFFormLoginMsg(const Value: TUCLoginFormMSG);
 begin
   Login := Value;
+end;
+
+procedure TUCUserSettings.SetfHistory(const Value: TUCHistoryMSG);
+begin
+  History := Value;
 end;
 
 procedure TUCUserSettings.SetFLogControlFormMSG(const Value: TUCLogControlFormMSG);
@@ -990,6 +1073,73 @@ end;
 
 destructor TUCAppMessagesMSG.Destroy;
 begin
+  inherited;
+end;
+
+{ TUCHistoryMSG }
+
+procedure TUCHistoryMSG.Assign(Source: TPersistent);
+begin
+  if Source is TUCHistoryMSG then
+    Begin
+      Self.Evento_edit         := TUCHistoryMSG(Source).Evento_edit;
+      Self.Evento_NewRecord    := TUCHistoryMSG(Source).Evento_NewRecord;
+      Self.Evento_Insert       := TUCHistoryMSG(Source).Evento_Insert;
+      Self.Evento_delete       := TUCHistoryMSG(Source).Evento_Delete;
+      Self.LabelTabela         := TUCHistoryMSG(Source).LabelTabela;
+      Self.Msg_LogEmptyHistory := TUCHistoryMSG(Source).Msg_LogEmptyHistory;
+      Self.Msg_MensConfirma    := TUCHistoryMSG(Source).Msg_MensConfirma;
+      Self.LabelDescricao      := TUCHistoryMSG(Source).LabelDescricao;
+      Self.Hist_BtnExcluir     := TUCHistoryMSG(Source).Hist_BtnExcluir;
+      Self.Hist_BtnFiltro      := TUCHistoryMSG(Source).Hist_BtnFiltro;
+      Self.LabelForm           := TUCHistoryMSG(Source).LabelForm;
+      Self.Hist_BtnFechar      := TUCHistoryMSG(Source).Hist_BtnFechar;
+      Self.LabelDataEvento     := TUCHistoryMSG(Source).LabelDataEvento;
+      Self.LabelEvento         := TUCHistoryMSG(Source).LabelEvento;
+      Self.Msg_NewRecord       := TUCHistoryMSG(Source).Msg_NewRecord;
+      Self.Hist_All            := TUCHistoryMSG(Source).Hist_All;
+      Self.Msg_LimpHistorico   := TUCHistoryMSG(Source).Msg_LimpHistorico;
+      Self.LabelHoraEvento     := TUCHistoryMSG(Source).LabelHoraEvento;
+      Self.LabelUser           := TUCHistoryMSG(Source).LabelUser;
+      Self.Hist_MsgExceptPropr := TUCHistoryMSG(Source).Hist_MsgExceptPropr;
+    End
+  else
+    inherited;
+end;
+
+constructor TUCHistoryMSG.Create(AOwner: TComponent);
+begin
+  inherited Create;
+end;
+
+destructor TUCHistoryMSG.Destroy;
+begin
+  inherited;
+end;
+
+{ TUCFieldType }
+
+procedure TUCFieldType.Assign(Source: TPersistent);
+begin
+  if Source is TUCFieldType then
+    Begin
+      Self.Type_VarChar   := TUCFieldType(Source).Type_VarChar;
+      Self.Type_Char      := TUCFieldType(Source).Type_Char;
+      Self.Type_Int       := TUCFieldType(Source).Type_Int;
+      Self.Type_MemoField := TUCFieldType(Source).Type_MemoField;
+    end
+  else
+    inherited;
+end;
+
+constructor TUCFieldType.Create(AOwner: TComponent);
+begin
+  inherited Create;
+end;
+
+destructor TUCFieldType.Destroy;
+begin
+
   inherited;
 end;
 

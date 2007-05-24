@@ -146,6 +146,23 @@ type
     property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
   end;
 
+ TUCUserHistory = class(TPersistent) // armazenar menuitem ou action responsavel pelo historico
+  private
+    FAtive:    Boolean;
+    FAction:   TAction;
+    FMenuItem: TMenuItem;
+    procedure SetAction(const Value: TAction);
+    procedure SetMenuItem(const Value: TMenuItem);
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Active: Boolean read FAtive write FAtive default True;
+    property Action: TAction read FAction write SetAction;
+    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
+  end;
+
   TUCUserPasswordChange = class(TPersistent) // armazenar menuitem ou action responsavel pelo Form trocar senha
   private
     FForcePassword:     Boolean;
@@ -375,6 +392,8 @@ type
     FUsersLogged:             TUCUsersLogged;
     FTableUsersLogged:        TUCTableUsersLogged;
     fUsersLogoff: TUCUserLogoff;
+    fTableHistory: TUCTableHistorico;
+    fUsersHistory: TUCUserHistory;
     procedure SetExtraRights(Value: TUCExtraRights);
     procedure SetWindow;
     procedure SetWindowProfile;
@@ -384,6 +403,7 @@ type
     procedure ActionCadUser(Sender: TObject);
     procedure ActionTrocaSenha(Sender: TObject);
     procedure ActionUserProfile(Sender: TObject);
+    procedure ActionUserHistory(Sender: TObject);    
     procedure ActionUsersLogged(Sender: TObject);
     procedure ActionOKLogin(Sender: TObject);
     procedure TestaFecha(Sender: TObject; var CanClose: Boolean);
@@ -405,6 +425,7 @@ type
     FFormLogin:            TCustomForm;
     FFormLogControl:       TCustomForm;
     FFormUsersLogged:      TCustomForm;
+    FrmHistorico:          TCustomForm;
     // -----
 
     procedure Loaded; override;
@@ -487,6 +508,7 @@ type
     property UserPasswordChange: TUCUserPasswordChange read FUserPasswordChange write FUserPasswordChange;
     property UsersLogged: TUCUsersLogged read FUsersLogged write FUsersLogged;
     property UsersLogoff: TUCUserLogoff read fUsersLogoff write fUsersLogoff; //by vicente barros leonel
+    property UsersHistory: TUCUserHistory read fUsersHistory write fUsersHistory; //by vicente barros leonel
     property LogControl: TUCLogControl read FLogControl write FLogControl;
 
     property EncryptKey: Word read FEncrytKey write FEncrytKey;
@@ -502,6 +524,7 @@ type
     property TableUsers: TUCTableUsers read FTableUsers write FTableUsers;
     property TableRights: TUCTableRights read FTableRights write FTableRights;
     property TableUsersLogged: TUCTableUsersLogged read FTableUsersLogged write FTableUsersLogged;
+    property TableHistory : TUCTableHistorico read fTableHistory write fTableHistory;
 
     property DataConnector: TUCDataConnector read FDataConnector write SetDataConnector;
     property CheckValidationKey: Boolean read FCheckValidationKey write FCheckValidationKey default False;
@@ -617,8 +640,8 @@ type
     FComponents:  TUCComponentsVar;
     FUserControl: TUserControl;
     FNotAllowed:  TUCNotAllowed;
-    function GetAccessType: String;
-    function GetActiveForm: String;
+    function  GetAccessType: String;
+    function  GetActiveForm: String;
     procedure SetGroupName(const Value: String);
     procedure SetUserControl(const Value: TUserControl);
   protected
@@ -626,9 +649,9 @@ type
     procedure Notification(AComponent: TComponent; AOperation: TOperation); override;
   public
     destructor Destroy; override;
-    procedure ApplyRights;
-    procedure LockControls;
-    procedure ListComponents(Form: String; List: TStrings);
+    procedure  ApplyRights;
+    procedure  LockControls;
+    procedure  ListComponents(Form: String; List: TStrings);
   published
     property AccessType: String read GetAccessType;
     property ActiveForm: String read GetActiveForm;
@@ -660,16 +683,69 @@ type
     property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
   end;
 
+
+
+ TUCHistTypeSavePostEdit = ( tpSaveAllFields , tpSaveModifiedFields );
+
+ TUCHistOptions = Class( TPersistent )
+   private
+    fSavePostEdit: Boolean;
+    fSavePostInsert: Boolean;
+    fSaveDelete: Boolean;
+    fSaveNewRecord: Boolean;
+    fTypeSave: TUCHistTypeSavePostEdit;
+   public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+   published
+     property SaveNewRecord    : Boolean read fSaveNewRecord write fSaveNewRecord;
+     property SaveDelete       : Boolean read fSaveDelete write fSaveDelete;
+     property SavePostInsert   : Boolean read fSavePostInsert write fSavePostInsert;
+     property SavePostEdit     : Boolean read fSavePostEdit Write fSavePostEdit;
+     Property TypeSavePostEdit : TUCHistTypeSavePostEdit read fTypeSave Write fTypeSave;
+ end;
+
+ TUCHistorico = class(TComponent) // Componente TUCHISTORICO
+  private
+    fUserControl: TUserControl;
+    fDataSet: TDataSet;
+    fOnNewRecord    ,
+    fOnBeforeDelete ,
+    fOnBeforeEdit   ,
+    fOnAfterPost    : TDataSetNotifyEvent;
+    fOptions: TUCHistOptions;
+    procedure SetDataSet(const Value: TDataSet);
+    procedure SetUserControl(const Value: TUserControl);
+    { Private declarations }
+  protected
+    DataSetInEdit : Boolean;
+    AFields       : Array of Variant;
+    procedure NewRecord(DataSet: TDataSet);
+    procedure BeforeDelete(DataSet: TDataSet);
+    procedure BeforeEdit(DataSet: TDataSet);
+    procedure AfterPost(DataSet: TDataSet);
+    procedure AddHistory( AppID , Form , FormCaption, Event , Obs  , TableName : String; UserId : Integer );
+    Function  GetValueFields : String;
+    procedure Loaded; override;    
+    procedure Notification(AComponent: TComponent; AOperation: TOperation);override;
+    { Protected declarations }
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor  Destroy; override;
+    procedure   Assign(Source: TPersistent); override;
+    { Public declarations }
+  published
+    { Published declarations }
+    Property UserControl : TUserControl read fUserControl write SetUserControl;
+    Property DataSet     : TDataSet Read fDataSet Write SetDataSet;
+    Property Options     : TUCHistOptions read fOptions write fOptions;
+  end;
+
+
 function Decrypt(const S: ansistring; Key: Word): ansistring;
 function Encrypt(const S: ansistring; Key: Word): ansistring;
 function MD5Sum(strValor: String): String;
-
-(*
-{$IFDEF DELPHI5}
-  function StrToBool(Valor: String): Boolean;
-  function BoolToStr(Valor: Boolean): String;
-{$ENDIF}
-*)
 
 { TODO -oLuiz -cUpgrade : Mudar o GetLoginName para a Unit principal }
 
@@ -689,21 +765,9 @@ uses
   UCConsts,
   UserPermis_U,
   UsersLogged_U,
-  ViewLog_U;
+  ViewLog_U,
+  UCHist_Form;
 
-(*
-{$IFDEF DELPHI5}
-function StrToBool ( Valor : String) : Boolean;
-begin
-  if Valor = '-1' then Result := True else Result := False;
-end;
-
-function BoolToStr ( Valor : Boolean) : String;
-begin
-  if Valor then Result := '-1' else Result := '0';
-end;
-{$ENDIF}
-*)
 
 {$IFDEF DELPHI9_UP} {$REGION 'TUSerControl'} {$ENDIF}
 
@@ -721,12 +785,14 @@ begin
   FUserPasswordChange := TUCUserPasswordChange.Create(Self);
   FUsersLogged        := TUCUsersLogged.Create(Self);
   fUsersLogoff        := TUCUserLogoff.Create(Self);
+  fUsersHistory       := TUCUserHistory.Create(Self);
   FUserSettings       := TUCUserSettings.Create(Self);
   FNotAllowedItems    := TUCNotAllowedItems.Create(Self);
   FExtraRights        := TUCExtraRights.Create(Self);
   FTableUsers         := TUCTableUsers.Create(Self);
   FTableRights        := TUCTableRights.Create(Self);
   FTableUsersLogged   := TUCTableUsersLogged.Create(Self);
+  fTableHistory       := TUCTableHistorico.Create(Self); 
 
   if csDesigning in ComponentState then
   begin
@@ -752,7 +818,7 @@ begin
         FieldProfile := Const_TableUsers_FieldProfile;
       if FieldKey = '' then
         FieldKey := Const_TableUsers_FieldKey;
-        
+
       If FieldDateExpired = '' then
         FieldDateExpired  := Const_TableUsers_FieldDateExpired; {Vicente Barros Leonel}
 
@@ -794,6 +860,40 @@ begin
       if FieldData = '' then
         FieldData := Const_TableUsersLogged_FieldData;
     end;
+
+
+     With fTableHistory do
+        Begin
+          if Length(Trim(TableName)) = 0 then
+            TableName          := Const_Hist_TableName;
+
+          if Length(Trim(FieldApplicationID)) = 0 then
+            FieldApplicationID := Const_Hist_FieldApplicationID;
+
+          if Length(trim(FieldUserID)) = 0 then
+            FieldUserID        := Const_Hist_FieldUserID;
+
+          If Length(Trim(FieldEventDate)) = 0 then
+            FieldEventDate     := Const_Hist_FieldEventDate;
+
+          If Length(trim(FieldEventTime)) = 0 then
+            FieldEventTime     := Const_Hist_FieldEventTime;
+
+          If Length(trim(FieldForm)) = 0 then
+            FieldForm          := Const_Hist_FieldForm;
+
+          If Length(trim(FieldCaptionForm)) = 0 then
+            FieldCaptionForm   := Const_Hist_FieldCaptionForm;
+
+          If Length(trim(FieldEvent)) = 0 then
+            FieldEvent         := Const_Hist_FieldEvent;
+
+          If Length(trim(FieldObs)) = 0 then
+            FieldObs           := Const_Hist_FieldObs;
+
+          If Length(trim(FieldTableName)) = 0 then
+            FieldTableName     := Const_Hist_FieldTableName; // nome do campo que grava a tabela nao confuda
+        End;
 
     if LogControl.TableLog = '' then
       LogControl.TableLog := 'UCLog';
@@ -838,6 +938,12 @@ begin
 
     if ApplicationID = '' then
       raise Exception.Create(MsgExceptAppID);
+
+    If ( ( Not Assigned( ControlRight.ActionList ) ) and
+         ( Not Assigned( ControlRight.ActionManager ) ) and
+         ( Not Assigned( ControlRight.MainMenu ) ) and
+         ( Not Assigned( ControlRight.ActionMainMenuBar ) ) ) then
+      raise Exception.Create(Format(MsgExceptPropriedade,['ControlRight']));
 
     for Contador := 0 to Pred(Owner.ComponentCount) do
       if Owner.Components[Contador] is TUCSettings then
@@ -908,6 +1014,52 @@ begin
       If ( ( Not Assigned(LogControl.Action) ) and ( not Assigned( LogControl.MenuItem) ) ) then
         raise Exception.Create(Format(MsgExceptPropriedade,['LogControl']));
     end;
+
+    If ( UsersHistory.Active ) then
+      begin
+        With fTableHistory do
+          Begin
+            if Length(trim(TableName)) = 0 then
+              Raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['TableName']));
+
+            if Length(trim(FieldApplicationID)) = 0 then
+              Raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['FieldApplicationID']));
+
+            if Length(trim(FieldUserID)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldUserID']));
+
+            if Length(trim(FieldEventDate)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldEventDate']));
+
+            if Length(trim(FieldEventTime)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldEventTime']));
+
+            if Length(trim(FieldForm)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldForm']));
+
+            if Length(trim(FieldEvent)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldEvent']));
+
+            if Length(trim(FieldObs)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldObs']));
+
+            if Length(trim(FieldCaptionForm)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldCaptionForm']));
+
+            if Length(trim(FieldTableName)) = 0 then
+              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldTableName']));
+          end;
+
+          if Assigned(UsersHistory.MenuItem) and (not Assigned(UsersHistory.MenuItem.OnClick)) then
+            UsersHistory.MenuItem.OnClick := ActionUserHistory;
+
+          if Assigned(UsersHistory.Action) and (not Assigned(UsersHistory.Action.OnExecute)) then
+            UsersHistory.Action.OnExecute := ActionUserHistory;
+
+          If ( ( Not Assigned(UsersHistory.Action) ) and ( not Assigned( UsersHistory.MenuItem) ) ) then
+            raise Exception.Create(Format(MsgExceptPropriedade,['UsersHistory']));
+
+        End;
 
     with TableUsers do
     begin
@@ -995,6 +1147,16 @@ begin
   FFormUsersLogged.ShowModal;
   FreeAndNil(FFormUsersLogged);
 end;
+
+
+procedure TUserControl.ActionUserHistory(Sender:TObject);
+Begin
+  FrmHistorico                             := TFrmHistorico.Create(Self);
+  TFrmHistorico(FrmHistorico).fUserControl := Self;
+  TFrmHistorico(FrmHistorico).Position     := Self.UserSettings.WindowsPosition;
+  FrmHistorico.ShowModal;
+  FreeAndNil(FrmHistorico);
+End;
 
 procedure TUserControl.ActionCadUser(Sender: TObject);
 begin
@@ -1446,7 +1608,7 @@ begin
     UserID          := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
     UserName        := Dados.FieldByName(TableUsers.FieldUserName).AsString;
     UserLogin       := Dados.FieldByName(TableUsers.FieldLogin).AsString;
-    DateExpiration  := StrToDateDef(Dados.FieldByName(TableUsers.FieldDateExpired).AsString,Date);
+    DateExpiration  := StrToDateDef(Dados.FieldByName(TableUsers.FieldDateExpired).AsString, Now );
     UserNotExpired  := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
     UserDaysExpired := Dados.FieldByName(TableUsers.FieldUserDaysSun).AsInteger;
 
@@ -1781,13 +1943,13 @@ end;
 procedure TUserControl.CriaTabelaMsgs(const TableName: String);
 begin
   DataConnector.UCExecSQL('CREATE TABLE ' + TableName + ' ( ' +
-    'IdMsg int ,' +
-    'UsrFrom int, ' +
-    'UsrTo int, ' +
-    'Subject Varchar(50),' +
-    'Msg Varchar(255),' +
-    'DtSend Varchar(12),' +
-    'DtReceive Varchar(12) )');
+    'IdMsg   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
+    'UsrFrom ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
+    'UsrTo   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
+    'Subject ' + UserSettings.TypeFieldsDB.Type_VarChar + '(50),' +
+    'Msg     ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255),' +
+    'DtSend  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12),' +
+    'DtReceive  ' + UserSettings.TypeFieldsDB.Type_Varchar+ '(12) )');
 end;
 
 destructor TUserControl.Destroy;
@@ -1810,6 +1972,8 @@ begin
   FTableUsers.Free;
   FTableRights.Free;
   FTableUsersLogged.Free;
+  fTableHistory.Free;
+  fUsersHistory.Free;
 
   if Assigned( FControlList ) then
     FControlList.Free;
@@ -1839,7 +2003,6 @@ end;
 
 procedure TUserControl.Execute;
 begin
-  //    if not UCFindDataConnection then raise Exception.Create(Format(msgExceptConnection,[name]));
   if Assigned(FThUCRun) then
     FThUCRun.Terminate;
   try
@@ -1858,9 +2021,40 @@ begin
 
     CriaTabelaUsuarios(DataConnector.UCFindTable(FTableUsers.TableName) ) ;
 
+    If UsersHistory.Active then
+    If not DataConnector.UCFindTable( TableHistory.TableName ) then
+        DataConnector.UCExecSQL(
+           Format('CREATE TABLE %s ( %s %s(250), %s %s , %s %s(10), %s %s(8), %s %s(250), %s %s(100), %s %s(50) , %s %s, %s %s(20) )  ',
+             [ TableHistory.TableName,
+               TableHistory.FieldApplicationID,
+               UserSettings.TypeFieldsDB.Type_VarChar,
+
+               TableHistory.FieldUserID,
+               UserSettings.TypeFieldsDB.Type_Int,
+
+               TableHistory.FieldEventDate,
+               UserSettings.TypeFieldsDB.Type_Char,
+
+               TableHistory.FieldEventTime,
+               UserSettings.TypeFieldsDB.Type_Char,
+
+               TableHistory.FieldForm,
+               UserSettings.TypeFieldsDB.Type_VarChar,
+
+               TableHistory.FieldCaptionForm,
+               UserSettings.TypeFieldsDB.Type_VarChar,
+
+               TableHistory.FieldEvent,
+               UserSettings.TypeFieldsDB.Type_VarChar,
+
+               TableHistory.FieldObs,
+               UserSettings.TypeFieldsDB.Type_MemoField,
+
+               TableHistory.FieldTableName,
+               UserSettings.TypeFieldsDB.Type_VarChar]));
+
     //Atualizador de Versoes  By vicente barros leonel
     AtualizarVersao;
-
 
     // testa campo KEY qmd 28-02-2005
     if FCheckValidationKey then
@@ -1885,9 +2079,11 @@ begin
 
    If DataSet.FindField( FTableUsers.FieldDateExpired ) = nil then
      Begin
-       Sql := Format('alter table %s add %s char(10)',
+       Sql := Format('alter table %s add %s %s(10)',
               [ FTableUsers.TableName,
-                FTableUsers.FieldDateExpired] );
+                FTableUsers.FieldDateExpired,
+                UserSettings.TypeFieldsDB.Type_Char ] );
+
        DataConnector.UCExecSQL( Sql );
        Sql := Format('update %s set %s = %s where %s = ''U''',
              [ FTableUsers.TableName,
@@ -1899,9 +2095,10 @@ begin
 
    If DataSet.FindField( FTableUsers.FieldUserExpired  ) = nil then
      Begin
-       Sql := Format('alter table %s add %s Integer',
+       Sql := Format('alter table %s add %s %s',
               [ FTableUsers.TableName,
-                FTableUsers.FieldUserExpired] );
+                FTableUsers.FieldUserExpired,
+                UserSettings.TypeFieldsDB.Type_Int] );
        DataConnector.UCExecSQL( Sql );
        Sql := Format('update %s set %s = 1 where %s = ''U''',
              [ FTableUsers.TableName,
@@ -1912,9 +2109,10 @@ begin
 
    If DataSet.FindField( FTableUsers.FieldUserDaysSun ) = nil then
      Begin // Cria campo  setado no FieldUserDaysSun na tabela de usuarios
-       Sql := Format('alter table %s add %s integer',
+       Sql := Format('alter table %s add %s %s',
               [ FTableUsers.TableName,
-                FTableUsers.FieldUserDaysSun] );
+                FTableUsers.FieldUserDaysSun,
+                UserSettings.TypeFieldsDB.Type_Int] );
        DataConnector.UCExecSQL( Sql );
        Sql := Format('update %s set %s = 30 where %s = ''U''',
              [ FTableUsers.TableName,
@@ -2581,30 +2779,37 @@ var
   TipoCampo: String;
 begin
   case Self.Criptografia of
-    cPadrao: TipoCampo := 'VARCHAR(250)';
-    cMD5: TipoCampo    := 'VARCHAR(32)';
+    cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_Varchar + '(250)';
+    cMD5: TipoCampo    := UserSettings.TypeFieldsDB.Type_Varchar + 'VARCHAR(32)';
   end;
 
   with TableRights do
     if not ExtraRights then
     begin
-      SQLStmt := Format('CREATE TABLE %s( %s int, %s VARCHAR(50), %s VARCHAR(50), %s %s )',
+      SQLStmt := Format('CREATE TABLE %s( %s %s, %s %s(50), %s %s(50), %s %s )',
         [TableName,
         FieldUserID,
+        UserSettings.TypeFieldsDB.Type_Int,
         FieldModule,
+        UserSettings.TypeFieldsDB.Type_VarChar,
         FieldComponentName,
+        UserSettings.TypeFieldsDB.Type_Varchar,
         FieldKey,
         TipoCampo]);
       DataConnector.UCExecSQL(SQLStmt);
     end
     else
     begin
-      SQLStmt := Format('CREATE TABLE %sEX( %s int, %s VARCHAR(50), %s VARCHAR(50), %s VARCHAR(50), %s %s )',
+      SQLStmt := Format('CREATE TABLE %sEX( %s %s, %s %s(50), %s %s(50), %s %s(50), %s %s )',
         [TableName,
         FieldUserID,
+        UserSettings.TypeFieldsDB.Type_Int,
         FieldModule,
+        UserSettings.TypeFieldsDB.Type_VarChar,
         FieldComponentName,
+        UserSettings.TypeFieldsDB.Type_VarChar,
         FieldFormName,
+        UserSettings.TypeFieldsDB.Type_VarChar,
         FieldKey,
         TipoCampo]);
       DataConnector.UCExecSQL(SQLStmt);
@@ -2689,8 +2894,16 @@ end;
 
 procedure TUserControl.CriaTabelaLog;
 begin
-  DataConnector.UCExecSQL('CREATE TABLE ' + LogControl.TableLog +
-    ' (APPLICATIONID VARCHAR(250), IDUSER INT , MSG VARCHAR(250), DATA VARCHAR(14), NIVEL INT)');
+  DataConnector.UCExecSQL(
+    Format('CREATE TABLE %S  (APPLICATIONID %s(250), IDUSER %s , MSG %s(250), DATA %s(14), NIVEL %s)',
+     [
+      LogControl.TableLog,
+      UserSettings.TypeFieldsDB.Type_VarChar,
+      UserSettings.TypeFieldsDB.Type_Int,
+      UserSettings.TypeFieldsDB.Type_Varchar,
+      UserSettings.TypeFieldsDB.Type_Varchar,
+      UserSettings.TypeFieldsDB.Type_Int
+     ]));
 end;
 
 {.$IFDEF UCACTMANAGER}
@@ -2723,41 +2936,62 @@ var
   TipoCampo:        String;
 begin
   case Self.Criptografia of
-    cPadrao: TipoCampo := 'VARCHAR(250)';
-    cMD5   : TipoCampo := 'VARCHAR(32)';
+    cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_VarChar + '(250)';
+    cMD5   : TipoCampo := UserSettings.TypeFieldsDB.Type_Varchar + '(32)';
   end;
 
   if not TableExists then
     with TableUsers do
     begin
-      SQLStmt := Format('CREATE TABLE %s ' + // TableName
+      SQLStmt := Format('Create Table %s ' + // TableName
         '( ' +
-        '%s int, ' +         // FieldUserID
-        '%s varchar(30), ' + // FieldUserName
-        '%s varchar(30), ' + // FieldLogin
+        '%s %s, ' +         // FieldUserID
+        '%s %s(30), ' + // FieldUserName
+        '%s %s(30), ' + // FieldLogin
         '%s %s, ' +          // FieldPassword
-        '%s char(10), ' +    // FieldDateExpired Vicente Barros Leonel
-        '%s int , ' +       //FieldUserExpired  Vicente Barros Leonel
-        '%s int , ' +      //FieldUserDaysSun   Vicente Barros Leonel
-        '%s varchar(150), ' +
-        '%s int, ' +
-        '%s char(1), ' +
-        '%s int, ' +
+        '%s %s(10), ' +   // FieldDateExpired Vicente Barros Leonel
+        '%s %s , ' +       //FieldUserExpired  Vicente Barros Leonel
+        '%s %s , ' +      //FieldUserDaysSun   Vicente Barros Leonel
+        '%s %s(150), ' +
+        '%s %s, ' +
+        '%s %s(1), ' +
+        '%s %s, ' +
         '%s %s ' + // FieldKey
         ')',
         [TableName,
         FieldUserID,
+        UserSettings.TypeFieldsDB.Type_Int,
+
         FieldUserName,
+        UserSettings.TypeFieldsDB.Type_VarChar,
+
         FieldLogin,
+        UserSettings.TypeFieldsDB.Type_VarChar,
+
         FieldPassword,
         TipoCampo,
+
         FieldDateExpired,
+        UserSettings.TypeFieldsDB.Type_Char,
+
         FieldUserExpired,
+        UserSettings.TypeFieldsDB.Type_Int,
+
         FieldUserDaysSun,
+        UserSettings.TypeFieldsDB.Type_Int,
+
         FieldEmail,
+        UserSettings.TypeFieldsDB.Type_Varchar,
+
         FieldPrivileged,
+        UserSettings.TypeFieldsDB.Type_Int,
+
         FieldTypeRec,
+        UserSettings.TypeFieldsDB.Type_Char,
+
         FieldProfile,
+        UserSettings.TypeFieldsDB.Type_Int,
+
         FieldKey,
         TipoCampo]);
 
@@ -2831,6 +3065,16 @@ begin
     {.$ENDIF}
   end;
 
+  if UsersHistory.Active then
+    Begin
+      AddRight(IDUsuario, UsersHistory.MenuItem);
+      AddRight(IDUsuario, UsersHistory.Action);
+      {.$IFDEF UCACTMANAGER}
+      if Assigned(ControlRight.ActionMainMenuBar) then
+        IncPermissActMenuBar(IDUsuario, UsersHistory.Action);
+      {.$ENDIF}
+    End;
+
   for Contador := 0 to Pred(Login.InitialLogin.InitialRights.Count) do
     if Owner.FindComponent(Login.InitialLogin.InitialRights[contador]) <> nil then
     begin
@@ -2873,11 +3117,13 @@ begin
 
   with UserSettings.Login do
   begin
-    BtCancel      := SourceSettings.Login.BtCancel;
-    BtOK          := SourceSettings.Login.BtOK;
-    LabelPassword := SourceSettings.Login.LabelPassword;
-    LabelUser     := SourceSettings.Login.LabelUser;
-    WindowCaption := SourceSettings.Login.WindowCaption;
+    BtCancel        := SourceSettings.Login.BtCancel;
+    BtOK            := SourceSettings.Login.BtOK;
+    LabelPassword   := SourceSettings.Login.LabelPassword;
+    LabelUser       := SourceSettings.Login.LabelUser;
+    WindowCaption   := SourceSettings.Login.WindowCaption;
+    LabelTentativa  := SourceSettings.Login.LabelTentativa;
+    LabelTentativas := SourceSettings.Login.LabelTentativas;
 
     if Assigned(SourceSettings.Login.LeftImage.Bitmap) then
       LeftImage.Bitmap := SourceSettings.Login.LeftImage.Bitmap
@@ -2959,6 +3205,7 @@ begin
     LabelProfile  := SourceSettings.Rights.LabelProfile;
     PageMenu      := SourceSettings.Rights.PageMenu;
     PageActions   := SourceSettings.Rights.PageActions;
+    PageControls  := SourceSettings.Rights.PageControls;
     BtUnlock      := SourceSettings.Rights.BtUnlock;
     BtLock        := SourceSettings.Rights.BtLock;
     BtSave        := SourceSettings.Rights.BtSave;
@@ -3050,6 +3297,38 @@ begin
     MsgSend_LabelSubject     := SourceSettings.AppMessages.MsgSend_LabelSubject; //added by fduenas
     MsgSend_LabelMessageText := SourceSettings.AppMessages.MsgSend_LabelMessageText; //added by fduenas
   end;
+
+  With UserSettings.History do
+    Begin
+      Evento_edit         := SourceSettings.History.Evento_edit;
+      Evento_NewRecord    := SourceSettings.History.Evento_NewRecord;
+      Evento_Insert       := SourceSettings.History.Evento_Insert;
+      Evento_delete       := SourceSettings.History.Evento_Delete;
+      LabelTabela         := SourceSettings.History.LabelTabela;
+      Msg_LogEmptyHistory := SourceSettings.History.Msg_LogEmptyHistory;
+      Msg_MensConfirma    := SourceSettings.History.Msg_MensConfirma;
+      LabelDescricao      := SourceSettings.History.LabelDescricao;
+      Hist_BtnExcluir     := SourceSettings.History.Hist_BtnExcluir;
+      Hist_BtnFiltro      := SourceSettings.History.Hist_BtnFiltro;
+      LabelForm           := SourceSettings.History.LabelForm;
+      Hist_BtnFechar      := SourceSettings.History.Hist_BtnFechar;
+      LabelDataEvento     := SourceSettings.History.LabelDataEvento;
+      LabelEvento         := SourceSettings.History.LabelEvento;
+      Msg_NewRecord       := SourceSettings.History.Msg_NewRecord;
+      Hist_All            := SourceSettings.History.Hist_All;
+      Msg_LimpHistorico   := SourceSettings.History.Msg_LimpHistorico;
+      LabelHoraEvento     := SourceSettings.History.LabelHoraEvento;
+      LabelUser           := SourceSettings.History.LabelUser;
+      Hist_MsgExceptPropr := SourceSettings.History.Hist_MsgExceptPropr;
+    End;
+
+  with UserSettings.TypeFieldsDB do
+    Begin
+      Type_VarChar   := SourceSettings.TypeFieldsDB.Type_VarChar;
+      Type_Char      := SourceSettings.TypeFieldsDB.Type_Char;
+      Type_Int       := SourceSettings.TypeFieldsDB.Type_Int;
+      Type_MemoField := SourceSettings.TypeFieldsDB.Type_MemoField;
+    end;
 
   UserSettings.WindowsPosition := SourceSettings.WindowsPosition;
 end;
@@ -3549,9 +3828,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.ActionList);
-   // ActionManager     := nil;
-   // ActionMainMenuBar := nil;
-   // MainMenu          := nil;
+{    ActionManager     := nil;
+    ActionMainMenuBar := nil;
+    MainMenu          := nil; By Fknyght and QMD}
   end;
 end;
 
@@ -3562,9 +3841,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.ActionMainMenuBar);
-  //  ActionList    := nil;
-  //  ActionManager := nil;
-  //  MainMenu      := nil;
+ {   ActionList    := nil;
+    ActionManager := nil;
+    MainMenu      := nil; By Fknyght and QMD }
   end;
 end;
 
@@ -3574,9 +3853,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.ActionManager);
-    //ActionList        := nil;
-   // ActionMainMenuBar := nil;
-  //  MainMenu          := nil;
+   { ActionList        := nil;
+    ActionMainMenuBar := nil;
+    MainMenu          := nil; By Fknyght and QMD }
   end;
 end;
 
@@ -3588,9 +3867,9 @@ begin
   if Value <> nil then
   begin
     Value.FreeNotification(Self.MainMenu);
-   // ActionList        := nil;
-  //  ActionMainMenuBar := nil;
-  //  ActionManager     := nil;
+   { ActionList        := nil;
+    ActionMainMenuBar := nil;
+    ActionManager     := nil; By Fknyght and QMD }
   end;
 end;
 
@@ -4198,13 +4477,22 @@ begin
     Exit;
 
   with FUserControl.TableUsersLogged do
-    SQLStmt := Format('CREATE TABLE %s (%s CHAR(38), %s INT, %s VARCHAR(50), %s VARCHAR(50), %s VARCHAR(14))',
+    SQLStmt := Format('CREATE TABLE %s (%s %s(38), %s %s, %s %s(50), %s %s(50), %s %s(14))',
       [TableName,
       FieldLogonID,
+      FUserControl.UserSettings.TypeFieldsDB.Type_Char,
+
       FieldUserID,
+      FUserControl.UserSettings.TypeFieldsDB.Type_Int,
+
       FieldApplicationID,
+      FUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+
       FieldMachineName,
-      FieldData]);
+      FUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+
+      FieldData,
+      FUserControl.UserSettings.TypeFieldsDB.Type_VarChar]);
   FUserControl.DataConnector.UCExecSQL(SQLStmt);
 end;
 
@@ -4251,6 +4539,7 @@ end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
 
+
 { TUCUserLogoff Por Vicente Barros Leonel }
 
 {$IFDEF DELPHI9_UP} {$REGION 'TUCUserLogoff'} {$ENDIF}
@@ -4296,6 +4585,309 @@ begin
   end;
 end;
 
+{$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
+
+
+
+{$IFDEF DELPHI9_UP} {$REGION 'TUCHistorico'} {$ENDIF}
+
+{By Vicente Barros Leonel }
+
+function TUCHistorico.GetValueFields: String;
+Var Aux : Integer;
+begin
+  Result := '';
+  For Aux := 0 to DataSet.FieldCount -1 do
+    Begin
+      With DataSet.Fields[ Aux ] do
+        Begin
+          If DataSetInEdit = false then  // inserindo ou deletando
+            try Result := Result + Format('%-20s = %s ',[ FieldName , AsString ] ) + #13#10; except end
+          else
+            Begin //editando
+              If Options.TypeSavePostEdit = tpSaveModifiedFields then
+                Begin
+                  If Value <> AFields[ Aux ] then
+                  try Result := Result + Format('%s||%s||%s',[FieldNAme, Value , AFields[ Aux ] ] ) + #13#10; except end;
+                End
+              else
+                try Result := Result + Format('%s||%s||%s',[FieldNAme, Value , AFields[ Aux ] ] )+ #13#10; except end;
+            End;
+        end;
+    End; // for
+end;
+
+procedure TUCHistorico.AfterPost(DataSet: TDataSet);
+begin
+  If Assigned( fOnAfterPost ) then
+     fOnAfterPost( DataSet );
+
+  If ( ( DataSetInEdit = False ) and ( Options.SavePostInsert ) ) then   // quando inserindo
+    AddHistory(fUserControl.ApplicationID,
+               Screen.ActiveCustomForm.Name ,
+               Screen.ActiveCustomForm.Caption ,
+               fUserControl.UserSettings.History.Evento_Insert,
+               GetValueFields,
+               DataSet.Name,
+               UserControl.CurrentUser.UserID);
+
+  If ( ( DataSetInEdit = True ) and ( Options.SavePostEdit ) ) then   // quando editando
+    AddHistory(fUserControl.ApplicationID,
+               Screen.ActiveCustomForm.Name ,
+               Screen.ActiveCustomForm.Caption ,
+               fUserControl.UserSettings.History.Evento_Edit,
+               GetValueFields,
+               DataSet.Name,
+               UserControl.CurrentUser.UserID);
+
+   DataSetInEdit := False;
+   SetLength( AFields , 0 );
+end;
+
+procedure TUCHistorico.BeforeDelete(DataSet: TDataSet);
+begin
+  If Assigned( fOnBeforeDelete ) then
+     fOnBeforeDelete( DataSet );
+
+  DataSetInEdit := False;
+  SetLength( AFields , 0 );
+
+  If Options.SaveDelete then
+    AddHistory(fUserControl.ApplicationID,
+               Screen.ActiveCustomForm.Name ,
+               Screen.ActiveCustomForm.Caption ,
+               fUserControl.UserSettings.History.Evento_Delete,
+               GetValueFields,
+               DataSet.Name,
+               UserControl.CurrentUser.UserID);
+end;
+
+procedure TUCHistorico.BeforeEdit(DataSet: TDataSet);
+Var I : Integer;
+begin
+  // Antes de Editar
+  If Assigned( fOnBeforeEdit ) then
+     fOnBeforeEdit( DataSet );
+
+  DataSetInEdit := True;
+  SetLength( AFields , DataSet.FieldCount );
+  For I := 0 to DataSet.FieldCount - 1 do
+    AFields[ i ] := DataSet.Fields[ i ].Value;
+end;
+
+procedure TUCHistorico.NewRecord(DataSet: TDataSet);
+begin { Adciona novo registro }
+  If Assigned( fOnNewRecord ) then
+     fOnNewRecord( DataSet );
+
+  DataSetInEdit := False; // Inserindo novo registro
+  SetLength( AFields , 0 );
+
+  If Options.SaveNewRecord then
+    AddHistory( fUserControl.ApplicationID,
+                Screen.ActiveCustomForm.Name ,
+                Screen.ActiveCustomForm.Caption,
+                fUserControl.UserSettings.History.Evento_NewRecord,
+                Format(Const_Msg_NewRecord,[UserControl.CurrentUser.UserName]),
+                DataSet.Name,
+                UserControl.CurrentUser.UserID);
+end;
+
+procedure TUCHistorico.SetDataSet(const Value: TDataSet);
+begin
+  fDataSet := Value;
+  if Assigned(Value) then
+    Value.FreeNotification(Self.DataSet);
+end;
+
+procedure TUCHistorico.SetUserControl(const Value: TUserControl);
+begin
+  FUserControl := Value;
+  if Value <> nil then
+    Value.FreeNotification(self.UserControl);
+end;
+
+{----------------------------------------------------------------------------}
+
+constructor TUCHistorico.Create(AOwner: TComponent);
+begin
+  inherited;
+  DataSetInEdit   := False;
+  fOptions        := TUCHistOptions.Create(Self);
+end;
+
+destructor TUCHistorico.Destroy;
+begin
+  FreeAndNil( fOptions );
+  inherited;
+end;
+
+procedure TUCHistorico.Assign(Source: TPersistent);
+begin
+  if Source is TUCHistorico then
+    begin
+      Self.UserControl     := TUCHistorico(Source).UserControl;
+      Self.DataSet         := TUCHistorico(Source).DataSet;
+      Self.Options.Assign(TUCHistorico(Source).Options);
+    end
+  else
+    inherited;
+end;
+
+procedure TUCHistorico.Loaded;
+begin
+  inherited;
+  If fUserControl.UsersHistory.Active = false then exit;
+  
+  if not(csDesigning in ComponentState) then
+    begin
+      if not Assigned(UserControl) then
+        raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['UserControl']) );
+
+      if not Assigned(DataSet) then
+        raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['DataSet']) );
+
+      if not Assigned(UserControl.DataConnector) then
+        raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['UserControl.DataConnector']) );
+
+      fOnNewRecord    := Nil;
+      fOnBeforeDelete := Nil;
+      fOnBeforeEdit   := Nil;
+      fOnAfterPost    := Nil;
+
+      If Assigned( DataSet.OnNewRecord ) then
+        fOnNewRecord := DataSet.OnNewRecord;
+
+      If Assigned( DataSet.BeforeDelete ) then
+        fOnBeforeDelete := DataSet.BeforeDelete;
+
+      If Assigned( DataSet.AfterPost ) then
+        fOnAfterPost  := DataSet.AfterPost;
+
+      If Assigned( DataSet.BeforeEdit ) then
+        fOnBeforeEdit  := DataSet.BeforeEdit;
+
+      DataSet.OnNewRecord  := NewRecord;
+      DataSet.BeforeDelete := BeforeDelete;
+      DataSet.AfterPost    := AfterPost;
+      DataSet.BeforeEdit   := BeforeEdit;
+     end;
+end;
+
+procedure TUCHistorico.Notification(AComponent: TComponent;
+  AOperation: TOperation);
+begin
+
+  if (AOperation = opRemove) then
+    begin
+      If AComponent = fUserControl then
+        fUserControl := Nil;
+
+      if AComponent = fDataSet then
+        fDataSet := Nil;
+
+    end;
+
+  inherited Notification(AComponent, AOperation);
+end;
+
+procedure TUCHistorico.AddHistory(AppID, Form, FormCaption, Event, Obs, TableName: String;
+  UserId: Integer);
+begin
+  If fUserControl.UsersHistory.Active then
+  fUserControl.DataConnector.UCExecSQL
+  (
+   Format('INSERT INTO %s VALUES( %s, %d , %s , %s , %s , %s ,%s ,%s , %s )',
+    [ fUserControl.TableHistory.TableName ,
+      QuotedStr(AppID),
+      UserID,
+      QuotedStr( FormatDateTime('dd/mm/yyyy',date) ),
+      QuotedStr( FormatDateTime('hh:mm:ss',time) ),
+      QuotedStr( Form ),
+      QuotedStr( FormCaption ),
+      QuotedStr( Event ),
+      QuotedStr( Obs ) ,
+      QuotedStr( Form + '.' + TableName )
+    ]));
+end;
+{$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
+
+{ TUCUserHistory }
+
+{$IFDEF DELPHI9_UP} {$REGION 'TUCUserHistory'} {$ENDIF}
+
+procedure TUCUserHistory.Assign(Source: TPersistent);
+begin
+  if Source is TUCUserProfile then
+  begin
+    Self.MenuItem := TUCUserProfile(Source).MenuItem;
+    Self.Action   := TUCUserProfile(Source).Action;
+  end
+  else
+    inherited;
+end;
+
+constructor TUCUserHistory.Create(AOwner: TComponent);
+begin
+  inherited Create;
+  Self.Active := True;
+end;
+
+destructor TUCUserHistory.Destroy;
+begin
+  inherited;
+end;
+
+procedure TUCUserHistory.SetAction(const Value: TAction);
+begin
+  FAction := Value;
+  if Value <> nil then
+  begin
+    Self.MenuItem := nil;
+    Value.FreeNotification(Self.Action);
+  end;
+end;
+
+procedure TUCUserHistory.SetMenuItem(const Value: TMenuItem);
+begin
+  FMenuItem := Value;
+  if Value <> nil then
+  begin
+    Self.Action := nil;
+    Value.FreeNotification(Self.MenuItem);
+  end;
+end;
+{$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
+{ TUCHistOptions }
+
+{$IFDEF DELPHI9_UP} {$REGION 'TUCHistOptions'} {$ENDIF}
+procedure TUCHistOptions.Assign(Source: TPersistent);
+begin
+  if Source is TUCHistOptions then
+  begin
+    Self.SaveNewRecord    := TUCHistOptions(Source).SaveNewRecord;
+    Self.SaveDelete       := TUCHistOptions(Source).SaveDelete;
+    Self.SavePostInsert   := TUCHistOptions(Source).SavePostInsert;
+    Self.SavePostEdit     := TUCHistOptions(Source).SavePostEdit;
+    Self.TypeSavePostEdit := TUCHistOptions(Source).TypeSavePostEdit;
+  end
+  else
+    inherited;
+end;
+
+constructor TUCHistOptions.Create(AOwner: TComponent);
+begin
+  fSavePostEdit   := true;
+  fSavePostInsert := true;
+  fSaveDelete     := true;
+  fSaveNewRecord  := true;
+  fTypeSave       := tpSaveAllFields;
+end;
+
+destructor TUCHistOptions.Destroy;
+begin
+  inherited;
+end;
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
 
 end.

@@ -26,9 +26,15 @@ package pckUCGlobal;
 
 requires
   rtl,
-  vcl;
-
-contains
-  LoginWindow_U in '..\Source\LoginWindow_U.pas';
+  vcl,
+  dbrtl,
+  vclactnband,
+  dclindy,
+  indy,
+  vcldb,
+  pckMD5,
+  pckUCDataConnector,
+  VclSmp,
+  pckUserControl_RT;
 
 end.

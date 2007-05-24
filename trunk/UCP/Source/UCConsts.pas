@@ -231,6 +231,47 @@ const
   Const_TableUsersLogged_TableName          = 'UCTabUsersLogged';
 
 
+{ TUCHISTORICO }
+ //Eventos
+   Const_Evento_Insert    = 'Inserido';
+   Const_Evento_Delete    = 'Apagado';
+   Const_Evento_Edit      = 'Editado';
+   Const_Evento_NewRecord = 'Novo registro';
+
+   //Gerais
+   Const_Hist_All             = 'Todos';
+   Const_Msg_LimpHistorico    = 'Excluir todo o conteúdo do histórico ?';
+   Const_Msg_MensConfirma     = 'Confirmação';
+   Const_Msg_LogEmptyHistory  = 'Usuário %s apagou todo o histórico as %s';
+   Const_LabelDescricao       = 'Histórico de tabelas';
+   Const_LabelUser            = 'Usuário';
+   Const_LabelForm            = 'Formulário';
+   Const_LabelEvento          = 'Evento';
+   Const_LabelTabela          = 'Tabela';
+   Const_LabelDataEvento      = 'Data';
+   Const_LabelHoraEvento      = 'Hora';
+   Const_Msg_NewRecord        = '%s inseriu um novo registro';
+
+   //Campos da tabela
+   Const_Hist_TableName          = 'UCTABHistory';
+   Const_Hist_FieldApplicationID = 'ApplicationID';
+   Const_Hist_FieldUserID        = 'UserID';
+   Const_Hist_FieldEventDate     = 'EventDate';
+   Const_Hist_FieldEventTime     = 'EventTime';
+   Const_Hist_FieldForm          = 'Form';
+   Const_Hist_FieldCaptionForm   = 'FormCaption';
+   Const_Hist_FieldEvent         = 'Event';
+   Const_Hist_FieldObs           = 'Obs';
+   Const_Hist_FieldTableName     = 'tName'; // nome do campo que grava a tabela nao confuda
+
+   // mensagem de erro
+   Const_Hist_MsgExceptPropr     = 'Favor informar a propriedade %s';
+
+   //Botoes do form
+   Const_Hist_BtnFiltro      = '&Aplicar Filtro';
+   Const_Hist_BtnExcluir     = '&Excluir Histórico';
+   Const_Hist_BtnFechar      = '&Fechar';
+
 implementation
 
 end.

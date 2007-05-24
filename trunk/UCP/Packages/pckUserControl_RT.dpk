@@ -25,30 +25,6 @@ package pckUserControl_RT;
 {$DESCRIPTION 'User Control Package 2'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCBase\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCEMailForm_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCSettings\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\IncUser_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\CadUser_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\EnvMsgForm_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\CadPerfil_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCMail\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCMessages\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\LoginWindow_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCDataInfo\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UsersLogged_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\SenhaForm_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCConsts\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\MsgsForm_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\TrocaSenha_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\MsgRecForm_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\IncPerfil_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UserPermis_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\ViewLog_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\default.txvpck'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UserPermis_U\default.txvpck'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_RT\UCBase\default.txvpck'}
 
 requires
   vcljpg,
@@ -59,8 +35,8 @@ requires
   vcldb,
   pckMD5,
   pckUCDataConnector,
-  dclIndyCore,
-  IndyProtocols,
+  dclindy,
+  indy,
   VclSmp;
 
 contains
@@ -83,6 +59,8 @@ contains
   UCEMailForm_U in '..\Source\UCEMailForm_U.pas',
   UCSettings in '..\Source\UCSettings.pas',
   UsersLogged_U in '..\Source\UsersLogged_U.pas' {frmUsersLogged},
-  LoginWindow_U in '..\Source\LoginWindow_U.pas';
+  LoginWindow_U in '..\Source\LoginWindow_U.pas',
+  UCHist_Form in '..\Source\UCHist_Form.pas' {FrmHistorico},
+  UcConsts_Language in '..\Source\UcConsts_Language.pas';
 
 end.

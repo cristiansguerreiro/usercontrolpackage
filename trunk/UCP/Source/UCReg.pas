@@ -85,7 +85,8 @@ begin
     TUCSettings,
     TUCControls,
     TUCApplicationMessage,
-    TUCIdle
+    TUCIdle,
+    TUCHistorico
     {.$IFDEF Indy}
     , TMailUserControl
     {.$ENDIF}

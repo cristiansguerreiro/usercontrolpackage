@@ -197,11 +197,6 @@ begin
   for Contador := 0 to Pred(ListaCompsSelecionados.Items.Count) do
     if ListaCompsSelecionados.Items.Item[Contador].Selected then
     begin
-      {
-      if FInitialObjs.IndexOf(ListaCompsDisponiveis.Items[Contador].SubItems[0]) > -1 then
-        FInitialObjs.Delete(FInitialObjs.IndexOf(ListaCompsDisponiveis.Items[Contador].SubItems[0]));
-      }
-      // by vicente barros leonel
       if FInitialObjs.IndexOf(ListaCompsSelecionados.Items[Contador].SubItems[0]) > -1 then
         FInitialObjs.Delete(FInitialObjs.IndexOf(ListaCompsSelecionados.Items[Contador].SubItems[0]));
 
@@ -241,7 +236,6 @@ end;
 
 procedure TUCObjSel.ListaCompsSelecionadosDblClick(Sender: TObject);
 begin
-  //  btunsel.Click;
   if ListaCompsSelecionados.Items.Count = 0 then
     Exit;
   if ListaCompsSelecionados.SelCount = 1 then
