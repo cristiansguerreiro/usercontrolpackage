@@ -2,7 +2,7 @@ unit UCAbout;
 
 interface
 
-{.$I 'UserControl.inc'}
+{$I 'UserControl.inc'}
 
 uses
   Messages,

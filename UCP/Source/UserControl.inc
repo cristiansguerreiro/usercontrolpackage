@@ -151,9 +151,7 @@
 {$ENDIF}
 
 (*
-
   Definições do Usuario
-
 *)
 
 // Define se vai compilar com o indy

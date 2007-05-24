@@ -26,13 +26,6 @@ package pckUserControl_DT;
 {$DESCRIPTION 'User Control Package 2'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\UCReg\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\UCEditorForm_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\UCObjSel_U\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\UCAbout\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\UCIdle\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUserControl_DT\default.txvpck'}
 
 requires
   designide,
@@ -41,10 +34,6 @@ requires
   vcl,
   rtl,
   VclSmp,
-  IndyProtocols,
-  IndyCore,
-  IndySystem,
-  dclIndyCore,
   xmlrtl,
   vclactnband,
   vclx,

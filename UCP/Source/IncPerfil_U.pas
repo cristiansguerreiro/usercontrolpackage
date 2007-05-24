@@ -5,9 +5,9 @@ interface
 {$I 'UserControl.inc'}
 
 uses
-{$IFDEF DELPHI5_UP}
+{.$IFDEF DELPHI5_UP}
   Variants,
-{$ENDIF}
+{.$ENDIF}
   Buttons,
   Classes,
   Controls,

@@ -123,7 +123,14 @@ Private=0
 DLL=0
 Locale=1046
 CodePage=1252
-[Excluded Packages]
-c:\arquivos de programas\borland\delphi7\Bin\dcldss70.bpl=Borland Decision Cube Components
-C:\Arquivos de programas\Borland\Delphi7\Bin\dcltee70.bpl=TeeChart Components
-C:\Arquivos de programas\Borland\Componentes\TeeChart.Pro.v7.06\Sources\Compiled\Delphi7\Bin\DclTQR77.bpl=TeeChart 7 for QuickReport
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=

@@ -3,10 +3,10 @@ unit UsersLogged_U;
 interface
 
 uses
-{$IFDEF Ver130}
-{$ELSE}
+{.$IFDEF DELPHI5}
+{.$ELSE}
   Variants,
-{$ENDIF}
+{.$ENDIF}
   Buttons,
   Classes,
   Controls,
