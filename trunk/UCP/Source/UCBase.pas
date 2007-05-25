@@ -4737,13 +4737,13 @@ end;
 procedure TUCHistorico.Loaded;
 begin
   inherited;
-  If fUserControl.UsersHistory.Active = false then exit;
-  
   if not(csDesigning in ComponentState) then
     begin
       if not Assigned(UserControl) then
         raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['UserControl']) );
 
+      If fUserControl.UsersHistory.Active = false then exit;
+              
       if not Assigned(DataSet) then
         raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['DataSet']) );
 
