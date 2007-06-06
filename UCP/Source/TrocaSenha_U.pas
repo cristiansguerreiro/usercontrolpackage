@@ -20,7 +20,7 @@ uses
   StdCtrls,
   SysUtils,
   Windows,
-  UCConsts,
+//  UCConsts,
   UCBase; { Por Vicente Barros Leonel }
 
 type
@@ -82,7 +82,7 @@ begin
   If ForcarTroca = True then
      Begin
        CanClose := False;
-       MessageDlg(Const_ErrPass_ForcaTrocaSenha,mtWarning, [mbOK], 0);
+       MessageDlg(  fUsercontrol.UserSettings.CommonMessages.ForcaTrocaSenha ,mtWarning, [mbOK], 0);
      End;
 end;
 

@@ -51,7 +51,8 @@ uses
   UCMail,
   {.$ENDIF}
   UCMessages,
-  UCSettings;
+  UCSettings,
+  UcConsts_Language;
 
 const
   llBaixo   = 0;
@@ -61,7 +62,7 @@ const
 
 // Version
 const
-  UCVersion = '2.20RC5';
+  UCVersion = '2.20 RC6';
 
 type
   // Pensando em usar GUID para gerar a chave das tabelas !!!!
@@ -394,6 +395,7 @@ type
     fUsersLogoff: TUCUserLogoff;
     fTableHistory: TUCTableHistorico;
     fUsersHistory: TUCUserHistory;
+    fLanguage: TUCLanguage;
     procedure SetExtraRights(Value: TUCExtraRights);
     procedure SetWindow;
     procedure SetWindowProfile;
@@ -416,6 +418,7 @@ type
     {.$ENDIF}
     procedure SetDataConnector(const Value: TUCDataConnector);
     procedure DoCheckValidationField;
+    procedure SetfLanguage(const Value: TUCLanguage);
   protected
     FRetry:                Integer;
     // Formulários
@@ -510,6 +513,8 @@ type
     property UsersLogoff: TUCUserLogoff read fUsersLogoff write fUsersLogoff; //by vicente barros leonel
     property UsersHistory: TUCUserHistory read fUsersHistory write fUsersHistory; //by vicente barros leonel
     property LogControl: TUCLogControl read FLogControl write FLogControl;
+
+    property Language : TUCLanguage read fLanguage write SetfLanguage;
 
     property EncryptKey: Word read FEncrytKey write FEncrytKey;
     property NotAllowedItems: TUCNotAllowedItems read FNotAllowedItems write FNotAllowedItems;
@@ -762,7 +767,7 @@ uses
   MsgRecForm_U,
   MsgsForm_U,
   TrocaSenha_U,
-  UCConsts,
+//  UCConsts,
   UserPermis_U,
   UsersLogged_U,
   ViewLog_U,
@@ -799,100 +804,100 @@ begin
     with TableUsers do
     begin
       if TableName = '' then
-        TableName := Const_TableUsers_TableName;
+        TableName :=  RetornaLingua( fLanguage,'Const_TableUsers_TableName');
       if FieldUserID = '' then
-        FieldUserID := Const_TableUsers_FieldUserID;
+        FieldUserID := RetornaLingua( fLanguage,'Const_TableUsers_FieldUserID');
       if FieldUserName = '' then
-        FieldUserName := Const_TableUsers_FieldUserName;
+        FieldUserName := RetornaLingua( fLanguage,'Const_TableUsers_FieldUserName');
       if FieldLogin = '' then
-        FieldLogin := Const_TableUsers_FieldLogin;
+        FieldLogin := RetornaLingua( fLanguage,'Const_TableUsers_FieldLogin');
       if FieldPassword = '' then
-        FieldPassword := Const_TableUsers_FieldPassword;
+        FieldPassword := RetornaLingua( fLanguage,'Const_TableUsers_FieldPassword');
       if FieldEmail = '' then
-        FieldEmail := Const_TableUsers_FieldEmail;
+        FieldEmail := RetornaLingua( fLanguage,'Const_TableUsers_FieldEmail');
       if FieldPrivileged = '' then
-        FieldPrivileged := Const_TableUsers_FieldPrivileged;
+        FieldPrivileged := RetornaLingua( fLanguage,'Const_TableUsers_FieldPrivileged');
       if FieldTypeRec = '' then
-        FieldTypeRec := Const_TableUsers_FieldTypeRec;
+        FieldTypeRec := RetornaLingua( fLanguage,'Const_TableUsers_FieldTypeRec');
       if FieldProfile = '' then
-        FieldProfile := Const_TableUsers_FieldProfile;
+        FieldProfile := RetornaLingua( fLanguage,'Const_TableUsers_FieldProfile');
       if FieldKey = '' then
-        FieldKey := Const_TableUsers_FieldKey;
+        FieldKey := RetornaLingua( fLanguage,'Const_TableUsers_FieldKey');
 
       If FieldDateExpired = '' then
-        FieldDateExpired  := Const_TableUsers_FieldDateExpired; {Vicente Barros Leonel}
+        FieldDateExpired  := RetornaLingua( fLanguage,'Const_TableUsers_FieldDateExpired'); {Vicente Barros Leonel}
 
       If FieldUserExpired = '' then
-        FieldUserExpired := Const_TableUser_FieldUserExpired;  {Vicente Barros Leonel}
+        FieldUserExpired := RetornaLingua( fLanguage,'Const_TableUser_FieldUserExpired');  {Vicente Barros Leonel}
 
       if FieldUserDaysSun = '' then
-        FieldUserDaysSun := Const_TableUser_FieldUserDaysSun; { Vicente Barros leoenl }
+        FieldUserDaysSun := RetornaLingua( fLanguage,'Const_TableUser_FieldUserDaysSun'); { Vicente Barros leoenl }
     end;
 
     with TableRights do
     begin
       if TableName = '' then
-        TableName := Const_TableRights_TableName;
+        TableName := RetornaLingua( fLanguage,'Const_TableRights_TableName');
       if FieldUserID = '' then
-        FieldUserID := Const_TableRights_FieldUserID;
+        FieldUserID := RetornaLingua( fLanguage,'Const_TableRights_FieldUserID');
       if FieldModule = '' then
-        FieldModule := Const_TableRights_FieldModule;
+        FieldModule := RetornaLingua( fLanguage,'Const_TableRights_FieldModule');
       if FieldComponentName = '' then
-        FieldComponentName := Const_TableRights_FieldComponentName;
+        FieldComponentName := RetornaLingua( fLanguage,'Const_TableRights_FieldComponentName');
       if FieldFormName = '' then
-        FieldFormName := Const_TableRights_FieldFormName;
+        FieldFormName := RetornaLingua( fLanguage,'Const_TableRights_FieldFormName');
       if FieldKey = '' then
-        FieldKey := Const_TableRights_FieldKey;
+        FieldKey := RetornaLingua( fLanguage,'Const_TableRights_FieldKey');
     end;
 
     with TableUsersLogged do
     begin
       if TableName = '' then
-        TableName := Const_TableUsersLogged_TableName;
+        TableName := RetornaLingua( fLanguage,'Const_TableUsersLogged_TableName');
       if FieldLogonID = '' then
-        FieldLogonID := Const_TableUsersLogged_FieldLogonID;
+        FieldLogonID := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldLogonID');
       if FieldUserID = '' then
-        FieldUserID := Const_TableUsersLogged_FieldUserID;
+        FieldUserID := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldUserID');
       if FieldApplicationID = '' then
-        FieldApplicationID := Const_TableUsersLogged_FieldApplicationID;
+        FieldApplicationID := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldApplicationID');
       if FieldMachineName = '' then
-        FieldMachineName := Const_TableUsersLogged_FieldMachineName;
+        FieldMachineName := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldMachineName');
       if FieldData = '' then
-        FieldData := Const_TableUsersLogged_FieldData;
+        FieldData := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldData');
     end;
 
 
      With fTableHistory do
         Begin
           if Length(Trim(TableName)) = 0 then
-            TableName          := Const_Hist_TableName;
+            TableName          := RetornaLingua( fLanguage,'Const_Hist_TableName');
 
           if Length(Trim(FieldApplicationID)) = 0 then
-            FieldApplicationID := Const_Hist_FieldApplicationID;
+            FieldApplicationID := RetornaLingua( fLanguage,'Const_Hist_FieldApplicationID');
 
           if Length(trim(FieldUserID)) = 0 then
-            FieldUserID        := Const_Hist_FieldUserID;
+            FieldUserID        := RetornaLingua( fLanguage,'Const_Hist_FieldUserID');
 
           If Length(Trim(FieldEventDate)) = 0 then
-            FieldEventDate     := Const_Hist_FieldEventDate;
+            FieldEventDate     := RetornaLingua( fLanguage,'Const_Hist_FieldEventDate');
 
           If Length(trim(FieldEventTime)) = 0 then
-            FieldEventTime     := Const_Hist_FieldEventTime;
+            FieldEventTime     := RetornaLingua( fLanguage,'Const_Hist_FieldEventTime');
 
           If Length(trim(FieldForm)) = 0 then
-            FieldForm          := Const_Hist_FieldForm;
+            FieldForm          := RetornaLingua( fLanguage,'Const_Hist_FieldForm');
 
           If Length(trim(FieldCaptionForm)) = 0 then
-            FieldCaptionForm   := Const_Hist_FieldCaptionForm;
+            FieldCaptionForm   := RetornaLingua( fLanguage,'Const_Hist_FieldCaptionForm');
 
           If Length(trim(FieldEvent)) = 0 then
-            FieldEvent         := Const_Hist_FieldEvent;
+            FieldEvent         := RetornaLingua( fLanguage,'Const_Hist_FieldEvent');
 
           If Length(trim(FieldObs)) = 0 then
-            FieldObs           := Const_Hist_FieldObs;
+            FieldObs           := RetornaLingua( fLanguage,'Const_Hist_FieldObs');
 
           If Length(trim(FieldTableName)) = 0 then
-            FieldTableName     := Const_Hist_FieldTableName; // nome do campo que grava a tabela nao confuda
+            FieldTableName     := RetornaLingua( fLanguage,'Const_Hist_FieldTableName'); // nome do campo que grava a tabela nao confuda
         End;
 
     if LogControl.TableLog = '' then
@@ -934,20 +939,23 @@ begin
   if not (csDesigning in ComponentState) then
   begin
     if not Assigned(DataConnector) then
-      raise Exception.Create(MsgExceptConnector);
+      raise Exception.Create(RetornaLingua( fLanguage,'MsgExceptConnector'));
 
     if ApplicationID = '' then
-      raise Exception.Create(MsgExceptAppID);
+      raise Exception.Create(RetornaLingua( fLanguage,'MsgExceptAppID'));
 
     If ( ( Not Assigned( ControlRight.ActionList ) ) and
          ( Not Assigned( ControlRight.ActionManager ) ) and
          ( Not Assigned( ControlRight.MainMenu ) ) and
          ( Not Assigned( ControlRight.ActionMainMenuBar ) ) ) then
-      raise Exception.Create(Format(MsgExceptPropriedade,['ControlRight']));
+      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['ControlRight']));
 
     for Contador := 0 to Pred(Owner.ComponentCount) do
       if Owner.Components[Contador] is TUCSettings then
-        ApplySettings(TUCSettings(Owner.Components[Contador]));
+        Begin
+          Language := TUCSettings(Owner.Components[Contador]).Language; // torna a linguage do UCSETTINGS como padrão
+          ApplySettings(TUCSettings(Owner.Components[Contador]));
+        end;
 
     if Assigned(User.MenuItem) and (not Assigned(User.MenuItem.OnClick)) then
       User.MenuItem.OnClick := ActionCadUser;
@@ -956,7 +964,7 @@ begin
       User.Action.OnExecute := ActionCadUser;
 
     If ( ( Not Assigned(User.Action) ) and ( not Assigned( User.MenuItem) ) ) then
-      raise Exception.Create(Format(MsgExceptPropriedade,['User']));
+      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['User']));
 
     if UserProfile.Active then
     begin
@@ -967,7 +975,7 @@ begin
         UserProfile.Action.OnExecute := ActionUserProfile;
 
       If ( ( Not Assigned(UserProfile.Action) ) and ( not Assigned( UserProfile.MenuItem) ) ) then
-        raise Exception.Create(Format(MsgExceptPropriedade,['UserProfile']));
+        raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UserProfile']));
     end;
 
     if UsersLogged.Active then
@@ -979,7 +987,7 @@ begin
         UsersLogged.Action.OnExecute := ActionUsersLogged;
 
       If ( ( Not Assigned(UsersLogged.Action) ) and ( not Assigned( UsersLogged.MenuItem) ) ) then
-        raise Exception.Create(Format(MsgExceptPropriedade,['UsersLogged']));
+        raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UsersLogged']));
 
     end;
 
@@ -997,10 +1005,10 @@ begin
       UsersLogoff.Action.OnExecute := ActionLogoff;
 
     If ( ( Not Assigned(UserPasswordChange.Action) ) and ( not Assigned( UserPasswordChange.MenuItem) ) ) then
-      raise Exception.Create(Format(MsgExceptPropriedade,['UserPasswordChange']));
+      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UserPasswordChange']));
 
     If ( ( Not Assigned(UsersLogoff.Action) ) and ( not Assigned( UsersLogoff.MenuItem) ) ) then
-      raise Exception.Create(Format(MsgExceptPropriedade,['UsersLogoff']));
+      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UsersLogoff']));
 
 
     if (LogControl.Active) then
@@ -1012,7 +1020,7 @@ begin
         LogControl.Action.OnExecute := ActionLog;
 
       If ( ( Not Assigned(LogControl.Action) ) and ( not Assigned( LogControl.MenuItem) ) ) then
-        raise Exception.Create(Format(MsgExceptPropriedade,['LogControl']));
+        raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['LogControl']));
     end;
 
     If ( UsersHistory.Active ) then
@@ -1020,34 +1028,34 @@ begin
         With fTableHistory do
           Begin
             if Length(trim(TableName)) = 0 then
-              Raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['TableName']));
+              Raise Exception.Create( Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['TableName']));
 
             if Length(trim(FieldApplicationID)) = 0 then
-              Raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['FieldApplicationID']));
+              Raise Exception.Create( Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldApplicationID']));
 
             if Length(trim(FieldUserID)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldUserID']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldUserID']));
 
             if Length(trim(FieldEventDate)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldEventDate']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldEventDate']));
 
             if Length(trim(FieldEventTime)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldEventTime']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldEventTime']));
 
             if Length(trim(FieldForm)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldForm']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldForm']));
 
             if Length(trim(FieldEvent)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldEvent']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldEvent']));
 
             if Length(trim(FieldObs)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldObs']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldObs']));
 
             if Length(trim(FieldCaptionForm)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldCaptionForm']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldCaptionForm']));
 
             if Length(trim(FieldTableName)) = 0 then
-              Raise Exception.Create(Format( Const_Hist_MsgExceptPropr,['FieldTableName']));
+              Raise Exception.Create(Format( RetornaLingua( fLanguage,'Const_Hist_MsgExceptPropr'),['FieldTableName']));
           end;
 
           if Assigned(UsersHistory.MenuItem) and (not Assigned(UsersHistory.MenuItem.OnClick)) then
@@ -1057,57 +1065,57 @@ begin
             UsersHistory.Action.OnExecute := ActionUserHistory;
 
           If ( ( Not Assigned(UsersHistory.Action) ) and ( not Assigned( UsersHistory.MenuItem) ) ) then
-            raise Exception.Create(Format(MsgExceptPropriedade,['UsersHistory']));
+            raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UsersHistory']));
 
         End;
 
     with TableUsers do
     begin
       if TableName = '' then
-        Exception.Create(MsgExceptUsersTable);
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable'));
       if FieldUserID = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserID***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserID***');
       if FieldUserName = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserName***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserName***');
       if FieldLogin = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldLogin***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldLogin***');
       if FieldPassword = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldPassword***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldPassword***');
       if FieldEmail = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldEmail***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldEmail***');
       if FieldPrivileged = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldPrivileged***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldPrivileged***');
       if FieldTypeRec = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldTypeRec***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldTypeRec***');
       if FieldKey = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldKey***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldKey***');
       if FieldProfile = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldProfile***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldProfile***');
         
       if FieldDateExpired = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldDateExpired***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldDateExpired***');
 
       If FieldUserExpired = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserExpired***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserExpired***');
 
       If FieldUserDaysSun = '' then
-        Exception.Create(MsgExceptUsersTable + #13 + #10 + 'FieldUserDaysSun***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserDaysSun***');
     end;
 
     with TableRights do
     begin
       if TableName = '' then
-        Exception.Create(MsgExceptRightsTable);
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable'));
       if FieldUserID = '' then
-        Exception.Create(MsgExceptRightsTable + #13 + #10 + 'FieldProfile***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldProfile***');
       if FieldModule = '' then
-        Exception.Create(MsgExceptRightsTable + #13 + #10 + 'FieldModule***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldModule***');
       if FieldComponentName = '' then
-        Exception.Create(MsgExceptRightsTable + #13 + #10 + 'FieldComponentName***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldComponentName***');
       if FieldFormName = '' then
-        Exception.Create(MsgExceptRightsTable + #13 + #10 + 'FieldFormName***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldFormName***');
       if FieldKey = '' then
-        Exception.Create(MsgExceptRightsTable + #13 + #10 + 'FieldKey***');
+        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldKey***');
     end;
 
     if Assigned(OnStartApplication) then
@@ -2141,7 +2149,7 @@ begin
 
   if TempDS.FindField(TableUsers.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' VARCHAR(255)');
+    DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -2178,7 +2186,7 @@ begin
 
   if TempDS.FindField(TableRights.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' VARCHAR(255)');
+    DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey +  ' ' + UserSettings.TypeFieldsDB.Type_Varchar +'(255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -2210,7 +2218,7 @@ begin
   if TempDS.FindField(TableRights.FieldKey) = nil then
   begin
     DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + 'EX ADD ' +
-      TableUsers.FieldKey + ' VARCHAR(255)');
+      TableUsers.FieldKey +  ' ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -2780,7 +2788,7 @@ var
 begin
   case Self.Criptografia of
     cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_Varchar + '(250)';
-    cMD5: TipoCampo    := UserSettings.TypeFieldsDB.Type_Varchar + 'VARCHAR(32)';
+    cMD5: TipoCampo    := UserSettings.TypeFieldsDB.Type_Varchar + ' ' + UserSettings.TypeFieldsDB.Type_Varchar + '(32)';
   end;
 
   with TableRights do
@@ -3101,6 +3109,14 @@ begin
   end;
 end;
 
+procedure TUserControl.SetfLanguage(const Value: TUCLanguage);
+begin
+  fLanguage                  := Value;
+  Self.UserSettings.Language := Value;
+  UCSettings.AlterLanguage( Self.UserSettings );
+end;
+
+
 procedure TUserControl.ApplySettings(SourceSettings: TUCSettings);
 begin
   with UserSettings.CommonMessages do
@@ -3113,6 +3129,7 @@ begin
     AutoLogonError        := SourceSettings.CommonMessages.AutoLogonError;
     UsuarioExiste         := SourceSettings.CommonMessages.UsuarioExiste; // Luiz Benevenuto 20/04/06
     PasswordExpired       := SourceSettings.CommonMessages.PasswordExpired; // vicente barros leonel
+    ForcaTrocaSenha       := SourceSettings.CommonMessages.ForcaTrocaSenha;
   end;
 
   with UserSettings.Login do
@@ -4588,7 +4605,6 @@ end;
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
 
 
-
 {$IFDEF DELPHI9_UP} {$REGION 'TUCHistorico'} {$ENDIF}
 
 {By Vicente Barros Leonel }
@@ -4608,7 +4624,7 @@ begin
               If Options.TypeSavePostEdit = tpSaveModifiedFields then
                 Begin
                   If Value <> AFields[ Aux ] then
-                  try Result := Result + Format('%s||%s||%s',[FieldNAme, Value , AFields[ Aux ] ] ) + #13#10; except end;
+                  try Result := Result + Format('%s||%s||%s',[FieldNAme, Value ,  AFields[ Aux ] ] ) + #13#10; except end;
                 End
               else
                 try Result := Result + Format('%s||%s||%s',[FieldNAme, Value , AFields[ Aux ] ] )+ #13#10; except end;
@@ -4672,7 +4688,7 @@ begin
   DataSetInEdit := True;
   SetLength( AFields , DataSet.FieldCount );
   For I := 0 to DataSet.FieldCount - 1 do
-    AFields[ i ] := DataSet.Fields[ i ].Value;
+    AFields[ i ] := DataSet.Fields[ i ].Value; 
 end;
 
 procedure TUCHistorico.NewRecord(DataSet: TDataSet);
@@ -4688,7 +4704,7 @@ begin { Adciona novo registro }
                 Screen.ActiveCustomForm.Name ,
                 Screen.ActiveCustomForm.Caption,
                 fUserControl.UserSettings.History.Evento_NewRecord,
-                Format(Const_Msg_NewRecord,[UserControl.CurrentUser.UserName]),
+                Format(RetornaLingua( fUserControl.Language,'Const_Msg_NewRecord'),[UserControl.CurrentUser.UserName]),
                 DataSet.Name,
                 UserControl.CurrentUser.UserID);
 end;
@@ -4697,14 +4713,14 @@ procedure TUCHistorico.SetDataSet(const Value: TDataSet);
 begin
   fDataSet := Value;
   if Assigned(Value) then
-    Value.FreeNotification(Self.DataSet);
+    Value.FreeNotification(Self);
 end;
 
 procedure TUCHistorico.SetUserControl(const Value: TUserControl);
 begin
   FUserControl := Value;
   if Value <> nil then
-    Value.FreeNotification(self.UserControl);
+    Value.FreeNotification(self);
 end;
 
 {----------------------------------------------------------------------------}
@@ -4714,6 +4730,8 @@ begin
   inherited;
   DataSetInEdit   := False;
   fOptions        := TUCHistOptions.Create(Self);
+  fDataSet        := Nil;
+  fUserControl    := Nil;
 end;
 
 destructor TUCHistorico.Destroy;
@@ -4740,15 +4758,15 @@ begin
   if not(csDesigning in ComponentState) then
     begin
       if not Assigned(UserControl) then
-        raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['UserControl']) );
+        raise Exception.Create( Format( RetornaLingua( null ,'Const_Hist_MsgExceptPropr'),['UserControl']) );
 
       If fUserControl.UsersHistory.Active = false then exit;
-              
+
       if not Assigned(DataSet) then
-        raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['DataSet']) );
+        raise Exception.Create( Format( RetornaLingua( fUserControl.Language,'Const_Hist_MsgExceptPropr'),['DataSet']) );
 
       if not Assigned(UserControl.DataConnector) then
-        raise Exception.Create( Format( Const_Hist_MsgExceptPropr,['UserControl.DataConnector']) );
+        raise Exception.Create( Format( RetornaLingua( fUserControl.Language,'Const_Hist_MsgExceptPropr'),['UserControl.DataConnector']) );
 
       fOnNewRecord    := Nil;
       fOnBeforeDelete := Nil;
@@ -4777,7 +4795,6 @@ end;
 procedure TUCHistorico.Notification(AComponent: TComponent;
   AOperation: TOperation);
 begin
-
   if (AOperation = opRemove) then
     begin
       If AComponent = fUserControl then
@@ -4785,7 +4802,6 @@ begin
 
       if AComponent = fDataSet then
         fDataSet := Nil;
-
     end;
 
   inherited Notification(AComponent, AOperation);

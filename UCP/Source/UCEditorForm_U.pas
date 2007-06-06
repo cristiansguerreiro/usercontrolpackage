@@ -169,7 +169,7 @@ uses
   LoginWindow_U,
   ShellAPI,
   SysUtils,
-  UCConsts,
+  UcConsts_Language,
   UCMessages,
   Windows;
 
@@ -197,8 +197,8 @@ end;
 
 procedure TUCEditorForm.btnTabelasPadraoClick(Sender: TObject);
 begin
-  edtTableUsers.Text  := Const_TableUsers_TableName;
-  edtTableRights.Text := Const_TableRights_TableName;
+  edtTableUsers.Text  := RetornaLingua( FUserControl.Language,'Const_TableUsers_TableName');
+  edtTableRights.Text := RetornaLingua( FUserControl.Language,'Const_TableRights_TableName');
 end;
 
 procedure TUCEditorForm.ComboActionMenuItem(Sender: TObject);

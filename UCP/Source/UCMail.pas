@@ -27,7 +27,7 @@ uses
   IdTCPClient,
   IdTCPConnection,
   SysUtils,
-  UCConsts;
+  UcConsts_Language;
 
 type
   TUCMailMessage = class(TPersistent)
@@ -155,8 +155,8 @@ begin
     EsqueceuSenha.Ativo                := True;
     SenhaForcada.Ativo                 := True;
     SenhaTrocada.Ativo                 := True;
-    EsqueceuSenha.LabelLoginForm       := Const_Log_LbEsqueciSenha;
-    EsqueceuSenha.MensagemEmailEnviado := Const_Log_MsgMailSend;
+    EsqueceuSenha.LabelLoginForm       := RetornaLingua( ucPortuguesBr, 'Const_Log_LbEsqueciSenha');
+    EsqueceuSenha.MensagemEmailEnviado := RetornaLingua( ucPortuguesBr, 'Const_Log_MsgMailSend');
   end
   else
   begin
