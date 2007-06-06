@@ -25,7 +25,7 @@ uses
   StdCtrls,
   SysUtils,
   UCBase,
-  UCConsts,
+//  UCConsts,
   Windows;
 
 type

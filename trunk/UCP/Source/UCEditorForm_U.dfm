@@ -355,7 +355,7 @@ object UCEditorForm: TUCEditorForm
       Top = 0
       Width = 594
       Height = 406
-      ActivePage = tabControlRights
+      ActivePage = tabPrincipal
       Align = alClient
       Style = tsFlatButtons
       TabOrder = 0
@@ -634,7 +634,7 @@ object UCEditorForm: TUCEditorForm
           Width = 220
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 0
           OnChange = ComboActionMenuItem
           OnClick = ComboActionMenuItem
@@ -645,7 +645,7 @@ object UCEditorForm: TUCEditorForm
           Width = 220
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 1
           OnChange = ComboActionMenuItem
           OnClick = ComboActionMenuItem

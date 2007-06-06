@@ -10,7 +10,7 @@ uses
   Forms,
   Graphics,
   SysUtils,
-  UCConsts;
+  UCConsts_language;
 
 type
   TUCAppMessagesMSG = class(TPersistent)
@@ -118,6 +118,7 @@ type
     FChangePasswordError: TUCChangePassError;
     FUsuarioExiste:       String;
     fPasswordExpired: String;
+    fForcaTrocaSenha: String;
     procedure SetFErroTrocaSenha(const Value: TUCChangePassError);
     procedure SetFFirstMSG(const Value: TStrings);
   protected
@@ -136,6 +137,7 @@ type
     property BlankPassword: String read FPasswordOFF write FPasswordOFF;
     property UsuarioExiste: String read FUsuarioExiste write FUsuarioExiste;
     property PasswordExpired : String read fPasswordExpired write fPasswordExpired;
+    property ForcaTrocaSenha : String read fForcaTrocaSenha write fForcaTrocaSenha;
   end;
 
   TUCLoginFormMSG = class(TPersistent)
@@ -502,6 +504,7 @@ type
     FPosition:           TPosition;
     fHistory: TUCHistoryMSG;
     fTypeFields: TUCFieldType;
+    fLanguage: TUCLanguage;
     procedure SetFResetPassword(const Value: TUCResetPassword);
     procedure SetFProfileUserFormMSG(const Value: TUCProfileUserFormMSG);
     procedure SetFAddProfileFormMSG(const Value: TUCAddProfileFormMSG);
@@ -535,6 +538,7 @@ type
     property History : TUCHistoryMSG read fHistory write SetfHistory;
     property WindowsPosition: TPosition read FPosition write FPosition;
     Property TypeFieldsDB : TUCFieldType read fTypeFields write fTypeFields;
+    property Language : TUCLanguage read fLanguage write fLanguage;
   end;
 
 
@@ -660,7 +664,8 @@ begin
     Self.MaxLoginAttemptsError := TUCUserCommonMSG(Source).MaxLoginAttemptsError;
     Self.ChangePasswordError   := TUCUserCommonMSG(Source).ChangePasswordError;
     Self.UsuarioExiste         := TUCUserCommonMSG(Source).UsuarioExiste;
-    Self.PasswordExpired       := TUCUserCommonMSG(Source).PasswordExpired;  {By Vicente Barros Leonelx}
+    Self.PasswordExpired       := TUCUserCommonMSG(Source).PasswordExpired;
+    Self.ForcaTrocaSenha       := TUCUserCommonMSG(Source).ForcaTrocaSenha;
   end
   else
     inherited;
@@ -824,7 +829,7 @@ begin
       Self.BtLock        := BtLock;
       Self.BtSave        := BtSave;
       Self.BtCancel      := BtCancel;
-      Self.PageControls  := PageControls; // by vicente barros leonel
+      Self.PageControls  := PageControls;
     end
   else
     inherited;

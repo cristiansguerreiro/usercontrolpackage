@@ -22,7 +22,7 @@ uses
   StdCtrls,
   SysUtils,
   UCBase,
-  UCConsts,
+  UcConsts_Language,
   Windows;
 
 type
@@ -286,6 +286,22 @@ begin
           if FForm.FindComponent(FUserControl.ExtraRights[Contador].CompName) <> nil then
             SubItems.Add(FForm.FindComponent(FUserControl.ExtraRights[Contador].CompName).ClassName);
         end;
+
+  lbTitle.Caption                           := RetornaLingua( FUserControl.Language,'Const_Contr_TitleLabel');
+  lbGrupo.Caption                           := RetornaLingua( FUserControl.Language,'Const_Contr_GroupLabel');
+  lbCompDisp.Caption                        := RetornaLingua( FUserControl.Language,'Const_Contr_CompDispLabel');
+  lbCompSel.Caption                         := RetornaLingua( FUserControl.Language,'Const_Contr_CompSelLabel');
+  ListaCompsSelecionados.Columns[0].Caption := RetornaLingua( FUserControl.Language,'Const_Contr_DescCol');
+  btCancel.Caption                          := RetornaLingua( FUserControl.Language,'Const_Contr_BTCancel');
+  BtOK.Caption                              := RetornaLingua( FUserControl.Language,'Const_Contr_BtOK');
+
+  //Lines Bellow added by fduenas
+  btSellAll.Hint  := RetornaLingua( FUserControl.Language,'Const_Contr_BtSellAllHint');
+  btSel.Hint      := RetornaLingua( FUserControl.Language,'Const_Contr_BtSelHint');
+  btUnSel.Hint    := RetornaLingua( FUserControl.Language,'Const_Contr_BtUnSelHint');
+  btUnSelAll.Hint := RetornaLingua( FUserControl.Language,'Const_Contr_BtUnSelAllHint');
+
+  lbForm.Left     := lbTitle.Width + 66;
 end;
 
 procedure TUCObjSel.FormCreate(Sender: TObject);
@@ -302,20 +318,6 @@ begin
     'TRxLabel,TComboEdit,TFileNamefEdit,TDirectoryEdit,TDateEdit,' +
     'TDateTimePicker,TRxCalcEdit,TCurrencyEdit,TRxSpinEdit';
   FListaLabelsEdits.Text      := UpperCase(FListaLabelsEdits.Text);
-
-  lbTitle.Caption                           := Const_Contr_TitleLabel;
-  lbGrupo.Caption                           := Const_Contr_GroupLabel;
-  lbCompDisp.Caption                        := Const_Contr_CompDispLabel;
-  lbCompSel.Caption                         := Const_Contr_CompSelLabel;
-  ListaCompsSelecionados.Columns[0].Caption := Const_Contr_DescCol;
-  btCancel.Caption                          := Const_Contr_BTCancel;
-  BtOK.Caption                              := Const_Contr_BtOK;
-
-  //Lines Bellow added by fduenas
-  btSellAll.Hint  := Const_Contr_BtSellAllHint;
-  btSel.Hint      := Const_Contr_BtSelHint;
-  btUnSel.Hint    := Const_Contr_BtUnSelHint;
-  btUnSelAll.Hint := Const_Contr_BtUnSelAllHint;
 end;
 
 procedure TUCObjSel.cbFilterClick(Sender: TObject);
