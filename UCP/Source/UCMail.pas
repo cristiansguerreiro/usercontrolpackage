@@ -11,21 +11,13 @@ unit UCMail;
 
 interface
 
-{$I 'UserControl.inc'}
-{.$I 'IdCompilerDefines.inc'}
+{.$I 'UserControl.inc'}
+
 
 uses
   Classes,
   Dialogs,
-  IdAntiFreeze,
-  IdAntiFreezeBase,
-  IdBaseComponent,
-  IdComponent,
-  IdMessage,
-  IdMessageClient,
-  IdSMTP,
-  IdTCPClient,
-  IdTCPConnection,
+  UCALSMTPClient,
   SysUtils,
   UcConsts_Language;
 
@@ -72,11 +64,9 @@ type
     FSenhaTrocada:    TUCMailMessage;
     FAlteraUsuario:   TUCMailMessage;
     FSenhaForcada:    TUCMailMessage;
-    FIdAntiFreeze:    TIdAntiFreeze;
     FEsqueceuSenha:   TUCMEsqueceuSenha;
     function ParseMailMSG(Nome, Login, Senha, Email, Perfil, txt: String): String;
     function TrataSenha(Senha: String; Key: Word): String;
-    procedure SMTPStatus(ASender: TObject; const AStatus: TIdStatus; const AStatusText: String);
   protected
     procedure EnviaEmailTp(Nome, Login, USenha, Email, Perfil: String; UCMSG: TUCMailMessage);
   public
@@ -91,7 +81,7 @@ type
     property ServidorSMTP: String read FSMTPServer write FSMTPServer;
     property Usuario: String read FUsuario write FUsuario;
     property Senha: String read FSenha write FSenha;
-    property Porta: Integer read FPorta write FPorta default 25;
+    property Porta: Integer read FPorta write FPorta default 0;
     property NomeRemetente: String read FNomeRemetente write FNomeRemetente;
     property EmailRemetente: String read FEmailRemetente write FEmailRemetente;
     property AdicionaUsuario: TUCMailMessage read FAdicionaUsuario write FAdicionaUsuario;
@@ -157,12 +147,8 @@ begin
     SenhaTrocada.Ativo                 := True;
     EsqueceuSenha.LabelLoginForm       := RetornaLingua( ucPortuguesBr, 'Const_Log_LbEsqueciSenha');
     EsqueceuSenha.MensagemEmailEnviado := RetornaLingua( ucPortuguesBr, 'Const_Log_MsgMailSend');
-  end
-  else
-  begin
-    FIdAntiFreeze        := TIdAntiFreeze.Create(Self);
-    FIdAntiFreeze.Active := True;
   end;
+
 end;
 
 destructor TMailUserControl.Destroy;
@@ -208,64 +194,42 @@ begin
   Result := Txt;
 end;
 
-procedure TMailUserControl.SMTPStatus(ASender: TObject; const AStatus: TIdStatus; const AStatusText: String);
-begin
-  if not Assigned(UCEMailForm) then
-    Exit;
-  UCEMailForm.lbStatus.Caption := AStatusText;
-  UCEMailForm.Update;
-end;
 
 procedure TMailUserControl.EnviaEmailTp(Nome, Login, USenha, Email, Perfil: String; UCMSG: TUCMailMessage);
 var
-  Mailmsg:  TIdMessage;
-  MailSMTP: TIdSMTP;
+  MailMsg :  TAlSmtpClient;
+  MailRecipients : TStringlist;
+  MailHeader : TALSMTPClientHeader;
 begin
   if Trim(Email) = '' then
     Exit;
-  MailSMTP          := TIdSMTP.Create(nil);
-  MailSMTP.OnStatus := SMTPStatus;
-  MailSMTP.Host     := ServidorSMTP;
-  MailSMTP.Username := Usuario;
-  if Senha <> '' then
-    MailSMTP.Password := Senha;
+  MailMsg :=  TAlSmtpClient.Create;
+  MailRecipients := TStringlist.Create;
+  MailHeader := TALSMTPClientHeader.Create;
+  MailHeader.From :=  EmailRemetente; //'rodrigo@oxio.com.br';
+  MailHeader.SendTo :=  Email ;
+  MailRecipients.Append(Email);
+  MailHeader.Subject := UCMSG.Titulo;
 
-  MailMsg              := TIdMessage.Create(nil);
-  MailMSG.From.Address := EmailRemetente;
-  MailMSG.From.Name    := NomeRemetente;
-  MailMSG.From.Text    := NomeRemetente + ' <' + EmailRemetente + '>';
-  with MailMSG.Recipients.Add do
-  begin
-    Address := Email;
-    Name    := Nome;
-    Text    := Nome + ' <' + Email + '>';
-  end;
-  MailMsg.Body.Text := ParseMailMSG(Nome, Login, USenha, Email, Perfil, UCMSG.Mensagem.Text);
-  MailMSG.Subject   := UCMSG.Titulo;
+
+
   try
     try
-      UCEMailForm                  := TUCEMailForm.Create(Self);
-      UCEMailForm.lbStatus.Caption := '';
-      UCEMailForm.Show;
-      MailSMTP.Connect;
-      MailSMTP.Send(MailMSG);
+      MailMsg.SendMail(ServidorSMTP, FPorta, NomeRemetente ,
+        MailRecipients, Usuario,  Senha, alsmtpClientAuthPlain, MailHeader.RawHeaderText,
+        ParseMailMSG(Nome, Login, USenha, Email, Perfil, UCMSG.Mensagem.Text));
     except
       on e: Exception do
       begin
-        UCEMailForm.lbStatus.Caption := E.Message;
-        UCEMailForm.Update;
         Beep;
         Sleep(5000);
         raise;
       end;
     end;
   finally
-    if MailSMTP.Connected then
-      MailSMTP.Disconnect;
-    MailMSG.Free;
-    MailSMTP.Free;
-    UCEMailForm.Close;
-    FreeAndNil(UCEMailForm);
+    FreeAndNil(MailMsg);
+    FreeAndNil(MailHeader);
+    FreeAndNil(MailRecipients);
   end;
 end;
 
