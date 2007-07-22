@@ -104,6 +104,9 @@ procedure TUCDBXConn.UCExecSQL(FSQL: String);
 begin
 //  FConnection.Execute(FSQL, nil);
   FConnection.ExecuteDirect(FSQL);
+  if (Pos('uib', LowerCase(FConnection.DriverName)) > 0) and
+     ( (Pos('create table', LowerCase(FSQL))>0 )or (Pos('alter table', LowerCase(FSQL)) >0)) then
+    FConnection.Execute('COMMIT;', nil);
 end;
 
 function TUCDBXConn.UCGetSQLDataset(FSQL: String): TDataset;
