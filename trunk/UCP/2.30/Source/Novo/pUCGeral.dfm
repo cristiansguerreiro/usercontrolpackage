@@ -327,8 +327,7 @@ object FormUserPerf: TFormUserPerf
       OnMouseEnter = SpeedUserMouseEnter
       OnMouseLeave = SpeedUserMouseLeave
       ExplicitLeft = -4
-      ExplicitTop = 67
-      ExplicitWidth = 95
+      ExplicitTop = 45
     end
     object SpeedLog: TSpeedButton
       Left = 1
@@ -517,8 +516,7 @@ object FormUserPerf: TFormUserPerf
       OnMouseEnter = SpeedUserMouseEnter
       OnMouseLeave = SpeedUserMouseLeave
       ExplicitLeft = -4
-      ExplicitTop = 187
-      ExplicitWidth = 95
+      ExplicitTop = 301
     end
   end
   object Panel3: TPanel

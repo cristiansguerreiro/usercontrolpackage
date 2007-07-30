@@ -29,17 +29,17 @@ uses
 
 type
   TUCFrame_UsersLogged = class(TFrame)
-    dsDados:     TDataSource;
-    DBGrid:      TDBGrid;
-    Panel3:      TPanel;
-    BtExit:      TBitBtn;
-    BitMsg:      TBitBtn;
-    BitRefresh:  TBitBtn;
+    dsDados:    TDataSource;
+    DBGrid:     TDBGrid;
+    Panel3:     TPanel;
+    BtExit:     TBitBtn;
+    BitMsg:     TBitBtn;
+    BitRefresh: TBitBtn;
     procedure BitRefreshClick(Sender: TObject);
     procedure BitMsgClick(Sender: TObject);
   private
     DSUserLogados: TDataset;
-    UCMes : TUCApplicationMessage;
+    UCMes:         TUCApplicationMessage;
   public
     FUserControl: TUserControl;
     procedure SetWindow;
@@ -47,23 +47,23 @@ type
 
 implementation
 
-uses UCMessages;
+uses
+  UCMessages;
 
 {$R *.dfm}
 
 procedure TUCFrame_UsersLogged.SetWindow;
 var
   SQLStmt: String;
- I : Integer; Form : TForm;
+  I:       Integer;
+  Form:    TForm;
 begin
   UCMes := nil;
   Form  := Application.MainForm;
-  For I := 0 to Form.ComponentCount - 1 do
-    Begin
-      If ( Form.Components[ I ] is TUCApplicationMessage ) then
-        UCMes := TUCApplicationMessage( Form.Components[ I ] );
-    end;
-  BitMsg.Visible := UCMES <> Nil;
+  for I := 0 to Form.ComponentCount - 1 do
+    if (Form.Components[I] is TUCApplicationMessage) then
+      UCMes := TUCApplicationMessage(Form.Components[I]);
+  BitMsg.Visible := UCMES <> nil;
 
 
   with FUserControl do
@@ -81,19 +81,18 @@ begin
 
     DSUserLogados := DataConnector.UCGetSQLDataset(SQLStmt);
 
-    With UserSettings.UsersLogged do
-      Begin
-        Caption             := LabelCaption;
-        BitMsg.Caption      := BtnMessage;
-        BitRefresh.Caption  := BtnRefresh;
-        BtExit.Caption      := BtnClose;
+    with UserSettings.UsersLogged do
+    begin
+      Caption            := LabelCaption;
+      BitMsg.Caption     := BtnMessage;
+      BitRefresh.Caption := BtnRefresh;
+      BtExit.Caption     := BtnClose;
 
-        DBGrid.Columns[ 0 ].Title.Caption := ColName;
-        DBGrid.Columns[ 1 ].Title.Caption := ColLogin;
-        DBGrid.Columns[ 2 ].Title.Caption := ColComputer;
-        DBGrid.Columns[ 3 ].Title.Caption := ColData;
-      End;
-
+      DBGrid.Columns[0].Title.Caption := ColName;
+      DBGrid.Columns[1].Title.Caption := ColLogin;
+      DBGrid.Columns[2].Title.Caption := ColComputer;
+      DBGrid.Columns[3].Title.Caption := ColData;
+    end;
 
   end;
   dsDados.Dataset := DSUserLogados;
@@ -111,13 +110,12 @@ begin
 end;
 
 procedure TUCFrame_UsersLogged.BitMsgClick(Sender: TObject);
-var Msg : String;
+var
+  Msg: String;
 begin
-  If Assigned( UcMes ) then
-    begin
-      If InputQuery(fUserControl.UserSettings.UsersLogged.InputText,fUserControl.UserSettings.UsersLogged.InputCaption,Msg) = true then
-      UcMes.SendAppMessage( dsDados.DataSet.FieldValues['id'],fUserControl.UserSettings.UsersLogged.MsgSystem,Msg);
-    End;
+  if Assigned(UcMes) then
+    if InputQuery(fUserControl.UserSettings.UsersLogged.InputText, fUserControl.UserSettings.UsersLogged.InputCaption, Msg) = True then
+      UcMes.SendAppMessage(dsDados.DataSet.FieldValues['id'], fUserControl.UserSettings.UsersLogged.MsgSystem, Msg);
 end;
 
 end.

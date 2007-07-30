@@ -18,11 +18,11 @@ uses
   Forms,
   Graphics,
   Messages,
+  Spin,
   StdCtrls,
   SysUtils,
   UCBase,
-  Windows,
-  Spin;
+  Windows;
 
 type
   TfrmIncluirUsuario = class(TForm)
@@ -43,29 +43,29 @@ type
     lbPerfil:       TLabel;
     ComboPerfil:    TDBLookupComboBox;
     btlimpa:        TSpeedButton;
-    ckUserExpired: TCheckBox;
-    LabelExpira: TLabel;
-    SpinExpira: TSpinEdit;
-    LabelDias: TLabel;
-    ComboStatus: TComboBox;
-    Label1: TLabel;
+    ckUserExpired:  TCheckBox;
+    LabelExpira:    TLabel;
+    SpinExpira:     TSpinEdit;
+    LabelDias:      TLabel;
+    ComboStatus:    TComboBox;
+    Label1:         TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btCancelaClick(Sender: TObject);
     procedure btGravarClick(Sender: TObject);
-    function  GetNewIdUser: Integer;
+    function GetNewIdUser: Integer;
     procedure btlimpaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ckUserExpiredClick(Sender: TObject);
   private
-    FormSenha : TCustomForm;
+    FormSenha: TCustomForm;
     { Private declarations }
   public
     { Public declarations }
-    FAltera:      Boolean;
-    FUserControl: TUserControl;
-    FDataSetCadastroUsuario : TDataSet;
-    vNovoIDUsuario : Integer;
+    FAltera:                 Boolean;
+    FUserControl:            TUserControl;
+    FDataSetCadastroUsuario: TDataSet;
+    vNovoIDUsuario:          Integer;
   end;
 
 implementation
@@ -82,8 +82,8 @@ end;
 
 procedure TfrmIncluirUsuario.FormCreate(Sender: TObject);
 begin
-  Self.BorderIcons   := [];
-  Self.BorderStyle   := bsDialog;
+  Self.BorderIcons := [];
+  Self.BorderStyle := bsDialog;
 end;
 
 procedure TfrmIncluirUsuario.btCancelaClick(Sender: TObject);
@@ -93,13 +93,13 @@ end;
 
 procedure TfrmIncluirUsuario.btGravarClick(Sender: TObject);
 var
-  vNovaSenha:     String;
-  vNome:          String;
-  vLogin:         String;
-  vEmail:         String;
-  vUserExpired  : Integer;
-  vPerfil:        Integer;
-  vPrivilegiado:  Boolean;
+  vNovaSenha:    String;
+  vNome:         String;
+  vLogin:        String;
+  vEmail:        String;
+  vUserExpired:  Integer;
+  vPerfil:       Integer;
+  vPrivilegiado: Boolean;
 begin
   btGravar.Enabled := False;
 
@@ -112,21 +112,21 @@ begin
         Exit;
       end;
 
-      FormSenha := TSenhaForm.Create( Self );
-      TSenhaForm(FormSenha).Position     := UserSettings.WindowsPosition;      
+      FormSenha                          := TSenhaForm.Create(Self);
+      TSenhaForm(FormSenha).Position     := UserSettings.WindowsPosition;
       TSenhaForm(FormSenha).fUserControl := fUserControl;
-      TSenhaForm(FormSenha).Caption      := Format(FUserControl.UserSettings.ResetPassword.WindowCaption, [ EditLogin.Text ]);
-      If TSenhaForm(FormSenha).ShowModal <> mrok then
-        Begin
-          btGravar.Enabled := True;
-          Exit;
-        End;
+      TSenhaForm(FormSenha).Caption      := Format(FUserControl.UserSettings.ResetPassword.WindowCaption, [EditLogin.Text]);
+      if TSenhaForm(FormSenha).ShowModal <> mrOk then
+      begin
+        btGravar.Enabled := True;
+        Exit;
+      end;
       vNovaSenha     := TSenhaForm(FormSenha).edtSenha.Text;
       vNovoIDUsuario := GetNewIdUser;
       vNome          := EditNome.Text;
       vLogin         := EditLogin.Text;
       vEmail         := EditEmail.Text;
-      FreeAndNil( FormSenha );
+      FreeAndNil(FormSenha);
 
       if ComboPerfil.KeyValue = null then
         vPerfil := 0
@@ -140,26 +140,26 @@ begin
     end
     else
     begin // alterar user
-//      vNovoIDUsuario := TfrmCadastrarUsuario(Self.Owner).FDataSetCadastroUsuario.FieldByName('IdUser').AsInteger;
-      vNome          := EditNome.Text;
-      vLogin         := EditLogin.Text;
-      vEmail         := EditEmail.Text;
+          //      vNovoIDUsuario := TfrmCadastrarUsuario(Self.Owner).FDataSetCadastroUsuario.FieldByName('IdUser').AsInteger;
+      vNome  := EditNome.Text;
+      vLogin := EditLogin.Text;
+      vEmail := EditEmail.Text;
       if ComboPerfil.KeyValue = null then
         vPerfil := 0
       else
         vPerfil := ComboPerfil.KeyValue;
 
-      vUserExpired := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
+      vUserExpired  := StrToInt(BoolToStr(ckUserExpired.Checked)); //Added by Petrus van Breda 28/04/2007
       vPrivilegiado := ckPrivilegiado.Checked;
-      ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil,vUserExpired , SpinExpira.Value, ComboStatus.ItemIndex, vPrivilegiado);
+      ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil, vUserExpired, SpinExpira.Value, ComboStatus.ItemIndex, vPrivilegiado);
     end;
 
 {  With TfrmCadastrarUsuario(Owner) do
     Begin }
-      FDataSetCadastroUsuario.Close;
-      FDataSetCadastroUsuario.Open;
-      FDataSetCadastroUsuario.Locate('idUser', vNovoIDUsuario, []);
-//    End;
+  FDataSetCadastroUsuario.Close;
+  FDataSetCadastroUsuario.Open;
+  FDataSetCadastroUsuario.Locate('idUser', vNovoIDUsuario, []);
+  //    End;
   Close;
 end;
 
@@ -170,11 +170,8 @@ var
 begin
   with FUserControl do
   begin
-    SQLStmt := Format('SELECT %s.%s FROM %s ORDER BY %s DESC',
-      [TableUsers.TableName,
-      TableUsers.FieldUserID,
-      TableUsers.TableName,
-      TableUsers.FieldUserID]);
+    SQLStmt := Format('SELECT %s.%s FROM %s ORDER BY %s DESC', [TableUsers.TableName, TableUsers.FieldUserID,
+      TableUsers.TableName, TableUsers.FieldUserID]);
     try
       DataSet := DataConnector.UCGetSQLDataSet(SQLStmt);
       Result  := DataSet.Fields[0].AsInteger + 1;
@@ -204,16 +201,17 @@ begin
     ComboPerfil.ListSource.DataSet.Open;
   end;
 
-  If FUserControl.Login.ActiveDateExpired = true then    //Opção de senha so deve aparecer qdo setada como true no componente By Vicente Barros Leonel
+  if FUserControl.Login.ActiveDateExpired = True then
+    //Opção de senha so deve aparecer qdo setada como true no componente By Vicente Barros Leonel
     ckPrivilegiado.Visible := FUserControl.User.UsePrivilegedField
   else
-    ckUserExpired.Visible := False;
+    ckUserExpired.Visible  := False;
 
-  EditLogin.CharCase     := Self.FUserControl.Login.CharCaseUser;
+  EditLogin.CharCase := Self.FUserControl.Login.CharCaseUser;
 
-  SpinExpira.Visible     := ckUserExpired.Visible;
-  LabelExpira.Visible    := ckUserExpired.Visible;
-  LabelDias.Visible      := ckUserExpired.Visible;
+  SpinExpira.Visible  := ckUserExpired.Visible;
+  LabelExpira.Visible := ckUserExpired.Visible;
+  LabelDias.Visible   := ckUserExpired.Visible;
 
   if (FUserControl.User.ProtectAdministrator) and (EditLogin.Text = FUserControl.Login.InitialLogin.User) then
     EditLogin.Enabled := False;

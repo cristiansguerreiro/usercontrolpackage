@@ -157,7 +157,6 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 219
     object btGravar: TBitBtn
       Left = 8
       Top = 16
@@ -290,44 +289,49 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     BevelInner = bvRaised
     BevelOuter = bvLowered
     TabOrder = 0
-    ExplicitHeight = 219
+    ExplicitLeft = 46
+    ExplicitTop = 203
     object lbNome: TLabel
-      Left = 52
-      Top = 18
+      Left = 48
+      Top = 15
       Width = 34
-      Height = 13
+      Height = 22
       Alignment = taRightJustify
       Caption = 'Nome :'
+      Layout = tlCenter
     end
     object lbLogin: TLabel
-      Left = 54
-      Top = 50
+      Left = 50
+      Top = 45
       Width = 32
-      Height = 13
+      Height = 22
       Alignment = taRightJustify
       Caption = 'Login :'
+      Layout = tlCenter
     end
     object lbEmail: TLabel
-      Left = 54
-      Top = 82
+      Left = 50
+      Top = 75
       Width = 32
-      Height = 13
+      Height = 22
       Alignment = taRightJustify
       Caption = 'EMail :'
+      Layout = tlCenter
     end
     object lbPerfil: TLabel
-      Left = 57
-      Top = 141
+      Left = 53
+      Top = 136
       Width = 29
-      Height = 13
+      Height = 22
       Alignment = taRightJustify
       Caption = 'Perfil :'
+      Layout = tlCenter
     end
     object btlimpa: TSpeedButton
-      Left = 335
-      Top = 138
+      Left = 334
+      Top = 136
       Width = 19
-      Height = 19
+      Height = 21
       Glyph.Data = {
         36050000424D3605000000000000360400002800000010000000100000000100
         080000000000000100000E0F00000E0F00000001000000010000FF00FF00B584
@@ -374,54 +378,56 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       OnClick = btlimpaClick
     end
     object LabelExpira: TLabel
-      Left = 31
-      Top = 175
-      Width = 55
-      Height = 13
+      Left = 30
+      Top = 167
+      Width = 52
+      Height = 22
       Alignment = taRightJustify
-      Caption = 'Expira em : '
+      Caption = 'Expira em :'
+      Layout = tlCenter
     end
     object LabelDias: TLabel
       Left = 331
-      Top = 175
+      Top = 167
       Width = 19
-      Height = 13
-      Alignment = taRightJustify
+      Height = 22
       Caption = 'dias'
+      Layout = tlCenter
     end
     object Label1: TLabel
-      Left = 53
-      Top = 115
-      Width = 33
+      Left = 46
+      Top = 106
+      Width = 36
       Height = 13
       Alignment = taRightJustify
-      Caption = 'Status:'
+      Caption = 'Status :'
+      Layout = tlCenter
     end
     object EditNome: TEdit
-      Left = 89
+      Left = 88
       Top = 15
       Width = 265
-      Height = 21
+      Height = 22
       Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
       TabOrder = 0
     end
     object EditLogin: TEdit
-      Left = 89
-      Top = 47
+      Left = 88
+      Top = 45
       Width = 265
-      Height = 21
+      Height = 22
       Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
       TabOrder = 1
     end
     object EditEmail: TEdit
-      Left = 89
-      Top = 79
+      Left = 88
+      Top = 75
       Width = 265
-      Height = 21
+      Height = 22
       Ctl3D = True
       MaxLength = 150
       ParentCtl3D = False
@@ -436,8 +442,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       TabOrder = 7
     end
     object ComboPerfil: TDBLookupComboBox
-      Left = 89
-      Top = 138
+      Left = 88
+      Top = 136
       Width = 242
       Height = 21
       Ctl3D = True
@@ -466,8 +472,8 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Value = 10
     end
     object ComboStatus: TComboBox
-      Left = 89
-      Top = 107
+      Left = 88
+      Top = 106
       Width = 265
       Height = 21
       Style = csDropDownList
