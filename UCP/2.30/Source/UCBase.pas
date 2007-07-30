@@ -43,13 +43,13 @@ uses
   Graphics,
   md5,
   Menus,
-  SysUtils,
   StdCtrls,
+  SysUtils,
+  UcConsts_Language,
   UCDataConnector,
   UCDataInfo,
   UCMessages,
-  UCSettings,
-  UcConsts_Language;
+  UCSettings;
 
 const
   llBaixo   = 0;
@@ -90,22 +90,22 @@ type
     FPerfilUsuario: TDataSet;
     FPerfilGrupo:   TDataSet;
   public
-    UserID:         Integer;
-    Profile:        Integer;
-    UserIDOld:      Integer;
-    IdLogon:        String;
-    UserName:       String;
-    UserLogin:      String;
-    Password:       String;
-    Email:          String;
-    DateExpiration: TDateTime;
-    Privileged:     Boolean;
-    UserNotExpired: Boolean;
+    UserID:          Integer;
+    Profile:         Integer;
+    UserIDOld:       Integer;
+    IdLogon:         String;
+    UserName:        String;
+    UserLogin:       String;
+    Password:        String;
+    Email:           String;
+    DateExpiration:  TDateTime;
+    Privileged:      Boolean;
+    UserNotExpired:  Boolean;
     UserDaysExpired: Integer;
   published
     { TODO 1 -oLuiz -cUpgrade : Terminar a implementação dos DataSets para os Perfis de Usuario Loggado }
-    property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;
-    property PerfilGrupo: TDataSet read FPerfilGrupo write FPerfilGrupo;
+    property PerfilUsuario: TDataSet Read FPerfilUsuario Write FPerfilUsuario;
+    property PerfilGrupo: TDataSet Read FPerfilGrupo Write FPerfilGrupo;
   end;
 
   TUCUser = class(TPersistent) // armazenar menuitem ou action responsavel pelo controle de usuarios
@@ -121,21 +121,21 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Action: TAction read FAction write SetAction;
-    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
-    property UsePrivilegedField: Boolean read FUsePrivilegedField write FUsePrivilegedField default False;
-    property ProtectAdministrator: Boolean read FProtectAdministrator write FProtectAdministrator default True;
+    property Action: TAction Read FAction Write SetAction;
+    property MenuItem: TMenuItem Read FMenuItem Write SetMenuItem;
+    property UsePrivilegedField: Boolean Read FUsePrivilegedField Write FUsePrivilegedField default False;
+    property ProtectAdministrator: Boolean Read FProtectAdministrator Write FProtectAdministrator default True;
   end;
 
   TUCUserProfile = class(TPersistent) // armazenar menuitem ou action responsavel pelo Perfil de usuarios
   private
-    FAtive:    Boolean;
+    FAtive: Boolean;
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Active: Boolean read FAtive write FAtive default True;
+    property Active: Boolean Read FAtive Write FAtive default True;
   end;
 
   TUCUserPasswordChange = class(TPersistent) // armazenar menuitem ou action responsavel pelo Form trocar senha
@@ -151,16 +151,16 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Action: TAction read FAction write SetAction;
-    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
-    property ForcePassword: Boolean read FForcePassword write FForcePassword default False;
-    property MinPasswordLength: Integer read FMinPasswordLength write FMinPasswordLength default 0;
+    property Action: TAction Read FAction Write SetAction;
+    property MenuItem: TMenuItem Read FMenuItem Write SetMenuItem;
+    property ForcePassword: Boolean Read FForcePassword Write FForcePassword default False;
+    property MinPasswordLength: Integer Read FMinPasswordLength Write FMinPasswordLength default 0;
   end;
 
   TUCUserLogoff = class(TPersistent) // armazenar menuitem ou action responsavel pelo logoff
   private
-    FAction:            TAction;
-    FMenuItem:          TMenuItem;
+    FAction:   TAction;
+    FMenuItem: TMenuItem;
     procedure SetAction(const Value: TAction);
     procedure SetMenuItem(const Value: TMenuItem);
   public
@@ -168,8 +168,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Action: TAction read FAction write SetAction;
-    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
+    property Action: TAction Read FAction Write SetAction;
+    property MenuItem: TMenuItem Read FMenuItem Write SetMenuItem;
   end;
 
   TUCAutoLogin = class(TPersistent) // armazenar configuracao de Auto-Logon
@@ -183,10 +183,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Active: Boolean read FActive write FActive default False;
-    property User: String read FUser write FUser;
-    property Password: String read FPassword write FPassword;
-    property MessageOnError: Boolean read FMessageOnError write FMessageOnError default True;
+    property Active: Boolean Read FActive Write FActive default False;
+    property User: String Read FUser Write FUser;
+    property Password: String Read FPassword Write FPassword;
+    property MessageOnError: Boolean Read FMessageOnError Write FMessageOnError default True;
   end;
 
   TUCInitialLogin = class(TPersistent) // armazenar Dados do Login que sera criado na primeira execucao do programa.
@@ -201,10 +201,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property User: String read FUser write FUser;
-    property Email: String read FEmail write FEmail;
-    property Password: String read FPassword write FPassword;
-    property InitialRights: TStrings read FInitialRights write SetInitialRights;
+    property User: String Read FUser Write FUser;
+    property Email: String Read FEmail Write FEmail;
+    property Password: String Read FPassword Write FPassword;
+    property InitialRights: TStrings Read FInitialRights Write SetInitialRights;
   end;
 
   TUCGetLoginName = (lnNone, lnUserName, lnMachineName);
@@ -215,8 +215,8 @@ type
     FMaxLoginAttempts: Integer;
     FInitialLogin:     TUCInitialLogin;
     FGetLoginName:     TUCGetLoginName;
-    fCharCaseUser: TEditCharCase;
-    fCharCasePass: TEditCharCase;
+    fCharCaseUser:     TEditCharCase;
+    fCharCasePass:     TEditCharCase;
     fDateExpireActive: Boolean;
     fDaysOfSunExpired: Word;
   public
@@ -224,14 +224,14 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property AutoLogin: TUCAutoLogin read FAutoLogin write FAutoLogin;
-    property InitialLogin: TUCInitialLogin read FInitialLogin write FInitialLogin;
-    property MaxLoginAttempts: Integer read FMaxLoginAttempts write FMaxLoginAttempts;
-    property GetLoginName : TUCGetLoginName read FGetLoginName write FGetLoginName default lnNone;
-    property CharCaseUser : TEditCharCase read fCharCaseUser write fCharCaseUser default ecNormal; { By Vicente Barros leonel }
-    property CharCasePass : TEditCharCase read fCharCasePass write fCharCasePass default ecNormal; { By Vicente Barros leonel }
-    property ActiveDateExpired : Boolean read fDateExpireActive write fDateExpireActive default false; { By Vicente Barros leonel }
-    property DaysOfSunExpired  : Word read fDaysOfSunExpired write fDaysOfSunExpired default 30; { By Vicente Barros leonel }
+    property AutoLogin: TUCAutoLogin Read FAutoLogin Write FAutoLogin;
+    property InitialLogin: TUCInitialLogin Read FInitialLogin Write FInitialLogin;
+    property MaxLoginAttempts: Integer Read FMaxLoginAttempts Write FMaxLoginAttempts;
+    property GetLoginName: TUCGetLoginName Read FGetLoginName Write FGetLoginName default lnNone;
+    property CharCaseUser: TEditCharCase Read fCharCaseUser Write fCharCaseUser default ecNormal; { By Vicente Barros leonel }
+    property CharCasePass: TEditCharCase Read fCharCasePass Write fCharCasePass default ecNormal; { By Vicente Barros leonel }
+    property ActiveDateExpired: Boolean Read fDateExpireActive Write fDateExpireActive default False; { By Vicente Barros leonel }
+    property DaysOfSunExpired: Word Read fDaysOfSunExpired Write fDaysOfSunExpired default 30;    { By Vicente Barros leonel }
   end;
 
   TUCNotAllowedItems = class(TPersistent) // Ocultar e/ou Desabilitar os itens que o usuario nao tem acesso
@@ -243,8 +243,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property MenuVisible: Boolean read FMenuVisible write FMenuVisible default True;
-    property ActionVisible: Boolean read FActionVisible write FActionVisible default True;
+    property MenuVisible: Boolean Read FMenuVisible Write FMenuVisible default True;
+    property ActionVisible: Boolean Read FActionVisible Write FActionVisible default True;
   end;
 
   TUCLogControl = class(TPersistent) // Responsavel pelo Controle de Log
@@ -256,8 +256,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Active: Boolean read FActive write FActive default True;
-    property TableLog: String read FTableLog write FTableLog;
+    property Active: Boolean Read FActive Write FActive default True;
+    property TableLog: String Read FTableLog Write FTableLog;
   end;
 
   TUCControlRight = class(TPersistent) // Menu / ActionList/ActionManager ou ActionMainMenuBar a serem Controlados
@@ -275,10 +275,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property ActionList: TActionList read FActionList write SetActionList;
-    property MainMenu: TMenu read FMainMenu write SetMainMenu;
-    property ActionManager: TActionManager read FActionManager write SetActionManager;
-    property ActionMainMenuBar: TActionMainMenuBar read FActionMainMenuBar write SetActionMainMenuBar;
+    property ActionList: TActionList Read FActionList Write SetActionList;
+    property MainMenu: TMenu Read FMainMenu Write SetMainMenu;
+    property ActionManager: TActionManager Read FActionManager Write SetActionManager;
+    property ActionMainMenuBar: TActionMainMenuBar Read FActionMainMenuBar Write SetActionMainMenuBar;
   end;
 
   TOnLogin = procedure(Sender: TObject; var User, Password: String) of object;
@@ -357,8 +357,8 @@ type
     FCriptografia:            TUCCriptografia;
     FUsersLogged:             TUCUsersLogged;
     FTableUsersLogged:        TUCTableUsersLogged;
-    fUsersLogoff: TUCUserLogoff;
-    fLanguage: TUCLanguage;
+    fUsersLogoff:             TUCUserLogoff;
+    fLanguage:                TUCLanguage;
     procedure SetExtraRights(Value: TUCExtraRights);
     procedure SetWindow;
     procedure SetWindowProfile;
@@ -377,11 +377,11 @@ type
     procedure DoCheckValidationField;
     procedure SetfLanguage(const Value: TUCLanguage);
   protected
-    FRetry:                Integer;
+    FRetry:           Integer;
     // Formulários
-    FFormTrocarSenha:      TCustomForm;
-    FFormLogin:            TCustomForm;
-    FFormGeral  :          TCustomForm;
+    FFormTrocarSenha: TCustomForm;
+    FFormLogin:       TCustomForm;
+    FFormGeral:       TCustomForm;
     // -----
 
     procedure Loaded; override;
@@ -418,13 +418,13 @@ type
     procedure AddLoginMonitor(UCAppMessage: TUCApplicationMessage);
     procedure DeleteLoginMonitor(UCAppMessage: TUCApplicationMessage);
     procedure NotificationLoginMonitor;
-    Procedure ShowNewConfig;
+    procedure ShowNewConfig;
   public
     procedure Logoff;
     procedure Execute;
     procedure StartLogin;
     procedure ShowChangePassword;
-    procedure ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile,UserExpired,UserDaysSun,Status: Integer; PrivUser: Boolean);
+    procedure ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile, UserExpired, UserDaysSun, Status: Integer; PrivUser: Boolean);
     procedure ChangePassword(IDUser: Integer; NewPassword: String);
     procedure AddRight(idUser: Integer; ItemRight: TObject; FullPath: Boolean = True); overload;
     procedure AddRight(idUser: Integer; ItemRight: String); overload;
@@ -434,62 +434,62 @@ type
     function VerificaLogin(User, Password: String): Integer;//Boolean;
     function GetLocalUserName: String;
     function GetLocalComputerName: String;
-    function AddUser(Login, Password, Name, Mail: String; Profile , UserExpired , DaysExpired : Integer; PrivUser: Boolean): Integer;
+    function AddUser(Login, Password, Name, Mail: String; Profile, UserExpired, DaysExpired: Integer; PrivUser: Boolean): Integer;
     function ExisteUsuario(Login: String): Boolean;
-    property CurrentUser: TUCCurrentUser read FCurrentUser write FCurrentUser;
-    property UserSettings: TUCUserSettings read FUserSettings write SetUserSettings;
+    property CurrentUser: TUCCurrentUser Read FCurrentUser Write FCurrentUser;
+    property UserSettings: TUCUserSettings Read FUserSettings Write SetUserSettings;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property About: TUCAboutVar read FAbout write FAbout;
-    property Criptografia: TUCCriptografia read FCriptografia write FCriptografia default cPadrao;
-    property AutoStart: Boolean read FAutoStart write FAutoStart default False;
-    property ApplicationID: String read FApplicationID write FApplicationID;
-    property ControlRight: TUCControlRight read FControlRight write FControlRight;
+    property About: TUCAboutVar Read FAbout Write FAbout;
+    property Criptografia: TUCCriptografia Read FCriptografia Write FCriptografia default cPadrao;
+    property AutoStart: Boolean Read FAutoStart Write FAutoStart default False;
+    property ApplicationID: String Read FApplicationID Write FApplicationID;
+    property ControlRight: TUCControlRight Read FControlRight Write FControlRight;
     // Controle dos formularios
-    property User: TUCUser read FUser write FUser;
-    property UserProfile: TUCUserProfile read FUserProfile write FUserProfile;
-    property UserPasswordChange: TUCUserPasswordChange read FUserPasswordChange write FUserPasswordChange;
-    property UsersLogged: TUCUsersLogged read FUsersLogged write FUsersLogged;
-    property UsersLogoff: TUCUserLogoff read fUsersLogoff write fUsersLogoff; //by vicente barros leonel
-    property LogControl: TUCLogControl read FLogControl write FLogControl;
+    property User: TUCUser Read FUser Write FUser;
+    property UserProfile: TUCUserProfile Read FUserProfile Write FUserProfile;
+    property UserPasswordChange: TUCUserPasswordChange Read FUserPasswordChange Write FUserPasswordChange;
+    property UsersLogged: TUCUsersLogged Read FUsersLogged Write FUsersLogged;
+    property UsersLogoff: TUCUserLogoff Read fUsersLogoff Write fUsersLogoff; //by vicente barros leonel
+    property LogControl: TUCLogControl Read FLogControl Write FLogControl;
 
-    property Language : TUCLanguage read fLanguage write SetfLanguage;
+    property Language: TUCLanguage Read fLanguage Write SetfLanguage;
 
-    property EncryptKey: Word read FEncrytKey write FEncrytKey;
-    property NotAllowedItems: TUCNotAllowedItems read FNotAllowedItems write FNotAllowedItems;
-    property Login: TUCLogin read FLogin write FLogin;
-    property ExtraRights: TUCExtraRights read FExtraRights write SetExtraRights;
-    property LoginMode: TUCLoginMode read FLoginMode write FLoginMode default lmActive;
+    property EncryptKey: Word Read FEncrytKey Write FEncrytKey;
+    property NotAllowedItems: TUCNotAllowedItems Read FNotAllowedItems Write FNotAllowedItems;
+    property Login: TUCLogin Read FLogin Write FLogin;
+    property ExtraRights: TUCExtraRights Read FExtraRights Write SetExtraRights;
+    property LoginMode: TUCLoginMode Read FLoginMode Write FLoginMode default lmActive;
     // Tabelas
-    property TableUsers: TUCTableUsers read FTableUsers write FTableUsers;
-    property TableRights: TUCTableRights read FTableRights write FTableRights;
-    property TableUsersLogged: TUCTableUsersLogged read FTableUsersLogged write FTableUsersLogged;
+    property TableUsers: TUCTableUsers Read FTableUsers Write FTableUsers;
+    property TableRights: TUCTableRights Read FTableRights Write FTableRights;
+    property TableUsersLogged: TUCTableUsersLogged Read FTableUsersLogged Write FTableUsersLogged;
 
-    property DataConnector: TUCDataConnector read FDataConnector write SetDataConnector;
-    property CheckValidationKey: Boolean read FCheckValidationKey write FCheckValidationKey default False;
+    property DataConnector: TUCDataConnector Read FDataConnector Write SetDataConnector;
+    property CheckValidationKey: Boolean Read FCheckValidationKey Write FCheckValidationKey default False;
     // Eventos
-    property OnLogin: TOnLogin read FOnLogin write FOnLogin;
-    property OnStartApplication: TNotifyEvent read FOnStartApplication write FOnStartApplication;
-    property OnLoginSucess: TOnLoginSucess read FOnLoginSucess write FOnLoginSucess;
-    property OnLoginError: TOnLoginError read FOnLoginError write FOnLoginError;
-    property OnApplyRightsMenuIt: TOnApplyRightsMenuItem read FOnApplyRightsMenuIt write FOnApplyRightsMenuIt;
-    property OnApplyRightsActionIt: TOnApllyRightsActionItem read FOnApplyRightsActionIt write FOnApplyRightsActionIt;
-    property OnCustomUsersForm: TCustomUserForm read FOnCustomCadUsuarioForm write FOnCustomCadUsuarioForm;
-    property OnCustomUsersProfileForm: TCustomUserProfileForm read FCustomPerfilUsuarioForm write FCustomPerfilUsuarioForm;
-    property OnCustomLoginForm: TCustomLoginForm read FCustomLoginForm write FCustomLoginForm;
-    property OnCustomChangePasswordForm: TCustomUserPasswordChangeForm read FCustomTrocarSenhaForm write FCustomTrocarSenhaForm;
-    property OnCustomLogControlForm: TCustomLogControlForm read FCustomLogControlForm write FCustomLogControlForm;
-    property OnCustomInitialMsg: TCustomInitialMessage read FCustomInicialMsg write FCustomInicialMsg;
-    property OnCustomUserLoggedForm: TCustomUserForm read FOnCustomCadUsuarioForm write FOnCustomCadUsuarioForm; //Cesar: 13/07/2005
-    property OnAddUser: TOnAddUser read FOnAddUser write FOnAddUser;
-    property OnChangeUser: TOnChangeUser read FOnChangeUser write FOnChangeUser;
-    property OnDeleteUser: TOnDeleteUser read FOnDeleteUser write FOnDeleteUser;
-    property OnAddProfile: TOnAddProfile read FOnAddProfile write FOnAddProfile;
-    property OnDeleteProfile: TOnDeleteProfile read FOnDeleteProfile write FOnDeleteProfile;
-    property OnChangePassword: TOnChangePassword read FOnChangePassword write FOnChangePassword;
-    property OnLogoff: TOnLogoff read FOnLogoff write FOnLogoff;
-    property OnAfterLogin: TNotifyEvent read FAfterLogin write FAfterLogin;
+    property OnLogin: TOnLogin Read FOnLogin Write FOnLogin;
+    property OnStartApplication: TNotifyEvent Read FOnStartApplication Write FOnStartApplication;
+    property OnLoginSucess: TOnLoginSucess Read FOnLoginSucess Write FOnLoginSucess;
+    property OnLoginError: TOnLoginError Read FOnLoginError Write FOnLoginError;
+    property OnApplyRightsMenuIt: TOnApplyRightsMenuItem Read FOnApplyRightsMenuIt Write FOnApplyRightsMenuIt;
+    property OnApplyRightsActionIt: TOnApllyRightsActionItem Read FOnApplyRightsActionIt Write FOnApplyRightsActionIt;
+    property OnCustomUsersForm: TCustomUserForm Read FOnCustomCadUsuarioForm Write FOnCustomCadUsuarioForm;
+    property OnCustomUsersProfileForm: TCustomUserProfileForm Read FCustomPerfilUsuarioForm Write FCustomPerfilUsuarioForm;
+    property OnCustomLoginForm: TCustomLoginForm Read FCustomLoginForm Write FCustomLoginForm;
+    property OnCustomChangePasswordForm: TCustomUserPasswordChangeForm Read FCustomTrocarSenhaForm Write FCustomTrocarSenhaForm;
+    property OnCustomLogControlForm: TCustomLogControlForm Read FCustomLogControlForm Write FCustomLogControlForm;
+    property OnCustomInitialMsg: TCustomInitialMessage Read FCustomInicialMsg Write FCustomInicialMsg;
+    property OnCustomUserLoggedForm: TCustomUserForm Read FOnCustomCadUsuarioForm Write FOnCustomCadUsuarioForm; //Cesar: 13/07/2005
+    property OnAddUser: TOnAddUser Read FOnAddUser Write FOnAddUser;
+    property OnChangeUser: TOnChangeUser Read FOnChangeUser Write FOnChangeUser;
+    property OnDeleteUser: TOnDeleteUser Read FOnDeleteUser Write FOnDeleteUser;
+    property OnAddProfile: TOnAddProfile Read FOnAddProfile Write FOnAddProfile;
+    property OnDeleteProfile: TOnDeleteProfile Read FOnDeleteProfile Write FOnDeleteProfile;
+    property OnChangePassword: TOnChangePassword Read FOnChangePassword Write FOnChangePassword;
+    property OnLogoff: TOnLogoff Read FOnLogoff Write FOnLogoff;
+    property OnAfterLogin: TNotifyEvent Read FAfterLogin Write FAfterLogin;
   end;
 
   TUCExtraRightsItem = class(TCollectionItem)
@@ -506,10 +506,10 @@ type
     function GetDisplayName: String; override;
   public
   published
-    property FormName: String read FFormName write SetFormName;
-    property CompName: String read FCompName write SetCompName;
-    property Caption: String read FCaption write SetCaption;
-    property GroupName: String read FGroupName write SetGroupName;
+    property FormName: String Read FFormName Write SetFormName;
+    property CompName: String Read FCompName Write SetCompName;
+    property Caption: String Read FCaption Write SetCaption;
+    property GroupName: String Read FGroupName Write SetGroupName;
   end;
 
   TUCExtraRights = class(TCollection)
@@ -522,7 +522,7 @@ type
   public
     constructor Create(UCBase: TUserControl);
     function Add: TUCExtraRightsItem;
-    property Items[Index: Integer]: TUCExtraRightsItem read GetItem write SetItem; default;
+    property Items[Index: Integer]: TUCExtraRightsItem Read GetItem Write SetItem; default;
   end;
 
   TUCVerificaMensagemThread = class(TThread)
@@ -564,10 +564,10 @@ type
     procedure DeleteAppMessage(IdMsg: Integer);
     procedure CheckMessages;
   published
-    property Active: Boolean read FActive write SetActive;
-    property Interval: Integer read FInterval write FInterval;
-    property TableMessages: String read FTableMessages write FTableMessages;
-    property UserControl: TUserControl read FUserControl write SetUserControl;
+    property Active: Boolean Read FActive Write SetActive;
+    property Interval: Integer Read FInterval Write FInterval;
+    property TableMessages: String Read FTableMessages Write FTableMessages;
+    property UserControl: TUserControl Read FUserControl Write SetUserControl;
   end;
 
   TUCComponentsVar = String;
@@ -580,8 +580,8 @@ type
     FComponents:  TUCComponentsVar;
     FUserControl: TUserControl;
     FNotAllowed:  TUCNotAllowed;
-    function  GetAccessType: String;
-    function  GetActiveForm: String;
+    function GetAccessType: String;
+    function GetActiveForm: String;
     procedure SetGroupName(const Value: String);
     procedure SetUserControl(const Value: TUserControl);
   protected
@@ -589,20 +589,20 @@ type
     procedure Notification(AComponent: TComponent; AOperation: TOperation); override;
   public
     destructor Destroy; override;
-    procedure  ApplyRights;
-    procedure  LockControls;
-    procedure  ListComponents(Form: String; List: TStrings);
+    procedure ApplyRights;
+    procedure LockControls;
+    procedure ListComponents(Form: String; List: TStrings);
   published
-    property AccessType: String read GetAccessType;
-    property ActiveForm: String read GetActiveForm;
-    property GroupName: String read FGroupName write SetGroupName;
-    property UserControl: TUserControl read FUserControl write SetUserControl;
-    property Components: TUCComponentsVar read FComponents write FComponents;
-    property NotAllowed: TUCNotAllowed read FNotAllowed write FNotAllowed default naInvisible;
+    property AccessType: String Read GetAccessType;
+    property ActiveForm: String Read GetActiveForm;
+    property GroupName: String Read FGroupName Write SetGroupName;
+    property UserControl: TUserControl Read FUserControl Write SetUserControl;
+    property Components: TUCComponentsVar Read FComponents Write FComponents;
+    property NotAllowed: TUCNotAllowed Read FNotAllowed Write FNotAllowed default naInvisible;
   end;
 
   TUCUsersLogged = class(TPersistent)
-  //Cesar: 12/07/2005: classe que armazena os usuarios logados no sistema
+    //Cesar: 12/07/2005: classe que armazena os usuarios logados no sistema
   private
     FUserControl: TUserControl;
     FAtive:       Boolean;
@@ -614,7 +614,7 @@ type
     procedure DelCurrentUser;
     procedure CriaTableUserLogado;
   published
-    property Active: Boolean read FAtive write FAtive default True;
+    property Active: Boolean Read FAtive Write FAtive default True;
   end;
 
 function Decrypt(const S: ansistring; Key: Word): ansistring;
@@ -633,9 +633,9 @@ uses
   LoginWindow_U,
   MsgRecForm_U,
   MsgsForm_U,
+  pUCGeral,
   TrocaSenha_U,
-  UserPermis_U,
-  pUCGeral;
+  UserPermis_U;
 
 
 {$IFDEF DELPHI9_UP} {$REGION 'TUSerControl'} {$ENDIF}
@@ -667,69 +667,69 @@ begin
     with TableUsers do
     begin
       if TableName = '' then
-        TableName :=  RetornaLingua( fLanguage,'Const_TableUsers_TableName');
+        TableName := RetornaLingua(fLanguage, 'Const_TableUsers_TableName');
       if FieldUserID = '' then
-        FieldUserID := RetornaLingua( fLanguage,'Const_TableUsers_FieldUserID');
+        FieldUserID := RetornaLingua(fLanguage, 'Const_TableUsers_FieldUserID');
       if FieldUserName = '' then
-        FieldUserName := RetornaLingua( fLanguage,'Const_TableUsers_FieldUserName');
+        FieldUserName := RetornaLingua(fLanguage, 'Const_TableUsers_FieldUserName');
       if FieldLogin = '' then
-        FieldLogin := RetornaLingua( fLanguage,'Const_TableUsers_FieldLogin');
+        FieldLogin := RetornaLingua(fLanguage, 'Const_TableUsers_FieldLogin');
       if FieldPassword = '' then
-        FieldPassword := RetornaLingua( fLanguage,'Const_TableUsers_FieldPassword');
+        FieldPassword := RetornaLingua(fLanguage, 'Const_TableUsers_FieldPassword');
       if FieldEmail = '' then
-        FieldEmail := RetornaLingua( fLanguage,'Const_TableUsers_FieldEmail');
+        FieldEmail := RetornaLingua(fLanguage, 'Const_TableUsers_FieldEmail');
       if FieldPrivileged = '' then
-        FieldPrivileged := RetornaLingua( fLanguage,'Const_TableUsers_FieldPrivileged');
+        FieldPrivileged := RetornaLingua(fLanguage, 'Const_TableUsers_FieldPrivileged');
       if FieldTypeRec = '' then
-        FieldTypeRec := RetornaLingua( fLanguage,'Const_TableUsers_FieldTypeRec');
+        FieldTypeRec := RetornaLingua(fLanguage, 'Const_TableUsers_FieldTypeRec');
       if FieldProfile = '' then
-        FieldProfile := RetornaLingua( fLanguage,'Const_TableUsers_FieldProfile');
+        FieldProfile := RetornaLingua(fLanguage, 'Const_TableUsers_FieldProfile');
       if FieldKey = '' then
-        FieldKey := RetornaLingua( fLanguage,'Const_TableUsers_FieldKey');
+        FieldKey := RetornaLingua(fLanguage, 'Const_TableUsers_FieldKey');
 
-      If FieldDateExpired = '' then
-        FieldDateExpired  := RetornaLingua( fLanguage,'Const_TableUsers_FieldDateExpired'); {Vicente Barros Leonel}
+      if FieldDateExpired = '' then
+        FieldDateExpired := RetornaLingua(fLanguage, 'Const_TableUsers_FieldDateExpired'); {Vicente Barros Leonel}
 
-      If FieldUserExpired = '' then
-        FieldUserExpired := RetornaLingua( fLanguage,'Const_TableUser_FieldUserExpired');  {Vicente Barros Leonel}
+      if FieldUserExpired = '' then
+        FieldUserExpired := RetornaLingua(fLanguage, 'Const_TableUser_FieldUserExpired');  {Vicente Barros Leonel}
 
       if FieldUserDaysSun = '' then
-        FieldUserDaysSun := RetornaLingua( fLanguage,'Const_TableUser_FieldUserDaysSun'); { Vicente Barros leoenl }
+        FieldUserDaysSun := RetornaLingua(fLanguage, 'Const_TableUser_FieldUserDaysSun'); { Vicente Barros leoenl }
 
       if FieldUserInative = '' then
-        FieldUserInative := RetornaLingua( fLanguage,'Const_TableUser_FieldUserInative'); { Vicente Barros leoenl }
+        FieldUserInative := RetornaLingua(fLanguage, 'Const_TableUser_FieldUserInative'); { Vicente Barros leoenl }
     end;
 
     with TableRights do
     begin
       if TableName = '' then
-        TableName := RetornaLingua( fLanguage,'Const_TableRights_TableName');
+        TableName := RetornaLingua(fLanguage, 'Const_TableRights_TableName');
       if FieldUserID = '' then
-        FieldUserID := RetornaLingua( fLanguage,'Const_TableRights_FieldUserID');
+        FieldUserID := RetornaLingua(fLanguage, 'Const_TableRights_FieldUserID');
       if FieldModule = '' then
-        FieldModule := RetornaLingua( fLanguage,'Const_TableRights_FieldModule');
+        FieldModule := RetornaLingua(fLanguage, 'Const_TableRights_FieldModule');
       if FieldComponentName = '' then
-        FieldComponentName := RetornaLingua( fLanguage,'Const_TableRights_FieldComponentName');
+        FieldComponentName := RetornaLingua(fLanguage, 'Const_TableRights_FieldComponentName');
       if FieldFormName = '' then
-        FieldFormName := RetornaLingua( fLanguage,'Const_TableRights_FieldFormName');
+        FieldFormName := RetornaLingua(fLanguage, 'Const_TableRights_FieldFormName');
       if FieldKey = '' then
-        FieldKey := RetornaLingua( fLanguage,'Const_TableRights_FieldKey');
+        FieldKey := RetornaLingua(fLanguage, 'Const_TableRights_FieldKey');
     end;
 
     with TableUsersLogged do
     begin
       if TableName = '' then
-        TableName := RetornaLingua( fLanguage,'Const_TableUsersLogged_TableName');
+        TableName := RetornaLingua(fLanguage, 'Const_TableUsersLogged_TableName');
       if FieldLogonID = '' then
-        FieldLogonID := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldLogonID');
+        FieldLogonID := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldLogonID');
       if FieldUserID = '' then
-        FieldUserID := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldUserID');
+        FieldUserID := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldUserID');
       if FieldApplicationID = '' then
-        FieldApplicationID := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldApplicationID');
+        FieldApplicationID := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldApplicationID');
       if FieldMachineName = '' then
-        FieldMachineName := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldMachineName');
+        FieldMachineName := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldMachineName');
       if FieldData = '' then
-        FieldData := RetornaLingua( fLanguage,'Const_TableUsersLogged_FieldData');
+        FieldData := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldData');
     end;
 
 
@@ -772,23 +772,23 @@ begin
   if not (csDesigning in ComponentState) then
   begin
     if not Assigned(DataConnector) then
-      raise Exception.Create(RetornaLingua( fLanguage,'MsgExceptConnector'));
+      raise Exception.Create(RetornaLingua(fLanguage, 'MsgExceptConnector'));
 
     if ApplicationID = '' then
-      raise Exception.Create(RetornaLingua( fLanguage,'MsgExceptAppID'));
+      raise Exception.Create(RetornaLingua(fLanguage, 'MsgExceptAppID'));
 
-    If ( ( Not Assigned( ControlRight.ActionList ) ) and
-         ( Not Assigned( ControlRight.ActionManager ) ) and
-         ( Not Assigned( ControlRight.MainMenu ) ) and
-         ( Not Assigned( ControlRight.ActionMainMenuBar ) ) ) then
-      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['ControlRight']));
+    if ((not Assigned(ControlRight.ActionList)) and
+      (not Assigned(ControlRight.ActionManager)) and
+      (not Assigned(ControlRight.MainMenu)) and
+      (not Assigned(ControlRight.ActionMainMenuBar))) then
+      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['ControlRight']));
 
     for Contador := 0 to Pred(Owner.ComponentCount) do
       if Owner.Components[Contador] is TUCSettings then
-        Begin
-          Language := TUCSettings(Owner.Components[Contador]).Language; // torna a linguage do UCSETTINGS como padrão
-          ApplySettings(TUCSettings(Owner.Components[Contador]));
-        end;
+      begin
+        Language := TUCSettings(Owner.Components[Contador]).Language; // torna a linguage do UCSETTINGS como padrão
+        ApplySettings(TUCSettings(Owner.Components[Contador]));
+      end;
 
     if Assigned(User.MenuItem) and (not Assigned(User.MenuItem.OnClick)) then
       User.MenuItem.OnClick := ActionCadUser;
@@ -796,8 +796,8 @@ begin
     if Assigned(User.Action) and (not Assigned(User.Action.OnExecute)) then
       User.Action.OnExecute := ActionCadUser;
 
-    If ( ( Not Assigned(User.Action) ) and ( not Assigned( User.MenuItem) ) ) then
-      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['User']));
+    if ((not Assigned(User.Action)) and (not Assigned(User.MenuItem))) then
+      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['User']));
 
     if Assigned(UserPasswordChange.MenuItem) and (not Assigned(UserPasswordChange.MenuItem.OnClick)) then
       UserPasswordChange.MenuItem.OnClick := ActionTrocaSenha;
@@ -812,63 +812,63 @@ begin
     if Assigned(UsersLogoff.Action) and (not Assigned(UsersLogoff.Action.OnExecute)) then
       UsersLogoff.Action.OnExecute := ActionLogoff;
 
-    If ( ( Not Assigned(UserPasswordChange.Action) ) and ( not Assigned( UserPasswordChange.MenuItem) ) ) then
-      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UserPasswordChange']));
+    if ((not Assigned(UserPasswordChange.Action)) and (not Assigned(UserPasswordChange.MenuItem))) then
+      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['UserPasswordChange']));
 
-    If ( ( Not Assigned(UsersLogoff.Action) ) and ( not Assigned( UsersLogoff.MenuItem) ) ) then
-      raise Exception.Create(Format(RetornaLingua( fLanguage,'MsgExceptPropriedade'),['UsersLogoff']));
+    if ((not Assigned(UsersLogoff.Action)) and (not Assigned(UsersLogoff.MenuItem))) then
+      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['UsersLogoff']));
 
     with TableUsers do
     begin
       if TableName = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable'));
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable'));
       if FieldUserID = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserID***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserID***');
       if FieldUserName = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserName***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserName***');
       if FieldLogin = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldLogin***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldLogin***');
       if FieldPassword = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldPassword***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldPassword***');
       if FieldEmail = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldEmail***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldEmail***');
       if FieldPrivileged = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldPrivileged***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldPrivileged***');
       if FieldTypeRec = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldTypeRec***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldTypeRec***');
       if FieldKey = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldKey***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldKey***');
       if FieldProfile = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldProfile***');
-        
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldProfile***');
+
       if FieldDateExpired = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldDateExpired***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldDateExpired***');
 
-      If FieldUserExpired = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserExpired***');
+      if FieldUserExpired = '' then
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserExpired***');
 
-      If FieldUserDaysSun = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserDaysSun***');
+      if FieldUserDaysSun = '' then
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserDaysSun***');
 
       if FieldUserInative = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptUsersTable') + #13 + #10 + 'FieldUserInative***');
-        
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserInative***');
+
     end;
 
     with TableRights do
     begin
       if TableName = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable'));
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable'));
       if FieldUserID = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldProfile***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldProfile***');
       if FieldModule = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldModule***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldModule***');
       if FieldComponentName = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldComponentName***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldComponentName***');
       if FieldFormName = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldFormName***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldFormName***');
       if FieldKey = '' then
-        Exception.Create(RetornaLingua( fLanguage,'MsgExceptRightsTable') + #13 + #10 + 'FieldKey***');
+        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldKey***');
     end;
 
     if Assigned(OnStartApplication) then
@@ -1002,15 +1002,16 @@ begin
     TTrocaSenha(FFormTrocarSenha).btCancel.Caption    := BtCancel;
     TTrocaSenha(FFormTrocarSenha).ForcarTroca         := False; // Vicente Barros Leonel
   end;
-  TTrocaSenha(FFormTrocarSenha).Position        := Self.UserSettings.WindowsPosition; // Adicionado por Luiz Benevenuto
- 
+  TTrocaSenha(FFormTrocarSenha).Position := Self.UserSettings.WindowsPosition; // Adicionado por Luiz Benevenuto
+
   TTrocaSenha(FFormTrocarSenha).btGrava.OnClick := ActionTSBtGrava;
   if CurrentUser.Password = '' then
     TTrocaSenha(FFormTrocarSenha).EditAtu.Enabled := False;
 end;
 
 procedure TUserControl.ActionTSBtGrava(Sender: TObject);
-Var AuxPass : String;
+var
+  AuxPass: String;
 begin
   { Pelo que eu analizei, a gravação da senha no Banco de Dados e feita criptografada
     Qdo a criptografia e padrão, a funcao RegistraCurrentUser descriptografa a senha atual
@@ -1018,12 +1019,12 @@ begin
     troca de senha para podemoscomparar com a senha atual da classe TUCCurrentUser
     Modificação Feita por Vicente Barros Leonel
   }
-   case Self.Criptografia of     // por Vicente Barros Leonel
-     cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditAtu.Text;
-        cMD5: AuxPass := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text);
-    end;
+  case Self.Criptografia of     // por Vicente Barros Leonel
+    cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditAtu.Text;
+    cMD5: AuxPass    := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text);
+  end;
 
-  if CurrentUser.Password <> AuxPass Then //MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text) then  Vicente Barros Leonel
+  if CurrentUser.Password <> AuxPass then //MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text) then  Vicente Barros Leonel
   begin
     MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidCurrentPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditAtu.SetFocus;
@@ -1037,11 +1038,11 @@ begin
     Exit;
   end;
 
-   case Self.Criptografia of     // por Vicente Barros Leonel
-     cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditNova.Text;
-        cMD5: AuxPass := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
-    end;
-    
+  case Self.Criptografia of     // por Vicente Barros Leonel
+    cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditNova.Text;
+    cMD5: AuxPass    := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+  end;
+
   if AuxPass = CurrentUser.Password then
   begin
     MessageDlg(UserSettings.CommonMessages.ChangePasswordError.NewEqualCurrent, mtWarning, [mbOK], 0);
@@ -1077,7 +1078,7 @@ begin
 
   case Self.Criptografia of // Por Vicente Barros Leonel
     cPadrao: CurrentUser.Password := TTrocaSenha(FFormTrocarSenha).EditNova.Text;
-       cMD5: CurrentUser.Password := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+    cMD5: CurrentUser.Password    := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
   end;
 
 
@@ -1086,7 +1087,7 @@ begin
   else
     MessageDlg(UserSettings.CommonMessages.PasswordChanged, mtInformation, [mbOK], 0);
 
-  If TTrocaSenha(FFormTrocarSenha).ForcarTroca = True then
+  if TTrocaSenha(FFormTrocarSenha).ForcarTroca = True then
     TTrocaSenha(FFormTrocarSenha).ForcarTroca := False; // Vicente Barros Leonel
   TTrocaSenha(FFormTrocarSenha).Close;
 end;
@@ -1112,9 +1113,9 @@ begin
     if TopImage <> nil then
       ImgTop.Picture.Assign(TopImage);
 
-     StatusBar.Visible := Login.FMaxLoginAttempts > 0; // by vicente barros leonel
-     StatusBar.Panels[ 1 ].Text := '0'; // by vicente barros leonel
-     StatusBar.Panels[ 3 ].Text := IntToStr( Login.FMaxLoginAttempts ); // by vicente barros leonel
+    StatusBar.Visible        := Login.FMaxLoginAttempts > 0;       // by vicente barros leonel
+    StatusBar.Panels[1].Text := '0';                               // by vicente barros leonel
+    StatusBar.Panels[3].Text := IntToStr(Login.FMaxLoginAttempts); // by vicente barros leonel
   end;
 end;
 
@@ -1132,10 +1133,10 @@ begin
       UserPasswordChange.MenuItem := nil;
 
     { By Vicente Barros Leonel }
-    If AComponent = UsersLogoff.Action then
-      UsersLogoff.Action := Nil;
+    if AComponent = UsersLogoff.Action then
+      UsersLogoff.Action := nil;
     if AComponent = UsersLogoff.MenuItem then
-      UsersLogoff.MenuItem := Nil;
+      UsersLogoff.MenuItem := nil;
 
 
     if AComponent = ControlRight.MainMenu then
@@ -1150,11 +1151,11 @@ begin
     {.$ENDIF}
 
     if AComponent = FDataConnector then
-      Begin
-        if CurrentUser.UserID <> 0 then
-          UsersLogged.DelCurrentUser;
-        FDataConnector := nil;
-      End;
+    begin
+      if CurrentUser.UserID <> 0 then
+        UsersLogged.DelCurrentUser;
+      FDataConnector := nil;
+    end;
 
   end;
   inherited Notification(AComponent, AOperation);
@@ -1189,7 +1190,7 @@ begin
     UserID          := Dados.FieldByName(TableUsers.FieldUserID).AsInteger;
     UserName        := Dados.FieldByName(TableUsers.FieldUserName).AsString;
     UserLogin       := Dados.FieldByName(TableUsers.FieldLogin).AsString;
-    DateExpiration  := StrToDateDef(Dados.FieldByName(TableUsers.FieldDateExpired).AsString, Now );
+    DateExpiration  := StrToDateDef(Dados.FieldByName(TableUsers.FieldDateExpired).AsString, Now);
     UserNotExpired  := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
     UserDaysExpired := Dados.FieldByName(TableUsers.FieldUserDaysSun).AsInteger;
 
@@ -1251,16 +1252,16 @@ begin
   ApplyRightsUCControlMonitor;
   NotificationLoginMonitor;
 
-  If ( ( FLogin.fDateExpireActive = true ) and ( Date > CurrentUser.DateExpiration ) and ( CurrentUser.UserNotExpired = False )  ) then
-    Begin { By Vicente Barros Leonel }
-      MessageDlg( UserSettings.CommonMessages.PasswordExpired , mtInformation , [mbOK], 0);
+  if ((FLogin.fDateExpireActive = True) and (Date > CurrentUser.DateExpiration) and (CurrentUser.UserNotExpired = False)) then
+  begin { By Vicente Barros Leonel }
+    MessageDlg(UserSettings.CommonMessages.PasswordExpired, mtInformation, [mbOK], 0);
 
-      if FFormTrocarSenha = nil then
-        CriaFormTrocarSenha;
-      TTrocaSenha(FFormTrocarSenha).ForcarTroca := True;
-      FFormTrocarSenha.ShowModal;
-      FreeAndNil(FFormTrocarSenha);
-    end;
+    if FFormTrocarSenha = nil then
+      CriaFormTrocarSenha;
+    TTrocaSenha(FFormTrocarSenha).ForcarTroca := True;
+    FFormTrocarSenha.ShowModal;
+    FreeAndNil(FFormTrocarSenha);
+  end;
 end;
 
 procedure TUserControl.TryAutoLogon;
@@ -1318,12 +1319,13 @@ begin
         end
         else
         begin
-          If DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 then
-            Begin
-              RegistraCurrentuser(Dataset);
-              Result := 0;
-            End
-          else result := 2;
+          if DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 then
+          begin
+            RegistraCurrentuser(Dataset);
+            Result := 0;
+          end
+          else
+            Result := 2;
         end;
       end
       else
@@ -1351,7 +1353,7 @@ begin
   ApplyRights;
 end;
 
-function TUserControl.AddUser(Login, Password, Name, Mail: String; Profile, UserExpired, DaysExpired : Integer; PrivUser: Boolean): Integer;
+function TUserControl.AddUser(Login, Password, Name, Mail: String; Profile, UserExpired, DaysExpired: Integer; PrivUser: Boolean): Integer;
 var
   Key:     String;
   SQLStmt: String;
@@ -1403,9 +1405,9 @@ begin
       Profile,
       QuotedStr('U'),
       QuotedStr(Key),
-      QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FLogin.fDaysOfSunExpired) ), {By vicente Barros Leonel }
+      QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FLogin.fDaysOfSunExpired)), {By vicente Barros Leonel }
       UserExpired,
-      DaysExpired, '0' ]); {By vicente Barros Leonel }
+      DaysExpired, '0']); {By vicente Barros Leonel }
     DataConnector.UCExecSQL(SQLStmt);
   end;
 
@@ -1416,10 +1418,7 @@ end;
 
 procedure TUserControl.ChangePassword(IDUser: Integer; NewPassword: String);
 var
-  cSql ,
-  Login,
-  Senha,
-  Key  : String;
+  cSql, Login, Senha, Key: String;
 begin
   inherited;
   with DataConnector.UCGetSQLDataset('Select ' + TableUsers.FieldLogin + ' as login, ' + TableUsers.FieldPassword + ' as senha from ' + TableUsers.TableName + ' where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser)) do
@@ -1444,25 +1443,25 @@ begin
 
   case Self.Criptografia of // Por Vicente Barros Leonel
     cPadrao: cSql := 'Update ' + TableUsers.TableName +
-             ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword,EncryptKey)) +
-             ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-             ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
-             ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
+        ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword, EncryptKey)) +
+        ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
+        ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FCurrentUser.UserDaysExpired)) + // by vicente barros leonel
+        ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
 
-       cMD5: cSql := 'Update ' + TableUsers.TableName +
-                     ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
-                     ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-                     ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FCurrentUser.UserDaysExpired ) ) + // by vicente barros leonel
-                     ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
+    cMD5: cSql := 'Update ' + TableUsers.TableName +
+        ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
+        ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
+        ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FCurrentUser.UserDaysExpired)) + // by vicente barros leonel
+        ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
   end;
-  
-  DataConnector.UCExecSQL( cSql );
+
+  DataConnector.UCExecSQL(cSql);
 
   if Assigned(onChangePassword) then
     OnChangePassword(Self, IdUser, Login, Senha, NewPassword);
 end;
 
-procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile , UserExpired , UserDaysSun , Status : Integer; PrivUser: Boolean);
+procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile, UserExpired, UserDaysSun, Status: Integer; PrivUser: Boolean);
 var
   Key, Password: String;
 begin
@@ -1493,10 +1492,10 @@ begin
       FieldEmail + ' = ' + QuotedStr(Mail) + ', ' +
       FieldPrivileged + ' = ' + BooltoStr(PrivUser) + ', ' +
       FieldProfile + ' = ' + IntToStr(Profile) + ', ' +
-      FieldKey + ' = ' + QuotedStr(Key) +  ', ' +
-      FieldUserExpired + ' = ' + IntToStr( UserExpired ) + ' , ' + // vicente barros leonel
-      FieldUserDaysSun + ' = ' + IntToStr( UserDaysSun ) + ' , ' +
-      FieldUSerInative+ ' = ' + IntToStr( Status ) +
+      FieldKey + ' = ' + QuotedStr(Key) + ', ' +
+      FieldUserExpired + ' = ' + IntToStr(UserExpired) + ' , ' + // vicente barros leonel
+      FieldUserDaysSun + ' = ' + IntToStr(UserDaysSun) + ' , ' +
+      FieldUSerInative + ' = ' + IntToStr(Status) +
       ' where ' + FieldUserID + ' = ' + IntToStr(IdUser));
   if Assigned(OnChangeUser) then
     OnChangeUser(Self, IdUser, Login, Name, Mail, Profile, PrivUser);
@@ -1511,13 +1510,13 @@ begin
     'Subject ' + UserSettings.TypeFieldsDB.Type_VarChar + '(50),' +
     'Msg     ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255),' +
     'DtSend  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12),' +
-    'DtReceive  ' + UserSettings.TypeFieldsDB.Type_Varchar+ '(12) )');
+    'DtReceive  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12) )');
 end;
 
 destructor TUserControl.Destroy;
 begin
   if not (csDesigning in ComponentState) then;
-    fUsersLogged.DelCurrentUser;
+  fUsersLogged.DelCurrentUser;
 
   FCurrentUser.Free;
   FControlRight.Free;
@@ -1535,10 +1534,10 @@ begin
   FTableRights.Free;
   FTableUsersLogged.Free;
 
-  if Assigned( FControlList ) then
+  if Assigned(FControlList) then
     FControlList.Free;
 
-  If Assigned(FLoginMonitorList) then
+  if Assigned(FLoginMonitorList) then
     FLoginMonitorList.Free;
 
   inherited Destroy;
@@ -1579,7 +1578,7 @@ begin
       if not DataConnector.UCFindTable(LogControl.TableLog) then
         CriaTabelaLog;
 
-    CriaTabelaUsuarios(DataConnector.UCFindTable(FTableUsers.TableName) ) ;
+    CriaTabelaUsuarios(DataConnector.UCFindTable(FTableUsers.TableName));
 
     //Atualizador de Versoes  By vicente barros leonel
     AtualizarVersao;
@@ -1598,76 +1597,78 @@ begin
 end;
 
 procedure TUserControl.AtualizarVersao; // by vicente barros leonel
-Var Sql : String; DataSet : TDataSet;
+var
+  Sql:     String;
+  DataSet: TDataSet;
 begin
- { Procura o campo FieldUserDaysSun na tabela de usuarios se o mesmo não existi cria }
- try
-   Sql     := Format('select * from %s',[FTableUsers.TableName ] );
-   DataSet := DataConnector.UCGetSQLDataset( SQL );
+  { Procura o campo FieldUserDaysSun na tabela de usuarios se o mesmo não existi cria }
+  try
+    Sql     := Format('select * from %s', [FTableUsers.TableName]);
+    DataSet := DataConnector.UCGetSQLDataset(SQL);
 
-   If DataSet.FindField( FTableUsers.FieldDateExpired ) = nil then
-     Begin
-       Sql := Format('alter table %s add %s %s(10)',
-              [ FTableUsers.TableName,
-                FTableUsers.FieldDateExpired,
-                UserSettings.TypeFieldsDB.Type_Char ] );
+    if DataSet.FindField(FTableUsers.FieldDateExpired) = nil then
+    begin
+      Sql := Format('alter table %s add %s %s(10)',
+        [FTableUsers.TableName,
+        FTableUsers.FieldDateExpired,
+        UserSettings.TypeFieldsDB.Type_Char]);
 
-       DataConnector.UCExecSQL( Sql );
-       Sql := Format('update %s set %s = %s where %s = ''U''',
-             [ FTableUsers.TableName,
-               FTableUsers.FieldDateExpired,
-               QuotedStr( FormatDateTime('dd/mm/yyyy',Date + FLogin.fDaysOfSunExpired ) ),
-               FTableUsers.FieldTypeRec ] );
-       DataConnector.UCExecSQL( Sql );
-     End;
+      DataConnector.UCExecSQL(Sql);
+      Sql := Format('update %s set %s = %s where %s = ''U''',
+        [FTableUsers.TableName,
+        FTableUsers.FieldDateExpired,
+        QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FLogin.fDaysOfSunExpired)),
+        FTableUsers.FieldTypeRec]);
+      DataConnector.UCExecSQL(Sql);
+    end;
 
-   If DataSet.FindField( FTableUsers.FieldUserExpired  ) = nil then
-     Begin
-       Sql := Format('alter table %s add %s %s',
-              [ FTableUsers.TableName,
-                FTableUsers.FieldUserExpired,
-                UserSettings.TypeFieldsDB.Type_Int] );
-       DataConnector.UCExecSQL( Sql );
-       Sql := Format('update %s set %s = 1 where %s = ''U''',
-             [ FTableUsers.TableName,
-               FTableUsers.FieldUserExpired,
-               FTableUsers.FieldTypeRec ] );
-       DataConnector.UCExecSQL( Sql );
-     End;
+    if DataSet.FindField(FTableUsers.FieldUserExpired) = nil then
+    begin
+      Sql := Format('alter table %s add %s %s',
+        [FTableUsers.TableName,
+        FTableUsers.FieldUserExpired,
+        UserSettings.TypeFieldsDB.Type_Int]);
+      DataConnector.UCExecSQL(Sql);
+      Sql := Format('update %s set %s = 1 where %s = ''U''',
+        [FTableUsers.TableName,
+        FTableUsers.FieldUserExpired,
+        FTableUsers.FieldTypeRec]);
+      DataConnector.UCExecSQL(Sql);
+    end;
 
-   If DataSet.FindField( FTableUsers.FieldUserDaysSun ) = nil then
-     Begin // Cria campo  setado no FieldUserDaysSun na tabela de usuarios
-       Sql := Format('alter table %s add %s %s',
-              [ FTableUsers.TableName,
-                FTableUsers.FieldUserDaysSun,
-                UserSettings.TypeFieldsDB.Type_Int] );
-       DataConnector.UCExecSQL( Sql );
-       Sql := Format('update %s set %s = 30 where %s = ''U''',
-             [ FTableUsers.TableName,
-               FTableUsers.FieldUserDaysSun,
-               FTableUsers.FieldTypeRec ] );
-       DataConnector.UCExecSQL( Sql );
-     End;
+    if DataSet.FindField(FTableUsers.FieldUserDaysSun) = nil then
+    begin // Cria campo  setado no FieldUserDaysSun na tabela de usuarios
+      Sql := Format('alter table %s add %s %s',
+        [FTableUsers.TableName,
+        FTableUsers.FieldUserDaysSun,
+        UserSettings.TypeFieldsDB.Type_Int]);
+      DataConnector.UCExecSQL(Sql);
+      Sql := Format('update %s set %s = 30 where %s = ''U''',
+        [FTableUsers.TableName,
+        FTableUsers.FieldUserDaysSun,
+        FTableUsers.FieldTypeRec]);
+      DataConnector.UCExecSQL(Sql);
+    end;
 
 
-   If DataSet.FindField( FTableUsers.FieldUserInative ) = nil then
-     Begin // Cria campo  setado no FieldUserInative na tabela de usuarios
-       Sql := Format('alter table %s add %s %s',
-              [ FTableUsers.TableName,
-                FTableUsers.FieldUserInative,
-                UserSettings.TypeFieldsDB.Type_Int] );
-       DataConnector.UCExecSQL( Sql );
-       
-       Sql := Format('update %s set %s = 0 where %s = ''U''',
-             [ FTableUsers.TableName,
-               FTableUsers.FieldUserInative,
-               FTableUsers.FieldTypeRec ] );
-       DataConnector.UCExecSQL( Sql );
-     End;
+    if DataSet.FindField(FTableUsers.FieldUserInative) = nil then
+    begin // Cria campo  setado no FieldUserInative na tabela de usuarios
+      Sql := Format('alter table %s add %s %s',
+        [FTableUsers.TableName,
+        FTableUsers.FieldUserInative,
+        UserSettings.TypeFieldsDB.Type_Int]);
+      DataConnector.UCExecSQL(Sql);
 
- Finally
-   FreeAndNil( DataSet );
- end;
+      Sql := Format('update %s set %s = 0 where %s = ''U''',
+        [FTableUsers.TableName,
+        FTableUsers.FieldUserInative,
+        FTableUsers.FieldTypeRec]);
+      DataConnector.UCExecSQL(Sql);
+    end;
+
+  finally
+    FreeAndNil(DataSet);
+  end;
 
 end;
 
@@ -1684,7 +1685,7 @@ begin
 
   if TempDS.FindField(TableUsers.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' +  UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+    DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1721,7 +1722,7 @@ begin
 
   if TempDS.FindField(TableRights.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar+  ' (255)');
+    DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1760,7 +1761,7 @@ begin
       begin
         UserID := TempDS.FieldByName(TableRights.FieldUserID).AsInteger;
         Login  := TempDS.FieldByName(TableRights.FieldComponentName).AsString; //componentname
-        Senha  := TempDS.FieldByName(TableRights.FieldFormName).AsString; // formname
+        Senha  := TempDS.FieldByName(TableRights.FieldFormName).AsString;      // formname
         case Self.Criptografia of
           cPadrao: Key := Encrypt(IntToStr(UserID) + Login, EncryptKey);
           cMD5: Key    := MD5Sum(IntToStr(UserID) + Login);
@@ -1796,12 +1797,12 @@ procedure TUserControl.ShowNewConfig;
 begin
   FFormGeral := TFormUserPerf.Create(Self);
   with TFormUserPerf(FFormGeral) do
-    Begin
-      Position     := UserSettings.WindowsPosition;
-      fUserControl := Self;
-      ShowModal;
-    End;
-  FreeAndNil( FFormGeral );
+  begin
+    Position     := UserSettings.WindowsPosition;
+    fUserControl := Self;
+    ShowModal;
+  end;
+  FreeAndNil(FFormGeral);
 end;
 
 procedure TUserControl.AddUCControlMonitor(UCControl: TUCControls);
@@ -1890,10 +1891,10 @@ begin
     with FFormLogin as TfrmLoginWindow do
     begin
       SetfrmLoginWindow(TfrmLoginWindow(FFormLogin));
-      FUserControl      := Self;
-      btOK.onClick      := ActionOKLogin;
-      onCloseQuery      := Testafecha;
-      Position          := Self.UserSettings.WindowsPosition;
+      FUserControl := Self;
+      btOK.onClick := ActionOKLogin;
+      onCloseQuery := Testafecha;
+      Position     := Self.UserSettings.WindowsPosition;
     end;
   end;
   FFormLogin.ShowModal;
@@ -1904,7 +1905,7 @@ procedure TUserControl.ActionOKLogin(Sender: TObject);
 var
   TempUser:     String;
   TempPassword: String;
-  retorno : Integer;
+  retorno:      Integer;
 begin
   TempUser     := TfrmLoginWindow(FFormLogin).EditUsuario.Text;
   TempPassword := TfrmLoginWindow(FFormLogin).EditSenha.Text;
@@ -1916,14 +1917,14 @@ begin
     TfrmLoginWindow(FFormLogin).Close
   else
   begin
-    If Retorno = 1 then
+    if Retorno = 1 then
       MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0)
-    else if retorno = 2  then
+    else if retorno = 2 then
       MessageDlg(UserSettings.CommonMessages.InactiveLogin, mtWarning, [mbOK], 0);
 
     Inc(FRetry);
-    If TfrmLoginWindow(FFormLogin).StatusBar.Visible then
-      TfrmLoginWindow(FFormLogin).StatusBar.Panels[ 1 ].Text := IntToStr( FRetry );
+    if TfrmLoginWindow(FFormLogin).StatusBar.Visible then
+      TfrmLoginWindow(FFormLogin).StatusBar.Panels[1].Text := IntToStr(FRetry);
 
     if (Login.MaxLoginAttempts > 0) and (FRetry = Login.MaxLoginAttempts) then
     begin
@@ -2028,21 +2029,21 @@ begin
             TMenuItem(OwnerMenu.Components[Contador]).Visible := True;
         end
         else
-          if ADataset.Locate('ObjName', OwnerMenu.Components[Contador].Name, []) then
-          begin
-            KeyField := ADataset.FindField('UCKey').AsString;
-            case Self.Criptografia of
-              cPadrao:
-                Encontrado := (KeyField = Encrypt(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString, EncryptKey));
-              cMD5:
-                Encontrado := (KeyField = MD5Sum(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString));
-            end;
-            if Encontrado then
-            begin
-              TMenuItem(OwnerMenu.Components[Contador]).Enabled := True;
-              TMenuItem(OwnerMenu.Components[Contador]).Visible := True;
-            end; //verifica key
+        if ADataset.Locate('ObjName', OwnerMenu.Components[Contador].Name, []) then
+        begin
+          KeyField := ADataset.FindField('UCKey').AsString;
+          case Self.Criptografia of
+            cPadrao:
+              Encontrado := (KeyField = Encrypt(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString, EncryptKey));
+            cMD5:
+              Encontrado := (KeyField = MD5Sum(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString));
           end;
+          if Encontrado then
+          begin
+            TMenuItem(OwnerMenu.Components[Contador]).Enabled := True;
+            TMenuItem(OwnerMenu.Components[Contador]).Visible := True;
+          end; //verifica key
+        end;
         if Assigned(OnApplyRightsMenuIt) then
           OnApplyRightsMenuIt(Self, TMenuItem(OwnerMenu.Components[Contador]));
       end;
@@ -2079,19 +2080,19 @@ begin
           TAction(TActionList(ObjetoAction).Actions[contador]).Visible := True;
       end
       else
-        if ADataset.Locate('ObjName', TActionList(ObjetoAction).Actions[contador].Name, []) then
-        begin
-          KeyField := ADataset.FindField('UCKey').AsString;
-          case Self.Criptografia of
-            cPadrao: Encontrado := (KeyField = Encrypt(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString, EncryptKey));
-            cMD5: Encontrado    := (KeyField = MD5Sum(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString));
-          end;
-          if Encontrado then
-          begin
-            TAction(TActionList(ObjetoAction).Actions[contador]).Enabled := True;
-            TAction(TActionList(ObjetoAction).Actions[contador]).Visible := True;
-          end; //verifica key
+      if ADataset.Locate('ObjName', TActionList(ObjetoAction).Actions[contador].Name, []) then
+      begin
+        KeyField := ADataset.FindField('UCKey').AsString;
+        case Self.Criptografia of
+          cPadrao: Encontrado := (KeyField = Encrypt(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString, EncryptKey));
+          cMD5: Encontrado    := (KeyField = MD5Sum(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString));
         end;
+        if Encontrado then
+        begin
+          TAction(TActionList(ObjetoAction).Actions[contador]).Enabled := True;
+          TAction(TActionList(ObjetoAction).Actions[contador]).Visible := True;
+        end; //verifica key
+      end;
 
       if Assigned(OnApplyRightsActionIt) then
         OnApplyRightsActionIt(Self, TAction(TActionList(ObjetoAction).Actions[contador]));
@@ -2334,14 +2335,14 @@ procedure TUserControl.CriaTabelaLog;
 begin
   DataConnector.UCExecSQL(
     Format('CREATE TABLE %S  (APPLICATIONID %s(250), IDUSER %s , MSG %s(250), DATA %s(14), NIVEL %s)',
-     [
-      LogControl.TableLog,
-      UserSettings.TypeFieldsDB.Type_VarChar,
-      UserSettings.TypeFieldsDB.Type_Int,
-      UserSettings.TypeFieldsDB.Type_Varchar,
-      UserSettings.TypeFieldsDB.Type_Varchar,
-      UserSettings.TypeFieldsDB.Type_Int
-     ]));
+    [
+    LogControl.TableLog,
+    UserSettings.TypeFieldsDB.Type_VarChar,
+    UserSettings.TypeFieldsDB.Type_Int,
+    UserSettings.TypeFieldsDB.Type_Varchar,
+    UserSettings.TypeFieldsDB.Type_Varchar,
+    UserSettings.TypeFieldsDB.Type_Int
+    ]));
 end;
 
 {.$IFDEF UCACTMANAGER}
@@ -2350,7 +2351,7 @@ var
   Temp: TActionClientItem;
 begin
   if Act = nil then
-    exit;
+    Exit;
 
   Temp := ControlRight.ActionMainMenuBar.ActionManager.FindItemByAction(Act);
   while Temp <> nil do
@@ -2375,7 +2376,7 @@ var
 begin
   case Self.Criptografia of
     cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_VarChar + '(250)';
-    cMD5   : TipoCampo := UserSettings.TypeFieldsDB.Type_Varchar + '(32)';
+    cMD5: TipoCampo    := UserSettings.TypeFieldsDB.Type_Varchar + '(32)';
   end;
 
   if not TableExists then
@@ -2383,13 +2384,13 @@ begin
     begin
       SQLStmt := Format('Create Table %s ' + // TableName
         '( ' +
-        '%s %s, ' +         // FieldUserID
-        '%s %s(30), ' + // FieldUserName
-        '%s %s(30), ' + // FieldLogin
+        '%s %s, ' +          // FieldUserID
+        '%s %s(30), ' +      // FieldUserName
+        '%s %s(30), ' +      // FieldLogin
         '%s %s, ' +          // FieldPassword
-        '%s %s(10), ' +   // FieldDateExpired Vicente Barros Leonel
-        '%s %s , ' +       //FieldUserExpired  Vicente Barros Leonel
-        '%s %s , ' +      //FieldUserDaysSun   Vicente Barros Leonel
+        '%s %s(10), ' +      // FieldDateExpired Vicente Barros Leonel
+        '%s %s , ' +         //FieldUserExpired  Vicente Barros Leonel
+        '%s %s , ' +         //FieldUserDaysSun   Vicente Barros Leonel
         '%s %s(150), ' +
         '%s %s, ' +
         '%s %s(1), ' +
@@ -2452,7 +2453,7 @@ begin
       Login.InitialLogin.Password,
       Login.InitialLogin.User,
       Login.InitialLogin.Email,
-      0, 0 , Login.DaysOfSunExpired,
+      0, 0, Login.DaysOfSunExpired,
       True)
   else
     IDUsuario := DataSetUsuario.FieldByName('idUser').AsInteger;
@@ -2524,7 +2525,7 @@ procedure TUserControl.SetfLanguage(const Value: TUCLanguage);
 begin
   fLanguage                  := Value;
   Self.UserSettings.Language := Value;
-  UCSettings.AlterLanguage( Self.UserSettings );
+  UCSettings.AlterLanguage(Self.UserSettings);
 end;
 
 
@@ -2539,7 +2540,7 @@ begin
     InvalidLogin          := SourceSettings.CommonMessages.InvalidLogin;
     InactiveLogin         := SourceSettings.CommonMessages.InactiveLogin;
     AutoLogonError        := SourceSettings.CommonMessages.AutoLogonError;
-    UsuarioExiste         := SourceSettings.CommonMessages.UsuarioExiste; // Luiz Benevenuto 20/04/06
+    UsuarioExiste         := SourceSettings.CommonMessages.UsuarioExiste;   // Luiz Benevenuto 20/04/06
     PasswordExpired       := SourceSettings.CommonMessages.PasswordExpired; // vicente barros leonel
     ForcaTrocaSenha       := SourceSettings.CommonMessages.ForcaTrocaSenha;
   end;
@@ -2684,12 +2685,12 @@ begin
     BtClose                    := SourceSettings.Log.BtClose;
     PromptDelete               := SourceSettings.Log.PromptDelete;
     PromptDelete_WindowCaption := SourceSettings.Log.PromptDelete_WindowCaption; //added by fduenas
-    OptionUserAll              := SourceSettings.Log.OptionUserAll;  //added by fduenas
-    OptionLevelLow             := SourceSettings.Log.OptionLevelLow; //added by fduenas
-    OptionLevelNormal          := SourceSettings.Log.OptionLevelNormal; //added by fduenas
-    OptionLevelHigh            := SourceSettings.Log.OptionLevelHigh; //added by fduenas
-    OptionLevelCritic          := SourceSettings.Log.OptionLevelCritic; //added by fduenas
-    DeletePerformed            := SourceSettings.Log.DeletePerformed; //added by fduenas
+    OptionUserAll              := SourceSettings.Log.OptionUserAll;              //added by fduenas
+    OptionLevelLow             := SourceSettings.Log.OptionLevelLow;             //added by fduenas
+    OptionLevelNormal          := SourceSettings.Log.OptionLevelNormal;          //added by fduenas
+    OptionLevelHigh            := SourceSettings.Log.OptionLevelHigh;            //added by fduenas
+    OptionLevelCritic          := SourceSettings.Log.OptionLevelCritic;          //added by fduenas
+    DeletePerformed            := SourceSettings.Log.DeletePerformed;            //added by fduenas
   end;
 
   with UserSettings.AppMessages do
@@ -2705,7 +2706,7 @@ begin
     MsgsForm_ColDate                          := SourceSettings.AppMessages.MsgsForm_ColDate;
     MsgsForm_PromptDelete                     := SourceSettings.AppMessages.MsgsForm_PromptDelete;
     MsgsForm_PromptDelete_WindowCaption       := SourceSettings.AppMessages.MsgsForm_PromptDelete_WindowCaption; //added by fduenas
-    MsgsForm_NoMessagesSelected               := SourceSettings.AppMessages.MsgsForm_NoMessagesSelected; //added by fduenas
+    MsgsForm_NoMessagesSelected               := SourceSettings.AppMessages.MsgsForm_NoMessagesSelected;         //added by fduenas
     MsgsForm_NoMessagesSelected_WindowCaption := SourceSettings.AppMessages.MsgsForm_NoMessagesSelected_WindowCaption; //added by fduenas
 
     MsgRec_BtClose           := SourceSettings.AppMessages.MsgRec_BtClose;
@@ -2728,12 +2729,12 @@ begin
   end;
 
   with UserSettings.TypeFieldsDB do
-    Begin
-      Type_VarChar   := SourceSettings.TypeFieldsDB.Type_VarChar;
-      Type_Char      := SourceSettings.TypeFieldsDB.Type_Char;
-      Type_Int       := SourceSettings.TypeFieldsDB.Type_Int;
-      Type_MemoField := SourceSettings.TypeFieldsDB.Type_MemoField;
-    end;
+  begin
+    Type_VarChar   := SourceSettings.TypeFieldsDB.Type_VarChar;
+    Type_Char      := SourceSettings.TypeFieldsDB.Type_Char;
+    Type_Int       := SourceSettings.TypeFieldsDB.Type_Int;
+    Type_MemoField := SourceSettings.TypeFieldsDB.Type_MemoField;
+  end;
 
   UserSettings.WindowsPosition := SourceSettings.WindowsPosition;
 end;
@@ -2749,7 +2750,7 @@ const
 
 function Decode(const S: ansistring): ansistring;
 const
-  Map: array[char] of Byte = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  Map: array[char] of byte = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 0, 63, 52, 53,
     54, 55, 56, 57, 58, 59, 60, 61, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
@@ -3026,8 +3027,8 @@ begin
   if not AutoLogin.MessageOnError then
     AutoLogin.MessageOnError := True;
 
-  fDateExpireActive   := False; { By Vicente Barros Leonel }
-  fDaysOfSunExpired   := 30;  { By Vicente Barros Leonel }
+  fDateExpireActive := False; { By Vicente Barros Leonel }
+  fDaysOfSunExpired := 30;    { By Vicente Barros Leonel }
 end;
 
 destructor TUCLogin.Destroy;
@@ -3066,9 +3067,7 @@ end;
 procedure TUCUserProfile.Assign(Source: TPersistent);
 begin
   if Source is TUCUserProfile then
-  begin
-    Self.Active := TUCUserProfile(Source).Active;
-  end
+    Self.Active := TUCUserProfile(Source).Active
   else
     inherited;
 end;
@@ -3189,9 +3188,7 @@ procedure TUCControlRight.SetActionList(const Value: TActionList);
 begin
   FActionList := Value;
   if Value <> nil then
-  begin
     Value.FreeNotification(Self.ActionList);
-  end;
 end;
 
 {.$IFDEF UCACTMANAGER}
@@ -3199,18 +3196,14 @@ procedure TUCControlRight.SetActionMainMenuBar(const Value: TActionMainMenuBar);
 begin
   FActionMainMenuBar := Value;
   if Value <> nil then
-  begin
     Value.FreeNotification(Self.ActionMainMenuBar);
-  end;
 end;
 
 procedure TUCControlRight.SetActionManager(const Value: TActionManager);
 begin
   FActionManager := Value;
   if Value <> nil then
-  begin
     Value.FreeNotification(Self.ActionManager);
-  end;
 end;
 
 {.$ENDIF}
@@ -3219,9 +3212,7 @@ procedure TUCControlRight.SetMainMenu(const Value: TMenu);
 begin
   FMainMenu := Value;
   if Value <> nil then
-  begin
     Value.FreeNotification(Self.MainMenu);
-  end;
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
@@ -3353,7 +3344,7 @@ procedure TUCApplicationMessage.SetActive(const Value: Boolean);
 begin
   FActive := Value;
   if (csDesigning in ComponentState) then
-    exit;
+    Exit;
   if FActive then
     FVerifThread.Resume
   else
@@ -3404,7 +3395,7 @@ begin
       ' ORDER BY ' + UserControl.TableUsers.FieldUserName);
     MsgsForm.DSUsuarios.Open;
 
-    MsgsForm.Position   := Self.FUserControl.UserSettings.WindowsPosition;
+    MsgsForm.Position := Self.FUserControl.UserSettings.WindowsPosition;
     MsgsForm.ShowModal;
   finally
   end;
@@ -3581,7 +3572,7 @@ begin
         'WHERE %s = %d AND ' +
         '      %s = %s AND ' +
         '      %s = %s',
-        [ TableRights.FieldUserID ,
+        [TableRights.FieldUserID,
         TableRights.FieldComponentName,
         TableRights.FieldKey,
         TableRights.TableName,
@@ -3811,9 +3802,7 @@ end;
 procedure TUCUsersLogged.Assign(Source: TPersistent);
 begin
   if Source is TUCUsersLogged then
-  begin
-    Self.Active := TUCUsersLogged(Source).Active;
-  end
+    Self.Active := TUCUsersLogged(Source).Active
   else
     inherited;
 end;
@@ -3890,8 +3879,8 @@ procedure TUCUserLogoff.Assign(Source: TPersistent);
 begin
   if Source is TUCUserLogoff then
   begin
-    Self.MenuItem          := TUCUserLogoff(Source).MenuItem;
-    Self.Action            := TUCUserLogoff(Source).Action;
+    Self.MenuItem := TUCUserLogoff(Source).MenuItem;
+    Self.Action   := TUCUserLogoff(Source).Action;
   end
   else
     inherited;

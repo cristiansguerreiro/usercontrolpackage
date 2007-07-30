@@ -31,32 +31,32 @@ type
   TUCFrame_Log = class(TFrame)
     DataSource1:  TDataSource;
     ImageList1:   TImageList;
-    DBGrid1: TDBGrid;
-    Panel1: TPanel;
-    lbUsuario: TLabel;
-    lbData: TLabel;
-    lbNivel: TLabel;
-    Bevel3: TBevel;
-    btfiltro: TBitBtn;
-    btfecha: TBitBtn;
-    btexclui: TBitBtn;
+    DBGrid1:      TDBGrid;
+    Panel1:       TPanel;
+    lbUsuario:    TLabel;
+    lbData:       TLabel;
+    lbNivel:      TLabel;
+    Bevel3:       TBevel;
+    btfiltro:     TBitBtn;
+    btfecha:      TBitBtn;
+    btexclui:     TBitBtn;
     ComboUsuario: TComboBox;
-    data1: TDateTimePicker;
-    data2: TDateTimePicker;
-    ComboNivel: TComboBox;
+    Data1:        TDateTimePicker;
+    Data2:        TDateTimePicker;
+    ComboNivel:   TComboBox;
     procedure ComboNivelDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
     procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure ComboUsuarioChange(Sender: TObject);
     procedure btexcluiClick(Sender: TObject);
-    procedure data1Change(Sender: TObject);
+    procedure Data1Change(Sender: TObject);
     procedure btfiltroClick(Sender: TObject);
   private
     procedure AplicaFiltro;
   public
     ListIdUser:   TStringList;
     DSLog, DSCmd: TDataset;
-    fUserControl:  TUserControl;
-    procedure SetWindow;    
+    FUsercontrol: TUserControl;
+    procedure SetWindow;
   end;
 
 implementation
@@ -88,14 +88,14 @@ begin
     Exit;
 
   if UpperCase(Column.FieldName) = 'NIVEL' then
+  begin
+    if Column.Field.AsInteger >= 0 then
     begin
-    If Column.Field.AsInteger >= 0 then
-      Begin
-        TempImg := Graphics.TBitmap.Create;
-        imagelist1.GetBitmap(Column.Field.AsInteger, TempImg);
-        DbGrid1.Canvas.Draw((((Rect.Left + Rect.Right) - TempImg.Width) div 2), rect.Top, Tempimg);
-        FreeAndNil(TempImg);
-      End
+      TempImg := Graphics.TBitmap.Create;
+      imagelist1.GetBitmap(Column.Field.AsInteger, TempImg);
+      DbGrid1.Canvas.Draw((((Rect.Left + Rect.Right) - TempImg.Width) div 2), rect.Top, Tempimg);
+      FreeAndNil(TempImg);
+    end
     else
       DbGrid1.Canvas.TextRect(Rect, Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
   end
@@ -121,12 +121,12 @@ var
   FTabLog, Temp: String;
 begin
   //modified by fduenas
-  if MessageBox(Handle, PChar( fUserControl.UserSettings.Log.PromptDelete),
-    PChar(fUserControl.UserSettings.Log.PromptDelete_WindowCaption), mb_YesNo) <> mrYes then
-    exit;
+  if MessageBox(Handle, PChar(FUsercontrol.UserSettings.Log.PromptDelete),
+    PChar(FUsercontrol.UserSettings.Log.PromptDelete_WindowCaption), mb_YesNo) <> mrYes then
+    Exit;
 
   btFiltro.Enabled := False;
-  FTabLog          := fUserControl.LogControl.TableLog;
+  FTabLog          := FUsercontrol.LogControl.TableLog;
   Temp             := 'Delete from ' + FTabLog +
     ' Where (Data >=' + QuotedStr(FormatDateTime('yyyyMMddhhmmss', data1.DateTime)) + ') ' +
     ' and (Data <=' + QuotedStr(FormatDateTime('yyyyMMddhhmmss', data2.DateTime)) + ') ' +
@@ -136,20 +136,20 @@ begin
     Temp := Temp + ' and ' + FTabLog + '.idUser = ' + ListIdUser[ComboUsuario.ItemIndex];
 
   try
-    fUserControl.DataConnector.UCExecSQL(Temp);
+    FUsercontrol.DataConnector.UCExecSQL(Temp);
     AplicaFiltro;
     DBGrid1.Repaint;
   except
   end;
 
   try
-    fUserControl.Log(Format(fUserControl.UserSettings.Log.DeletePerformed, [comboUsuario.Text, DateTimeToStr(Data1.datetime), DateTimeToStr(Data2.datetime), ComboNivel.Text]), 2);
+    FUsercontrol.Log(Format(FUsercontrol.UserSettings.Log.DeletePerformed, [comboUsuario.Text, DateTimeToStr(Data1.datetime), DateTimeToStr(Data2.datetime), ComboNivel.Text]), 2);
   except;
   end;
 
 end;
 
-procedure TUCFrame_Log.data1Change(Sender: TObject);
+procedure TUCFrame_Log.Data1Change(Sender: TObject);
 begin
   btFiltro.Enabled := True;
 end;
@@ -166,16 +166,16 @@ var
 begin
   btFiltro.Enabled := False;
   DSLog.Close;
-  FTabLog  := fUserControl.LogControl.TableLog;
-  FTabUser := fUserControl.TableUsers.TableName;
+  FTabLog  := FUsercontrol.LogControl.TableLog;
+  FTabUser := FUsercontrol.TableUsers.TableName;
 
-  Temp := Format('Select TabUser.' + fUserControl.TableUsers.FieldUserName + ' as nome, ' + FTabLog + '.* ' +
+  Temp := Format('Select TabUser.' + FUsercontrol.TableUsers.FieldUserName + ' as nome, ' + FTabLog + '.* ' +
     'from ' + FTabLog +
     '  Left outer join %s TabUser on ' + FTabLog + '.idUser = TabUser.%s ' +
     'Where (data >= ' + QuotedStr(FormatDateTime('yyyyMMddhhmmss', data1.DateTime)) + ') ' +
     'and (Data <= ' + QuotedStr(FormatDateTime('yyyyMMddhhmmss', data2.DateTime)) + ') ' +
     'and nivel >= ' + IntToStr(ComboNivel.ItemIndex),
-    [fUserControl.TableUsers.TableName, fUserControl.TableUsers.FieldUserID]);
+    [FUsercontrol.TableUsers.TableName, FUsercontrol.TableUsers.FieldUserID]);
 
   if ComboUsuario.ItemIndex > 0 then
     Temp := Temp + ' and ' + FTabLog + '.idUser = ' + ListIdUser[ComboUsuario.ItemIndex];
@@ -184,7 +184,7 @@ begin
 
   FreeAndNil(DSLog);
   DataSource1.DataSet := nil;
-  DSLog               := fUserControl.DataConnector.UCGetSQLDataset(Temp);
+  DSLog               := FUsercontrol.DataConnector.UCGetSQLDataset(Temp);
   DataSource1.DataSet := DSLog;
   btexclui.Enabled    := not DsLog.IsEmpty;
 end;
@@ -193,22 +193,22 @@ procedure TUCFrame_Log.SetWindow;
 var
   TabelaLog: String;
   SQLStmt:   String;
-Begin
+begin
   ComboNivel.Items.Clear;
-  ComboNivel.Items.Append(fUserControl.UserSettings.Log.OptionLevelLow);        //BGM
-  ComboNivel.Items.Append(fUserControl.UserSettings.Log.OptionLevelNormal);     //BGM
-  ComboNivel.Items.Append(fUserControl.UserSettings.Log.OptionLevelHigh);       //BGM
-  ComboNivel.Items.Append(fUserControl.UserSettings.Log.OptionLevelCritic);     //BGM
+  ComboNivel.Items.Append(FUsercontrol.UserSettings.Log.OptionLevelLow);        //BGM
+  ComboNivel.Items.Append(FUsercontrol.UserSettings.Log.OptionLevelNormal);     //BGM
+  ComboNivel.Items.Append(FUsercontrol.UserSettings.Log.OptionLevelHigh);       //BGM
+  ComboNivel.Items.Append(FUsercontrol.UserSettings.Log.OptionLevelCritic);     //BGM
   ComboNivel.ItemIndex := 0;
   ComboUsuario.Items.Clear;
-  ListIdUser     := TStringList.Create;
   data1.Date     := EncodeDate(StrToInt(FormatDateTime('yyyy', Date)), 1, 1);
   data2.DateTime := Now;
-
-  with fUserControl do
-    If (  ( fUserControl.CurrentUser.Privileged = True ) or
-          ( fUserControl.CurrentUser.UserLogin = fUserControl.Login.InitialLogin.User ) )  then
-      Begin
+  ListIdUser     := TStringList.Create;
+  try
+    with FUsercontrol do
+      if ((FUsercontrol.CurrentUser.Privileged = True) or
+        (FUsercontrol.CurrentUser.UserLogin = FUsercontrol.Login.InitialLogin.User)) then
+      begin
         DSCmd := DataConnector.UCGetSQLDataset(
           Format('SELECT %s AS IDUSER, %s AS NOME , %s AS LOGIN FROM %s WHERE %s  = %s ORDER BY %s',
           [TableUsers.FieldUserID,
@@ -218,28 +218,31 @@ Begin
           TableUsers.FieldTypeRec,
           QuotedStr('U'),
           TableUsers.FieldUserName]));
-          ComboUsuario.Items.Append(fUserControl.UserSettings.Log.OptionUserAll);
-          ListIdUser.Append('0');
-        End
-     else
-       DSCmd := DataConnector.UCGetSQLDataset(
-               Format('SELECT %s AS IDUSER, %s AS NOME , %s AS LOGIN FROM %s WHERE %s  = %s and %s = %s ORDER BY %s',
-               [TableUsers.FieldUserID,
-               TableUsers.FieldUserName,
-               TableUsers.FieldLogin,
-               TableUsers.TableName,
-               TableUsers.FieldTypeRec,
-               QuotedStr('U'),
-               TableUsers.FieldLogin,
-               QuotedStr(fUserControl.CurrentUser.UserLogin),
-               TableUsers.FieldUserName]));
+        ComboUsuario.Items.Append(FUsercontrol.UserSettings.Log.OptionUserAll);
+        ListIdUser.Append('0');
+      end
+      else
+        DSCmd := DataConnector.UCGetSQLDataset(
+          Format('SELECT %s AS IDUSER, %s AS NOME , %s AS LOGIN FROM %s WHERE %s  = %s and %s = %s ORDER BY %s',
+          [TableUsers.FieldUserID,
+          TableUsers.FieldUserName,
+          TableUsers.FieldLogin,
+          TableUsers.TableName,
+          TableUsers.FieldTypeRec,
+          QuotedStr('U'),
+          TableUsers.FieldLogin,
+          QuotedStr(FUsercontrol.CurrentUser.UserLogin),
+          TableUsers.FieldUserName]));
 
     while not DSCmd.EOF do
-      begin
-        ComboUsuario.Items.Append(DSCmd.FieldByName('Nome').AsString);
-        ListIdUser.Append(DSCmd.FieldByName('idUser').AsString);
-        DSCmd.Next;
-      end;
+    begin
+      ComboUsuario.Items.Append(DSCmd.FieldByName('Nome').AsString);
+      ListIdUser.Append(DSCmd.FieldByName('idUser').AsString);
+      DSCmd.Next;
+    end;
+  finally
+    SysUtils.FreeAndNil(ListIdUser);
+  end;
 
 
   DSCmd.Close;
@@ -248,8 +251,8 @@ Begin
   ComboUsuario.ItemIndex := 0;
 
 
-  TabelaLog := fUserControl.LogControl.TableLog;
-  with fUserControl do
+  TabelaLog := FUsercontrol.LogControl.TableLog;
+  with FUsercontrol do
   begin
     SQLStmt := 'SELECT ' + TableUsers.TableName + '.' + TableUsers.FieldUserName + ' AS NOME, ' + TabelaLog + '.* from ' + TabelaLog +
       ' LEFT OUTER JOIN ' + TableUsers.TableName + ' on ' + TabelaLog + '.idUser = ' + TableUsers.TableName + '.' + TableUsers.FieldUserID +
@@ -260,31 +263,31 @@ Begin
   btexclui.Enabled    := not DsLog.IsEmpty;
 
 
-  With fUSerControl.UserSettings.Log, DBGrid1 do
-    Begin
-      lbUsuario.Caption   := LabelUser;
-      lbData.Caption      := LabelDate;
-      lbNivel.Caption     := LabelLevel;
-      BtFiltro.Caption    := BtFilter;
-      BtExclui.Caption    := BtDelete;
-      BtFecha.Caption     := BtClose;
+  with FUsercontrol.UserSettings.Log, DBGrid1 do
+  begin
+    lbUsuario.Caption := LabelUser;
+    lbData.Caption    := LabelDate;
+    lbNivel.Caption   := LabelLevel;
+    BtFiltro.Caption  := BtFilter;
+    BtExclui.Caption  := BtDelete;
+    BtFecha.Caption   := BtClose;
 
-      Columns[0].Title.Caption := ColAppID;
-      Columns[0].FieldName     := 'APPLICATIONID';
-      Columns[0].Width         := 60;
-      Columns[1].Title.Caption := ColLevel;
-      Columns[1].FieldName     := 'NIVEL';
-      Columns[1].Width         := 32;
-      Columns[2].Title.Caption := ColMessage;
-      Columns[2].FieldName     := 'MSG';
-      Columns[2].Width         := 260;
-      Columns[3].Title.Caption := ColUser;
-      Columns[3].FieldName     := 'NOME';
-      Columns[3].Width         := 120;
-      Columns[4].Title.Caption := ColDate;
-      Columns[4].FieldName     := 'DATA';
-      Columns[4].Width         := 111;
-    end;
+    Columns[0].Title.Caption := ColAppID;
+    Columns[0].FieldName     := 'APPLICATIONID';
+    Columns[0].Width         := 60;
+    Columns[1].Title.Caption := ColLevel;
+    Columns[1].FieldName     := 'NIVEL';
+    Columns[1].Width         := 32;
+    Columns[2].Title.Caption := ColMessage;
+    Columns[2].FieldName     := 'MSG';
+    Columns[2].Width         := 260;
+    Columns[3].Title.Caption := ColUser;
+    Columns[3].FieldName     := 'NOME';
+    Columns[3].Width         := 120;
+    Columns[4].Title.Caption := ColDate;
+    Columns[4].FieldName     := 'DATA';
+    Columns[4].Width         := 111;
+  end;
 
   Bevel3.Width := Panel1.Width - 32;
   Bevel3.Left  := 16;

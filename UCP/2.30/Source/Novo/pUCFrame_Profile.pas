@@ -9,19 +9,33 @@ uses
  {$ELSE}
   Variants,
  {$ENDIF}
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids,Db,
-  UcBase,IncPerfil_U,UserPermis_U;
+  Buttons,
+  Classes,
+  Controls,
+  Db,
+  DBGrids,
+  Dialogs,
+  ExtCtrls,
+  Forms,
+  Graphics,
+  Grids,
+  IncPerfil_U,
+  Messages,
+  StdCtrls,
+  SysUtils,
+  UcBase,
+  UserPermis_U,
+  Windows;
 
 type
   TFrame_Profile = class(TFrame)
     DbGridPerf: TDBGrid;
-    Panel2: TPanel;
-    BtnAddPer: TBitBtn;
-    BtnAltPer: TBitBtn;
-    BtnExcPer: TBitBtn;
-    BtnClose: TBitBtn;
-    BtnAcePer: TBitBtn;
+    Panel2:     TPanel;
+    BtnAddPer:  TBitBtn;
+    BtnAltPer:  TBitBtn;
+    BtnExcPer:  TBitBtn;
+    BtnClose:   TBitBtn;
+    BtnAcePer:  TBitBtn;
     DataPerfil: TDataSource;
     procedure BtnAddPerClick(Sender: TObject);
     procedure BtnAltPerClick(Sender: TObject);
@@ -35,12 +49,12 @@ type
   private
     { Private declarations }
   public
-    fUserControl : TUserControl;
+    fUserControl:          TUserControl;
     FDataSetPerfilUsuario: TDataset;
     { Public declarations }
   end;
 
-  
+
 implementation
 
 {$R *.dfm}
@@ -68,44 +82,45 @@ var
   TempCampos, TempCamposEX: String;
 begin
   UserPermis.FTempIdUser := FDataSetPerfilUsuario.FieldByName('IdUser').AsInteger;
-  With fUserControl do Begin
-  TempCampos   := Format(' %s as IdUser, %s as Modulo, %s as ObjName, %s as UCKey ',
-    [TableRights.FieldUserID,
-    TableRights.FieldModule,
-    TableRights.FieldComponentName,
-    TableRights.FieldKey]);
+  with fUserControl do
+  begin
+    TempCampos   := Format(' %s as IdUser, %s as Modulo, %s as ObjName, %s as UCKey ',
+      [TableRights.FieldUserID,
+      TableRights.FieldModule,
+      TableRights.FieldComponentName,
+      TableRights.FieldKey]);
     TempCamposEX := Format('%s, %s as FormName ', [TempCampos, TableRights.FieldFormName]);
 
-  UserPermis.DSPermiss := DataConnector.UCGetSQLDataset(Format('Select %s from %s tab Where tab.%s = %s and tab.%s = %s',
-    [TempCampos,
-    TableRights.TableName,
-    TableRights.FieldUserID,
-    FDataSetPerfilUsuario.FieldByName('IdUser').AsString,
-    TableRights.FieldModule,
-    QuotedStr(ApplicationID)]));
+    UserPermis.DSPermiss := DataConnector.UCGetSQLDataset(Format('Select %s from %s tab Where tab.%s = %s and tab.%s = %s',
+      [TempCampos,
+      TableRights.TableName,
+      TableRights.FieldUserID,
+      FDataSetPerfilUsuario.FieldByName('IdUser').AsString,
+      TableRights.FieldModule,
+      QuotedStr(ApplicationID)]));
 
-  UserPermis.DSPermiss.Open;
+    UserPermis.DSPermiss.Open;
 
-  UserPermis.DSPermissEX := DataConnector.UCGetSQLDataset(Format('Select %s from %s tab1 Where tab1.%s = %s and tab1.%s = %s',
-    [TempCamposEX,
-    TableRights.TableName + 'EX',
-    TableRights.FieldUserID,
-    FDataSetPerfilUsuario.FieldByName('IdUser').AsString,
-    TableRights.FieldModule,
-    QuotedStr(ApplicationID)]));
+    UserPermis.DSPermissEX := DataConnector.UCGetSQLDataset(Format('Select %s from %s tab1 Where tab1.%s = %s and tab1.%s = %s',
+      [TempCamposEX,
+      TableRights.TableName + 'EX',
+      TableRights.FieldUserID,
+      FDataSetPerfilUsuario.FieldByName('IdUser').AsString,
+      TableRights.FieldModule,
+      QuotedStr(ApplicationID)]));
 
-  UserPermis.DSPermissEX.Open;
+    UserPermis.DSPermissEX.Open;
 
-  UserPermis.DSPerfil := TDataset.Create(UserPermis);
+    UserPermis.DSPerfil := TDataset.Create(UserPermis);
 
-  UserPermis.ShowModal;
+    UserPermis.ShowModal;
 
-  FDataSetPerfilUsuario.Close;
-  FDataSetPerfilUsuario.Open;
-  FDataSetPerfilUsuario.Locate('idUser', UserPermis.FTempIdUser, []);
+    FDataSetPerfilUsuario.Close;
+    FDataSetPerfilUsuario.Open;
+    FDataSetPerfilUsuario.Locate('idUser', UserPermis.FTempIdUser, []);
 
-  FreeAndNil(UserPermis);
-  End;
+    FreeAndNil(UserPermis);
+  end;
 end;
 
 procedure TFrame_Profile.SetWindowProfile;
@@ -193,11 +208,11 @@ begin
       PChar(FUserControl.UserSettings.UsersProfile.PromptDelete_WindowCaption), MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) <> idYes then
       Exit;
   end
-    else
-      Begin
-        TempDS.Close;
-        FreeAndNil(TempDS);
-      End;
+  else
+  begin
+    TempDS.Close;
+    FreeAndNil(TempDS);
+  end;
 
   CanDelete := True;
   if Assigned(FUserControl.onDeleteProfile) then
