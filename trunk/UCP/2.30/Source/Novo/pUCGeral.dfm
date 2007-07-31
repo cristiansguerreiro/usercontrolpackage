@@ -422,7 +422,6 @@ object FormUserPerf: TFormUserPerf
       OnMouseLeave = SpeedUserMouseLeave
       ExplicitLeft = -4
       ExplicitTop = 115
-      ExplicitWidth = 95
     end
     object SpeedUserLog: TSpeedButton
       Left = 1
