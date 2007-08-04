@@ -2038,11 +2038,8 @@ begin
             cMD5:
               Encontrado := (KeyField = MD5Sum(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString));
           end;
-          if Encontrado then
-          begin
-            TMenuItem(OwnerMenu.Components[Contador]).Enabled := True;
-            TMenuItem(OwnerMenu.Components[Contador]).Visible := True;
-          end; //verifica key
+          TMenuItem(OwnerMenu.Components[Contador]).Enabled := Encontrado;
+          TMenuItem(OwnerMenu.Components[Contador]).Visible := Encontrado;
         end;
         if Assigned(OnApplyRightsMenuIt) then
           OnApplyRightsMenuIt(Self, TMenuItem(OwnerMenu.Components[Contador]));
@@ -2087,11 +2084,8 @@ begin
           cPadrao: Encontrado := (KeyField = Encrypt(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString, EncryptKey));
           cMD5: Encontrado    := (KeyField = MD5Sum(ADataset.FieldByName('UserID').AsString + ADataset.FieldByName('ObjName').AsString));
         end;
-        if Encontrado then
-        begin
-          TAction(TActionList(ObjetoAction).Actions[contador]).Enabled := True;
-          TAction(TActionList(ObjetoAction).Actions[contador]).Visible := True;
-        end; //verifica key
+        TAction(TActionList(ObjetoAction).Actions[contador]).Enabled := Encontrado;
+        TAction(TActionList(ObjetoAction).Actions[contador]).Visible := Encontrado;
       end;
 
       if Assigned(OnApplyRightsActionIt) then
