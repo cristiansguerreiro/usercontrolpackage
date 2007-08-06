@@ -73,7 +73,8 @@ uses
   Menus,
   StdCtrls,
   UCSettings,
-  Variants;
+  Variants,
+  UcMail;
 
 procedure Register;
 begin
@@ -82,7 +83,8 @@ begin
     TUCSettings,
     TUCControls,
     TUCApplicationMessage,
-    TUCIdle
+    TUCIdle,
+    TMailUserControl
     {.$IFDEF DELPHI7}
     , TUCXPStyle
     {.$ENDIF}

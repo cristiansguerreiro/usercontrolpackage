@@ -289,13 +289,11 @@ object frmIncluirUsuario: TfrmIncluirUsuario
     BevelInner = bvRaised
     BevelOuter = bvLowered
     TabOrder = 0
-    ExplicitLeft = 46
-    ExplicitTop = 203
     object lbNome: TLabel
       Left = 48
       Top = 15
       Width = 34
-      Height = 22
+      Height = 13
       Alignment = taRightJustify
       Caption = 'Nome :'
       Layout = tlCenter
@@ -304,7 +302,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 50
       Top = 45
       Width = 32
-      Height = 22
+      Height = 13
       Alignment = taRightJustify
       Caption = 'Login :'
       Layout = tlCenter
@@ -313,7 +311,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 50
       Top = 75
       Width = 32
-      Height = 22
+      Height = 13
       Alignment = taRightJustify
       Caption = 'EMail :'
       Layout = tlCenter
@@ -322,7 +320,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 53
       Top = 136
       Width = 29
-      Height = 22
+      Height = 13
       Alignment = taRightJustify
       Caption = 'Perfil :'
       Layout = tlCenter
@@ -381,7 +379,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 30
       Top = 167
       Width = 52
-      Height = 22
+      Height = 13
       Alignment = taRightJustify
       Caption = 'Expira em :'
       Layout = tlCenter
@@ -390,7 +388,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 331
       Top = 167
       Width = 19
-      Height = 22
+      Height = 13
       Caption = 'dias'
       Layout = tlCenter
     end
@@ -407,7 +405,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 88
       Top = 15
       Width = 265
-      Height = 22
+      Height = 21
       Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
@@ -417,7 +415,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 88
       Top = 45
       Width = 265
-      Height = 22
+      Height = 21
       Ctl3D = True
       MaxLength = 30
       ParentCtl3D = False
@@ -427,7 +425,7 @@ object frmIncluirUsuario: TfrmIncluirUsuario
       Left = 88
       Top = 75
       Width = 265
-      Height = 22
+      Height = 21
       Ctl3D = True
       MaxLength = 150
       ParentCtl3D = False

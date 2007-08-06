@@ -49,7 +49,8 @@ uses
   UCDataConnector,
   UCDataInfo,
   UCMessages,
-  UCSettings;
+  UCSettings,
+  UCMail;
 
 const
   llBaixo   = 0;
@@ -359,9 +360,10 @@ type
     FTableUsersLogged:        TUCTableUsersLogged;
     fUsersLogoff:             TUCUserLogoff;
     fLanguage:                TUCLanguage;
+    fMailUserControl: TMailUserControl;
     procedure SetExtraRights(Value: TUCExtraRights);
-    procedure SetWindow;
-    procedure SetWindowProfile;
+  //  procedure SetWindow;
+  //  procedure SetWindowProfile;
     procedure ActionCadUser(Sender: TObject);
     procedure ActionTrocaSenha(Sender: TObject);
     procedure ActionOKLogin(Sender: TObject);
@@ -376,6 +378,8 @@ type
     procedure SetDataConnector(const Value: TUCDataConnector);
     procedure DoCheckValidationField;
     procedure SetfLanguage(const Value: TUCLanguage);
+    procedure SetFMailUserControl(const Value: TMailUserControl);
+    procedure ActionEsqueceuSenha(Sender: TObject);
   protected
     FRetry:           Integer;
     // Formulários
@@ -453,6 +457,8 @@ type
     property UsersLogged: TUCUsersLogged Read FUsersLogged Write FUsersLogged;
     property UsersLogoff: TUCUserLogoff Read fUsersLogoff Write fUsersLogoff; //by vicente barros leonel
     property LogControl: TUCLogControl Read FLogControl Write FLogControl;
+
+    property MailUserControl : TMailUserControl read fMailUserControl write SetFMailUserControl; // by vicente barros leonel
 
     property Language: TUCLanguage Read fLanguage Write SetfLanguage;
 
@@ -890,6 +896,28 @@ begin
   ShowNewConfig;
 end;
 
+procedure TUserControl.ActionEsqueceuSenha(Sender: TObject);
+var
+  FDataset: TDataset;
+begin
+  FDataset := DataConnector.UCGetSQLDataset('Select * from ' + TableUsers.TableName + ' Where ' +
+    TableUsers.FieldLogin + ' = ' + QuotedStr(TfrmLoginWindow(FFormLogin).EditUsuario.Text));
+  with FDataset do
+    try
+      if not IsEmpty then
+        { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsquceuSenha para usar a criptografia md5 }
+        MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
+          FieldByName(TableUsers.FieldLogin).AsString,
+          FieldByName(TableUsers.FieldPassword).AsString,
+          FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
+      else
+        MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
+    finally
+      Close;
+      Free;
+    end;
+end;
+
 procedure TUserControl.ActionTrocaSenha(Sender: TObject);
 begin
   if Assigned(OnCustomChangePasswordForm) then
@@ -902,7 +930,7 @@ begin
   FreeAndNil(FFormTrocarSenha);
 end;
 
-procedure TUserControl.SetWindowProfile;
+{procedure TUserControl.SetWindowProfile;
 begin
   with Self.UserSettings.Rights do
   begin
@@ -936,7 +964,7 @@ begin
     UserPermis.BtCancel.Caption     := BtCancel;
     UserPermis.Position             := Self.UserSettings.WindowsPosition;
   end;
-end;
+end;    }
 
 function TUserControl.ExisteUsuario(Login: String): Boolean;
 var
@@ -1089,6 +1117,21 @@ begin
 
   if TTrocaSenha(FFormTrocarSenha).ForcarTroca = True then
     TTrocaSenha(FFormTrocarSenha).ForcarTroca := False; // Vicente Barros Leonel
+
+
+   if ( Assigned(fMailUserControl) ) and (fMailUserControl.SenhaTrocada.Ativo) then
+   begin
+     with CurrentUser do
+     begin
+       try
+         fMailUserControl.EnviaEmailSenhaTrocada( Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
+       except
+         on e : Exception do Log(e.Message,2);
+       end;
+     end;
+   end;
+
+
   TTrocaSenha(FFormTrocarSenha).Close;
 end;
 
@@ -1112,6 +1155,13 @@ begin
       ImgBottom.Picture.Assign(BottomImage);
     if TopImage <> nil then
       ImgTop.Picture.Assign(TopImage);
+
+
+    if Assigned(fMailUserControl) then
+    begin
+      lbEsqueci.Visible := fMailUserControl.EsqueceuSenha.Ativo;
+      lbEsqueci.Caption := fMailUserControl.EsqueceuSenha.LabelLoginForm;
+    end;
 
     StatusBar.Visible        := Login.FMaxLoginAttempts > 0;       // by vicente barros leonel
     StatusBar.Panels[1].Text := '0';                               // by vicente barros leonel
@@ -1157,6 +1207,8 @@ begin
       FDataConnector := nil;
     end;
 
+    if AComponent = FMailUserControl then FMailUserControl := nil;
+    
   end;
   inherited Notification(AComponent, AOperation);
 end;
@@ -1895,6 +1947,7 @@ begin
       btOK.onClick := ActionOKLogin;
       onCloseQuery := Testafecha;
       Position     := Self.UserSettings.WindowsPosition;
+      lbEsqueci.OnClick := ActionEsqueceuSenha;
     end;
   end;
   FFormLogin.ShowModal;
@@ -2522,6 +2575,12 @@ begin
   UCSettings.AlterLanguage(Self.UserSettings);
 end;
 
+
+procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
+begin  // By Vicente Barros Leonel
+  FMailUserControl := Value;
+  if Value <> nil then Value.FreeNotification(Self);
+end;
 
 procedure TUserControl.ApplySettings(SourceSettings: TUCSettings);
 begin
