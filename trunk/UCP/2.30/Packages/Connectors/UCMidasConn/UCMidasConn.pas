@@ -49,9 +49,9 @@ type
     function UCGetSQLDataset(FSQL: String): TDataset; override;
     procedure UCExecSQL(FSQL: String); override;
   published
-    property Connection: TCustomRemoteServer read FConnection write SetConnection;
-    property ProviderName: String read FProviderName write SetProviderName;
-    property BancoDados: TBancoDados read FBancoDados write FBancoDados;
+    property Connection: TCustomRemoteServer Read FConnection Write SetConnection;
+    property ProviderName: String Read FProviderName Write SetProviderName;
+    property BancoDados: TBancoDados Read FBancoDados Write FBancoDados;
   end;
 
 const

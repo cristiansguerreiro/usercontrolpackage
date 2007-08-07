@@ -48,9 +48,9 @@ uses
   UcConsts_Language,
   UCDataConnector,
   UCDataInfo,
+  UCMail,
   UCMessages,
-  UCSettings{,
-  UCMail};
+  UCSettings;
 
 const
   llBaixo   = 0;
@@ -358,9 +358,9 @@ type
     FCriptografia:            TUCCriptografia;
     FUsersLogged:             TUCUsersLogged;
     FTableUsersLogged:        TUCTableUsersLogged;
-    fUsersLogoff:             TUCUserLogoff;
+    FUsersLogoff:             TUCUserLogoff;
     fLanguage:                TUCLanguage;
-    //fMailUserControl: TMailUserControl;
+    FMailUserControl:         TMailUserControl;
     procedure SetExtraRights(Value: TUCExtraRights);
     //  procedure SetWindow;
     //  procedure SetWindowProfile;
@@ -378,7 +378,7 @@ type
     procedure SetDataConnector(const Value: TUCDataConnector);
     procedure DoCheckValidationField;
     procedure SetfLanguage(const Value: TUCLanguage);
-    //procedure SetFMailUserControl(const Value: TMailUserControl);
+    procedure SetFMailUserControl(const Value: TMailUserControl);
     procedure ActionEsqueceuSenha(Sender: TObject);
   protected
     FRetry:           Integer;
@@ -455,10 +455,10 @@ type
     property UserProfile: TUCUserProfile Read FUserProfile Write FUserProfile;
     property UserPasswordChange: TUCUserPasswordChange Read FUserPasswordChange Write FUserPasswordChange;
     property UsersLogged: TUCUsersLogged Read FUsersLogged Write FUsersLogged;
-    property UsersLogoff: TUCUserLogoff Read fUsersLogoff Write fUsersLogoff; //by vicente barros leonel
+    property UsersLogoff: TUCUserLogoff Read FUsersLogoff Write FUsersLogoff; //by vicente barros leonel
     property LogControl: TUCLogControl Read FLogControl Write FLogControl;
 
-    //property MailUserControl : TMailUserControl read fMailUserControl write SetFMailUserControl; // by vicente barros leonel
+    property MailUserControl: TMailUserControl Read FMailUserControl Write SetFMailUserControl; // by vicente barros leonel
 
     property Language: TUCLanguage Read fLanguage Write SetfLanguage;
 
@@ -659,7 +659,7 @@ begin
   FUserProfile        := TUCUserProfile.Create(Self);
   FUserPasswordChange := TUCUserPasswordChange.Create(Self);
   FUsersLogged        := TUCUsersLogged.Create(Self);
-  fUsersLogoff        := TUCUserLogoff.Create(Self);
+  FUsersLogoff        := TUCUserLogoff.Create(Self);
   FUserSettings       := TUCUserSettings.Create(Self);
   FNotAllowedItems    := TUCNotAllowedItems.Create(Self);
   FExtraRights        := TUCExtraRights.Create(Self);
@@ -905,14 +905,13 @@ begin
   with FDataset do
     try
       if not IsEmpty then
-      { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsquceuSenha para usar a criptografia md5 }
-(*
-          MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
-            FieldByName(TableUsers.FieldLogin).AsString,
-            FieldByName(TableUsers.FieldPassword).AsString,
-            FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
+        { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsquceuSenha para usar a criptografia md5 }
+        MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
+          FieldByName(TableUsers.FieldLogin).AsString,
+          FieldByName(TableUsers.FieldPassword).AsString,
+          FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
 
-*)      else
+      else
         MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
     finally
       Close;
@@ -1122,12 +1121,12 @@ begin
 
 
 (*
-     if ( Assigned(fMailUserControl) ) and (fMailUserControl.SenhaTrocada.Ativo) then
+     if ( Assigned(FMailUserControl) ) and (FMailUserControl.SenhaTrocada.Ativo) then
      begin
        with CurrentUser do
        begin
          try
-           fMailUserControl.EnviaEmailSenhaTrocada( Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
+           FMailUserControl.EnviaEmailSenhaTrocada( Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
          except
            on e : Exception do Log(e.Message,2);
          end;
@@ -1162,10 +1161,10 @@ begin
 
 
 (*
-      if Assigned(fMailUserControl) then
+      if Assigned(FMailUserControl) then
       begin
-        lbEsqueci.Visible := fMailUserControl.EsqueceuSenha.Ativo;
-        lbEsqueci.Caption := fMailUserControl.EsqueceuSenha.LabelLoginForm;
+        lbEsqueci.Visible := FMailUserControl.EsqueceuSenha.Ativo;
+        lbEsqueci.Caption := FMailUserControl.EsqueceuSenha.LabelLoginForm;
       end;
 
 *)
@@ -1417,6 +1416,18 @@ var
   SQLStmt: String;
   Senha:   String;
 begin
+  case Self.Login.CharCasePass of
+    ecNormal: ;
+    ecUpperCase: Password := UpperCase(Password);
+    ecLowerCase: Password := LowerCase(Password);
+  end;
+
+  case Self.Login.CharCaseUser of
+    ecNormal: ;
+    ecUpperCase: Login := UpperCase(Login);
+    ecLowerCase: Login := LowerCase(Login);
+  end;
+
   with DataConnector.UCGetSQLDataset('Select Max(' + TableUsers.FieldUserID + ') as IdUser from ' + TableUsers.TableName) do
   begin
     Result := FieldByName('idUser').AsInteger + 1;
@@ -1476,10 +1487,24 @@ end;
 
 procedure TUserControl.ChangePassword(IDUser: Integer; NewPassword: String);
 var
-  cSql, Login, Senha, Key: String;
+  Login:   String;
+  Senha:   String;
+  Key:     String;
+  SQLStmt: String;
 begin
   inherited;
-  with DataConnector.UCGetSQLDataset('Select ' + TableUsers.FieldLogin + ' as login, ' + TableUsers.FieldPassword + ' as senha from ' + TableUsers.TableName + ' where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser)) do
+
+  case Self.Login.CharCasePass of
+    ecNormal: ;
+    ecUpperCase: NewPassword := UpperCase(NewPassword);
+    ecLowerCase: NewPassword := LowerCase(NewPassword);
+  end;
+
+  SQLStmt := 'Select ' + TableUsers.FieldLogin + ' as login, ' +
+    TableUsers.FieldPassword + ' as senha from ' + TableUsers.TableName + ' ' +
+    'where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
+
+  with DataConnector.UCGetSQLDataset(SQLStmt) do
   begin
     Login := FieldByName('Login').AsString;
     case Self.Criptografia of
@@ -1500,20 +1525,24 @@ begin
   end;
 
   case Self.Criptografia of // Por Vicente Barros Leonel
-    cPadrao: cSql := 'Update ' + TableUsers.TableName +
-        ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(NewPassword, EncryptKey)) +
+    cPadrao:
+      SQLStmt := 'Update ' + TableUsers.TableName +
+        ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(Encrypt(
+        NewPassword, EncryptKey)) +
         ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-        ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FCurrentUser.UserDaysExpired)) + // by vicente barros leonel
+        ', ' + TableUsers.FieldDateExpired + ' = ' +
+        QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FCurrentUser.UserDaysExpired)) + // by vicente barros leonel
         ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
 
-    cMD5: cSql := 'Update ' + TableUsers.TableName +
+    cMD5: SQLStmt := 'Update ' + TableUsers.TableName +
         ' Set ' + TableUsers.FieldPassword + ' = ' + QuotedStr(MD5Sum(NewPassword)) +
         ', ' + TableUsers.FieldKey + ' = ' + QuotedStr(Key) +
-        ', ' + TableUsers.FieldDateExpired + ' = ' + QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FCurrentUser.UserDaysExpired)) + // by vicente barros leonel
+        ', ' + TableUsers.FieldDateExpired + ' = ' +
+        QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FCurrentUser.UserDaysExpired)) + // by vicente barros leonel
         ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
   end;
 
-  DataConnector.UCExecSQL(cSql);
+  DataConnector.UCExecSQL(SQLStmt);
 
   if Assigned(onChangePassword) then
     OnChangePassword(Self, IdUser, Login, Senha, NewPassword);
@@ -1521,11 +1550,15 @@ end;
 
 procedure TUserControl.ChangeUser(IDUser: Integer; Login, Name, Mail: String; Profile, UserExpired, UserDaysSun, Status: Integer; PrivUser: Boolean);
 var
-  Key, Password: String;
+  Key:      String;
+  Password: String;
+  SQLStmt:  String;
 begin
-  with DataConnector.UCGetSQLDataset('SELECT ' + TableUsers.FieldPassword +
-      ' AS SENHA FROM ' + TableUsers.TableName + ' WHERE ' +
-      TableUsers.FieldUserID + ' = ' + IntToStr(IdUser)) do
+  SQLStmt := 'SELECT ' + TableUsers.FieldPassword +
+    ' AS SENHA FROM ' + TableUsers.TableName + ' WHERE ' +
+    TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
+
+  with DataConnector.UCGetSQLDataset(SQLStmt) do
   begin
     case Self.Criptografia of
       cPadrao:
@@ -1583,7 +1616,7 @@ begin
   FUser.Free;
   FUserProfile.Free;
   FUserPasswordChange.Free;
-  fUsersLogoff.Free;
+  FUsersLogoff.Free;
   FUsersLogged.Free;
   FUserSettings.Free;
   FNotAllowedItems.Free;
@@ -1999,59 +2032,12 @@ begin
 end;
 
 procedure TUserControl.ApplyRights;
-(*
-  var
-    DataSet: TDataset;
-    SQLStmt: String;
-*)
 begin
-  try
-    // Aplica Permissoes do Usuario logado
-    {
-    SQLStmt := Format('SELECT %s AS ObjName,' +
-      ' %s AS UCKey,' +
-      ' %s AS UserID' +
-      ' FROM %s' +
-      ' WHERE %s = %s AND %s = %s',
-      [TableRights.FieldComponentName,
-      TableRights.FieldKey,
-      TableRights.FieldUserID,
-      TableRights.TableName,
-      TableRights.FieldUserID,
-      IntToStr(CurrentUser.UserID),
-      TableRights.FieldModule,
-      QuotedStr(ApplicationID)]);
+  ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
 
-    DataSet := DataConnector.UCGetSQLDataset(SQLStmt);
-    }
-    //ApplyRightsObj(DataSet);
-
-    ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
-    //DataSet.Close;
-
-    // Aplica Permissoes do Perfil do usuario
-    if CurrentUser.Profile > 0 then
-      ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True)(*
-        SQLStmt := Format('SELECT %s AS ObjName,' +
-          ' %s AS UCKey,' +
-          ' %s AS UserID' +
-          ' FROM %s' +
-          ' WHERE %s = %s AND %s = %s',
-          [TableRights.FieldComponentName,
-          TableRights.FieldKey,
-          TableRights.FieldUserID,
-          TableRights.TableName,
-          TableRights.FieldUserID,
-          IntToStr(CurrentUser.Profile),
-          TableRights.FieldModule,
-          QuotedStr(ApplicationID)]);
-  
-        DataSet := DataConnector.UCGetSQLDataset(SQLStmt);
-        ApplyRightsObj(DataSet, True);
-        DataSet.Close;*);
-  finally
-    //FreeAndNil(DataSet);
-  end;
+  // Aplica Permissoes do Perfil do usuario
+  if CurrentUser.Profile > 0 then
+    ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True);
 
   if Assigned(FAfterLogin) then
     FAfterLogin(Self);
@@ -2431,6 +2417,8 @@ var
   DataSetPermissao: TDataSet;
   SQLStmt:          String;
   TipoCampo:        String;
+  UsuarioInicial:   String;
+  PasswordInicial:  String;
 begin
   case Self.Criptografia of
     cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_VarChar + '(250)';
@@ -2499,42 +2487,56 @@ begin
       DataConnector.UCExecSQL(SQLstmt);
     end;
 
+  case Self.Login.CharCaseUser of
+    ecNormal: UsuarioInicial    := Self.Login.InitialLogin.User;
+    ecUpperCase: UsuarioInicial := UpperCase(Self.Login.InitialLogin.User);
+    ecLowerCase: UsuarioInicial := LowerCase(Self.Login.InitialLogin.User);
+  end;
+
+  case Self.Login.CharCasePass of
+    ecNormal: PasswordInicial    := Self.Login.InitialLogin.Password;
+    ecUpperCase: PasswordInicial := UpperCase(Self.Login.InitialLogin.Password);
+    ecLowerCase: PasswordInicial := LowerCase(Self.Login.InitialLogin.Password);
+  end;
+
   SQLStmt := 'SELECT ' + TableUsers.FieldUserID + ' as idUser ' +
     'FROM ' + TableUsers.TableName + ' ' +
-    'WHERE ' + TableUsers.FieldLogin + ' = ' + QuotedStr(Login.InitialLogin.User);
+    'WHERE ' + TableUsers.FieldLogin + ' = ' + QuotedStr(UsuarioInicial);
 
-  DataSetUsuario := DataConnector.UCGetSQLDataset(SQLstmt);
+  try
+    DataSetUsuario := DataConnector.UCGetSQLDataset(SQLstmt);
 
-  // Inserir login inicial
-  if DataSetUsuario.IsEmpty then
-    IDUsuario := AddUser(Login.InitialLogin.User,
-      Login.InitialLogin.Password,
-      Login.InitialLogin.User,
-      Login.InitialLogin.Email,
-      0, 0, Login.DaysOfSunExpired,
-      True)
-  else
-    IDUsuario := DataSetUsuario.FieldByName('idUser').AsInteger;
+    // Inserir login inicial
+    if DataSetUsuario.IsEmpty then
+      IDUsuario := AddUser(UsuarioInicial,
+        PasswordInicial,
+        Login.InitialLogin.User,
+        Login.InitialLogin.Email,
+        0, 0, Login.DaysOfSunExpired,
+        True)
+    else
+      IDUsuario := DataSetUsuario.FieldByName('idUser').AsInteger;
 
-  DataSetUsuario.Close;
-  FreeAndNil(DataSetUsuario);
+  finally
+    DataSetUsuario.Close;
+    FreeAndNil(DataSetUsuario);
+  end;
 
   SQLStmt := 'SELECT ' + TableRights.FieldUserID + ' AS IDUSER ' +
     'FROM ' + TableRights.TableName + ' ' +
     'WHERE ' + TableRights.FieldUserID + ' = ' + IntToStr(IDUsuario) + ' ' +
     'AND ' + TableRights.FieldModule + ' = ' + QuotedStr(ApplicationID);
 
-  DataSetPermissao := DataConnector.UCGetSQLDataset(SQLStmt);
+  try
+    DataSetPermissao := DataConnector.UCGetSQLDataset(SQLStmt);
 
-  if not DataSetPermissao.IsEmpty then
-  begin
+    if not DataSetPermissao.IsEmpty then
+      Exit;
+
+  finally
     DataSetPermissao.Close;
     FreeAndNil(DataSetPermissao);
-    Exit; //login!
   end;
-
-  DataSetPermissao.Close;
-  FreeAndNil(DataSetPermissao);
 
   AddRight(IDUsuario, User.MenuItem);
   AddRight(IDUsuario, User.Action);
@@ -2563,8 +2565,8 @@ begin
   try
     Mensagens := TStringList.Create;
     Mensagens.Assign(UserSettings.CommonMessages.InitialMessage);
-    Mensagens.Text := StringReplace(Mensagens.Text, ':user', Login.InitialLogin.User, [rfReplaceAll]);
-    Mensagens.Text := StringReplace(Mensagens.Text, ':password', Login.InitialLogin.Password, [rfReplaceAll]);
+    Mensagens.Text := StringReplace(Mensagens.Text, ':user', UsuarioInicial, [rfReplaceAll]);
+    Mensagens.Text := StringReplace(Mensagens.Text, ':password', PasswordInicial, [rfReplaceAll]);
 
     if Assigned(OnCustomInitialMsg) then
       OnCustomInitialMsg(Self, CustomForm, Mensagens);
@@ -2587,15 +2589,13 @@ begin
 end;
 
 
-(*
-  procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
-  begin  // By Vicente Barros Leonel
-    FMailUserControl := Value;
-    if Value <> nil then
-      Value.FreeNotification(Self);
-  end;
-    
-*)
+procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
+begin  // By Vicente Barros Leonel
+  FMailUserControl := Value;
+  if Value <> nil then
+    Value.FreeNotification(Self);
+end;
+
 procedure TUserControl.ApplySettings(SourceSettings: TUCSettings);
 begin
   with UserSettings.CommonMessages do

@@ -29,18 +29,14 @@ package pckUserControl_DT;
 
 requires
   designide,
-  pckUserControl_RT,
   vcljpg,
-  vcl,
-  rtl,
-  VclSmp,
-  xmlrtl,
-  vclactnband,
-  vclx,
-  pckUCDataConnector,
+  inet,
   dbrtl,
+  vcldb,
+  VclSmp,
   pckMD5,
-  vcldb;
+  pckUCDataConnector,
+  pckUSerControl_RT;
 
 contains
   UCReg in '..\Source\UCReg.pas',

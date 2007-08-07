@@ -27,16 +27,15 @@ package pckUserControl_RT;
 {$IMPLICITBUILD OFF}
 
 requires
-  vcljpg,
-  vcl,
-  rtl,
-  vclactnband,
+  designide,
+  inet,
   dbrtl,
   vcldb,
+  VclSmp,
   pckMD5,
   pckUCDataConnector,
-  VclSmp,
-  inet;
+  vcl,
+  rtl;
 
 contains
   IncPerfil_U in '..\Source\IncPerfil_U.pas' {frmIncluirPerfil},
@@ -57,6 +56,9 @@ contains
   pUCFrame_User in '..\Source\Novo\pUCFrame_User.pas',
   pUCFrame_Profile in '..\Source\Novo\pUCFrame_Profile.pas',
   pUCFrame_Log in '..\Source\Novo\pUCFrame_Log.pas' {UCFrame_Log},
-  pUcFrame_UserLogged in '..\Source\Novo\pUcFrame_UserLogged.pas' {UCFrame_UsersLogged};
+  pUcFrame_UserLogged in '..\Source\Novo\pUcFrame_UserLogged.pas' {UCFrame_UsersLogged},
+  UCMail in '..\Source\UCMail.pas',
+  UCEMailForm_U in '..\Source\UCEMailForm_U.pas',
+  UCALSMTPClient in '..\Source\UCALSMTPClient.pas';
 
 end.
