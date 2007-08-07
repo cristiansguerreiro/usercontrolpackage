@@ -25,9 +25,6 @@ package pckUCDataConnector;
 {$DESCRIPTION 'User Control DataConn'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
-{%TogetherDiagram 'ModelSupport_pckUCDataConnector\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUCDataConnector\UCDataConnector\default.txaPackage'}
-{%TogetherDiagram 'ModelSupport_pckUCDataConnector\default.txvpck'}
 
 requires
   rtl,
