@@ -49,8 +49,8 @@ uses
   UCDataConnector,
   UCDataInfo,
   UCMessages,
-  UCSettings,
-  UCMail;
+  UCSettings{,
+  UCMail};
 
 const
   llBaixo   = 0;
@@ -360,10 +360,10 @@ type
     FTableUsersLogged:        TUCTableUsersLogged;
     fUsersLogoff:             TUCUserLogoff;
     fLanguage:                TUCLanguage;
-    fMailUserControl: TMailUserControl;
+    //fMailUserControl: TMailUserControl;
     procedure SetExtraRights(Value: TUCExtraRights);
-  //  procedure SetWindow;
-  //  procedure SetWindowProfile;
+    //  procedure SetWindow;
+    //  procedure SetWindowProfile;
     procedure ActionCadUser(Sender: TObject);
     procedure ActionTrocaSenha(Sender: TObject);
     procedure ActionOKLogin(Sender: TObject);
@@ -378,7 +378,7 @@ type
     procedure SetDataConnector(const Value: TUCDataConnector);
     procedure DoCheckValidationField;
     procedure SetfLanguage(const Value: TUCLanguage);
-    procedure SetFMailUserControl(const Value: TMailUserControl);
+    //procedure SetFMailUserControl(const Value: TMailUserControl);
     procedure ActionEsqueceuSenha(Sender: TObject);
   protected
     FRetry:           Integer;
@@ -458,7 +458,7 @@ type
     property UsersLogoff: TUCUserLogoff Read fUsersLogoff Write fUsersLogoff; //by vicente barros leonel
     property LogControl: TUCLogControl Read FLogControl Write FLogControl;
 
-    property MailUserControl : TMailUserControl read fMailUserControl write SetFMailUserControl; // by vicente barros leonel
+    //property MailUserControl : TMailUserControl read fMailUserControl write SetFMailUserControl; // by vicente barros leonel
 
     property Language: TUCLanguage Read fLanguage Write SetfLanguage;
 
@@ -905,12 +905,14 @@ begin
   with FDataset do
     try
       if not IsEmpty then
-        { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsquceuSenha para usar a criptografia md5 }
-        MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
-          FieldByName(TableUsers.FieldLogin).AsString,
-          FieldByName(TableUsers.FieldPassword).AsString,
-          FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
-      else
+      { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsquceuSenha para usar a criptografia md5 }
+(*
+          MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
+            FieldByName(TableUsers.FieldLogin).AsString,
+            FieldByName(TableUsers.FieldPassword).AsString,
+            FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
+
+*)      else
         MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
     finally
       Close;
@@ -1119,18 +1121,20 @@ begin
     TTrocaSenha(FFormTrocarSenha).ForcarTroca := False; // Vicente Barros Leonel
 
 
-   if ( Assigned(fMailUserControl) ) and (fMailUserControl.SenhaTrocada.Ativo) then
-   begin
-     with CurrentUser do
+(*
+     if ( Assigned(fMailUserControl) ) and (fMailUserControl.SenhaTrocada.Ativo) then
      begin
-       try
-         fMailUserControl.EnviaEmailSenhaTrocada( Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
-       except
-         on e : Exception do Log(e.Message,2);
+       with CurrentUser do
+       begin
+         try
+           fMailUserControl.EnviaEmailSenhaTrocada( Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
+         except
+           on e : Exception do Log(e.Message,2);
+         end;
        end;
      end;
-   end;
 
+*)
 
   TTrocaSenha(FFormTrocarSenha).Close;
 end;
@@ -1157,12 +1161,14 @@ begin
       ImgTop.Picture.Assign(TopImage);
 
 
-    if Assigned(fMailUserControl) then
-    begin
-      lbEsqueci.Visible := fMailUserControl.EsqueceuSenha.Ativo;
-      lbEsqueci.Caption := fMailUserControl.EsqueceuSenha.LabelLoginForm;
-    end;
+(*
+      if Assigned(fMailUserControl) then
+      begin
+        lbEsqueci.Visible := fMailUserControl.EsqueceuSenha.Ativo;
+        lbEsqueci.Caption := fMailUserControl.EsqueceuSenha.LabelLoginForm;
+      end;
 
+*)
     StatusBar.Visible        := Login.FMaxLoginAttempts > 0;       // by vicente barros leonel
     StatusBar.Panels[1].Text := '0';                               // by vicente barros leonel
     StatusBar.Panels[3].Text := IntToStr(Login.FMaxLoginAttempts); // by vicente barros leonel
@@ -1207,8 +1213,8 @@ begin
       FDataConnector := nil;
     end;
 
-    if AComponent = FMailUserControl then FMailUserControl := nil;
-    
+    //if AComponent = FMailUserControl then FMailUserControl := nil;
+
   end;
   inherited Notification(AComponent, AOperation);
 end;
@@ -1943,10 +1949,10 @@ begin
     with FFormLogin as TfrmLoginWindow do
     begin
       SetfrmLoginWindow(TfrmLoginWindow(FFormLogin));
-      FUserControl := Self;
-      btOK.onClick := ActionOKLogin;
-      onCloseQuery := Testafecha;
-      Position     := Self.UserSettings.WindowsPosition;
+      FUserControl      := Self;
+      btOK.onClick      := ActionOKLogin;
+      onCloseQuery      := Testafecha;
+      Position          := Self.UserSettings.WindowsPosition;
       lbEsqueci.OnClick := ActionEsqueceuSenha;
     end;
   end;
@@ -1993,12 +1999,15 @@ begin
 end;
 
 procedure TUserControl.ApplyRights;
-var
-  DataSet: TDataset;
-  SQLStmt: String;
+(*
+  var
+    DataSet: TDataset;
+    SQLStmt: String;
+*)
 begin
   try
     // Aplica Permissoes do Usuario logado
+    {
     SQLStmt := Format('SELECT %s AS ObjName,' +
       ' %s AS UCKey,' +
       ' %s AS UserID' +
@@ -2014,32 +2023,34 @@ begin
       QuotedStr(ApplicationID)]);
 
     DataSet := DataConnector.UCGetSQLDataset(SQLStmt);
-    ApplyRightsObj(DataSet);
-    DataSet.Close;
+    }
+    //ApplyRightsObj(DataSet);
+
+    ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
+    //DataSet.Close;
 
     // Aplica Permissoes do Perfil do usuario
     if CurrentUser.Profile > 0 then
-    begin
-      SQLStmt := Format('SELECT %s AS ObjName,' +
-        ' %s AS UCKey,' +
-        ' %s AS UserID' +
-        ' FROM %s' +
-        ' WHERE %s = %s AND %s = %s',
-        [TableRights.FieldComponentName,
-        TableRights.FieldKey,
-        TableRights.FieldUserID,
-        TableRights.TableName,
-        TableRights.FieldUserID,
-        IntToStr(CurrentUser.Profile),
-        TableRights.FieldModule,
-        QuotedStr(ApplicationID)]);
-
-      DataSet := DataConnector.UCGetSQLDataset(SQLStmt);
-      ApplyRightsObj(DataSet, True);
-      DataSet.Close;
-    end;
+      ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True)(*
+        SQLStmt := Format('SELECT %s AS ObjName,' +
+          ' %s AS UCKey,' +
+          ' %s AS UserID' +
+          ' FROM %s' +
+          ' WHERE %s = %s AND %s = %s',
+          [TableRights.FieldComponentName,
+          TableRights.FieldKey,
+          TableRights.FieldUserID,
+          TableRights.TableName,
+          TableRights.FieldUserID,
+          IntToStr(CurrentUser.Profile),
+          TableRights.FieldModule,
+          QuotedStr(ApplicationID)]);
+  
+        DataSet := DataConnector.UCGetSQLDataset(SQLStmt);
+        ApplyRightsObj(DataSet, True);
+        DataSet.Close;*);
   finally
-    FreeAndNil(DataSet);
+    //FreeAndNil(DataSet);
   end;
 
   if Assigned(FAfterLogin) then
@@ -2576,12 +2587,15 @@ begin
 end;
 
 
-procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
-begin  // By Vicente Barros Leonel
-  FMailUserControl := Value;
-  if Value <> nil then Value.FreeNotification(Self);
-end;
-
+(*
+  procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
+  begin  // By Vicente Barros Leonel
+    FMailUserControl := Value;
+    if Value <> nil then
+      Value.FreeNotification(Self);
+  end;
+    
+*)
 procedure TUserControl.ApplySettings(SourceSettings: TUCSettings);
 begin
   with UserSettings.CommonMessages do

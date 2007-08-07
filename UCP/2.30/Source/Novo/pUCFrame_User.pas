@@ -147,19 +147,21 @@ begin
   if TSenhaForm(FormSenha).ShowModal = mrOk then
     Begin
 
-    if (Assigned(FUsercontrol.MailUserControl)) and (FUsercontrol.MailUserControl.SenhaForcada.Ativo ) then
-      try
-        FUsercontrol.MailUserControl.EnviaEmailSenhaForcada(
-           FDataSetCadastroUsuario.FieldByName('NOME').AsString ,
-           FDataSetCadastroUsuario.FieldByName('LOGIN').AsString,
-           TSenhaForm(FormSenha).edtSenha.Text ,
-           FDataSetCadastroUsuario.FieldByName('EMAIL').AsString,
-            '');
-
-      except
-        on E : Exception do FUsercontrol.Log(e.Message, 0);
-      end;
-
+(*
+      if (Assigned(FUsercontrol.MailUserControl)) and (FUsercontrol.MailUserControl.SenhaForcada.Ativo ) then
+        try
+          FUsercontrol.MailUserControl.EnviaEmailSenhaForcada(
+             FDataSetCadastroUsuario.FieldByName('NOME').AsString ,
+             FDataSetCadastroUsuario.FieldByName('LOGIN').AsString,
+             TSenhaForm(FormSenha).edtSenha.Text ,
+             FDataSetCadastroUsuario.FieldByName('EMAIL').AsString,
+              '');
+  
+        except
+          on E : Exception do FUsercontrol.Log(e.Message, 0);
+        end;
+    
+*)
       FUsercontrol.ChangePassword(FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger, TSenhaForm(FormSenha).edtSenha.Text);
     End;
   FreeAndNil(FormSenha);
