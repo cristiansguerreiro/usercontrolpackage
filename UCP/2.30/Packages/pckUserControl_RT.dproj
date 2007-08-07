@@ -37,36 +37,8 @@
     <DelphiCompile Include="pckUserControl_RT.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
-    <None Include="ModelSupport_pckUserControl_RT\CadPerfil_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\CadUser_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\default.txvpck" />
-    <None Include="ModelSupport_pckUserControl_RT\EnvMsgForm_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\IncPerfil_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\IncUser_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\LoginWindow_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\MsgRecForm_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\MsgsForm_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\SenhaForm_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\TrocaSenha_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCBase\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCBase\default.txvpck" />
-    <None Include="ModelSupport_pckUserControl_RT\UCConsts\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCDataInfo\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCEMailForm_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCMail\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCMessages\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UCSettings\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UserPermis_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\UserPermis_U\default.txvpck" />
-    <None Include="ModelSupport_pckUserControl_RT\UsersLogged_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_RT\ViewLog_U\default.txaPackage" />
-    <DCCReference Include="..\Source\CadPerfil_U.pas">
-      <Form>frmCadastrarPerfil</Form>
-    </DCCReference>
-    <DCCReference Include="..\Source\CadUser_U.pas">
-      <Form>frmCadastrarUsuario</Form>
-    </DCCReference>
+    <DCCReference Include="..\Source\dbrtl.dcp" />
+    <DCCReference Include="..\Source\designide.dcp" />
     <DCCReference Include="..\Source\EnvMsgForm_U.pas" />
     <DCCReference Include="..\Source\IncPerfil_U.pas">
       <Form>frmIncluirPerfil</Form>
@@ -74,6 +46,7 @@
     <DCCReference Include="..\Source\IncUser_U.pas">
       <Form>frmIncluirUsuario</Form>
     </DCCReference>
+    <DCCReference Include="..\Source\inet.dcp" />
     <DCCReference Include="..\Source\LoginWindow_U.pas" />
     <DCCReference Include="..\Source\MsgRecForm_U.pas" />
     <DCCReference Include="..\Source\MsgsForm_U.pas" />
@@ -86,11 +59,13 @@
       <Form>UCFrame_UsersLogged</Form>
     </DCCReference>
     <DCCReference Include="..\Source\Novo\pUCGeral.pas" />
+    <DCCReference Include="..\Source\pckMD5.dcp" />
+    <DCCReference Include="..\Source\pckUCDataConnector.dcp" />
+    <DCCReference Include="..\Source\rtl.dcp" />
     <DCCReference Include="..\Source\SenhaForm_U.pas" />
     <DCCReference Include="..\Source\TrocaSenha_U.pas" />
     <DCCReference Include="..\Source\UCALSMTPClient.pas" />
     <DCCReference Include="..\Source\UCBase.pas" />
-    <DCCReference Include="..\Source\UCConsts.pas" />
     <DCCReference Include="..\Source\UcConsts_Language.pas" />
     <DCCReference Include="..\Source\UCDataInfo.pas" />
     <DCCReference Include="..\Source\UCEMailForm_U.pas" />
@@ -98,21 +73,8 @@
     <DCCReference Include="..\Source\UCMessages.pas" />
     <DCCReference Include="..\Source\UCSettings.pas" />
     <DCCReference Include="..\Source\UserPermis_U.pas" />
-    <DCCReference Include="..\Source\UsersLogged_U.pas">
-      <Form>frmUsersLogged</Form>
-    </DCCReference>
-    <DCCReference Include="..\Source\ViewLog_U.pas" />
-    <DCCReference Include="dbrtl.dcp" />
-    <DCCReference Include="dclIndyCore.dcp" />
-    <DCCReference Include="IndyProtocols.dcp" />
-    <DCCReference Include="inet.dcp" />
-    <DCCReference Include="pckMD5.dcp" />
-    <DCCReference Include="pckUCDataConnector.dcp" />
-    <DCCReference Include="rtl.dcp" />
-    <DCCReference Include="vcl.dcp" />
-    <DCCReference Include="vclactnband.dcp" />
-    <DCCReference Include="vcldb.dcp" />
-    <DCCReference Include="vcljpg.dcp" />
-    <DCCReference Include="VclSmp.dcp" />
+    <DCCReference Include="..\Source\vcl.dcp" />
+    <DCCReference Include="..\Source\vcldb.dcp" />
+    <DCCReference Include="..\Source\VclSmp.dcp" />
   </ItemGroup>
 </Project>

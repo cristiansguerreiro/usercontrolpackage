@@ -30,6 +30,12 @@
     <DelphiCompile Include="pckUserControl_DT.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
+    <DCCReference Include="..\Source\dbrtl.dcp" />
+    <DCCReference Include="..\Source\designide.dcp" />
+    <DCCReference Include="..\Source\inet.dcp" />
+    <DCCReference Include="..\Source\pckMD5.dcp" />
+    <DCCReference Include="..\Source\pckUCDataConnector.dcp" />
+    <DCCReference Include="..\Source\pckUSerControl_RT.dcp" />
     <DCCReference Include="..\Source\UCAbout.pas" />
     <DCCReference Include="..\Source\UCAboutXpStyle_U.pas" />
     <DCCReference Include="..\Source\UCEditorForm_U.pas" />
@@ -40,29 +46,8 @@
     <DCCReference Include="..\Source\UCReg.pas" />
     <DCCReference Include="..\Source\UCXPSettings.pas" />
     <DCCReference Include="..\Source\UCXPStyle.pas" />
-    <DCCReference Include="C:\Documents and Settings\luiz\dclIndyCore.dcp" />
-    <DCCReference Include="C:\Documents and Settings\luiz\IndyCore.dcp" />
-    <DCCReference Include="C:\Documents and Settings\luiz\IndyProtocols.dcp" />
-    <DCCReference Include="C:\Documents and Settings\luiz\IndySystem.dcp" />
-    <DCCReference Include="dbrtl.dcp" />
-    <DCCReference Include="designide.dcp" />
-    <DCCReference Include="pckMD5.dcp" />
-    <DCCReference Include="pckUCDataConnector.dcp" />
-    <DCCReference Include="pckUserControl_RT.dcp" />
-    <DCCReference Include="rtl.dcp" />
-    <DCCReference Include="vcl.dcp" />
-    <DCCReference Include="vclactnband.dcp" />
-    <DCCReference Include="vcldb.dcp" />
-    <DCCReference Include="vcljpg.dcp" />
-    <DCCReference Include="VclSmp.dcp" />
-    <DCCReference Include="vclx.dcp" />
-    <DCCReference Include="xmlrtl.dcp" />
-    <None Include="ModelSupport_pckUserControl_DT\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_DT\default.txvpck" />
-    <None Include="ModelSupport_pckUserControl_DT\UCAbout\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_DT\UCEditorForm_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_DT\UCIdle\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_DT\UCObjSel_U\default.txaPackage" />
-    <None Include="ModelSupport_pckUserControl_DT\UCReg\default.txaPackage" />
+    <DCCReference Include="..\Source\vcldb.dcp" />
+    <DCCReference Include="..\Source\vcljpg.dcp" />
+    <DCCReference Include="..\Source\VclSmp.dcp" />
   </ItemGroup>
 </Project>
