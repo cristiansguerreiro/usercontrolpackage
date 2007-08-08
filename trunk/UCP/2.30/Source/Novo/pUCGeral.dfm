@@ -30,7 +30,7 @@ object FormUserPerf: TFormUserPerf
       Left = 41
       Top = 0
       Width = 183
-      Height = 41
+      Height = 18
       Align = alLeft
       Caption = 'Controle de Usu'#225'rios'
       Font.Charset = ANSI_CHARSET
@@ -40,7 +40,6 @@ object FormUserPerf: TFormUserPerf
       Font.Style = [fsBold]
       ParentFont = False
       Layout = tlCenter
-      ExplicitHeight = 18
     end
     object Image1: TImage
       Left = 0

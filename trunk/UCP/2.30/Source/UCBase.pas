@@ -359,7 +359,7 @@ type
     FUsersLogged:             TUCUsersLogged;
     FTableUsersLogged:        TUCTableUsersLogged;
     FUsersLogoff:             TUCUserLogoff;
-    fLanguage:                TUCLanguage;
+    FLanguage:                TUCLanguage;
     FMailUserControl:         TMailUserControl;
     procedure SetExtraRights(Value: TUCExtraRights);
     //  procedure SetWindow;
@@ -377,7 +377,7 @@ type
     {.$ENDIF}
     procedure SetDataConnector(const Value: TUCDataConnector);
     procedure DoCheckValidationField;
-    procedure SetfLanguage(const Value: TUCLanguage);
+    procedure SetFLanguage(const Value: TUCLanguage);
     procedure SetFMailUserControl(const Value: TMailUserControl);
     procedure ActionEsqueceuSenha(Sender: TObject);
   protected
@@ -460,7 +460,7 @@ type
 
     property MailUserControl: TMailUserControl Read FMailUserControl Write SetFMailUserControl; // by vicente barros leonel
 
-    property Language: TUCLanguage Read fLanguage Write SetfLanguage;
+    property Language: TUCLanguage Read FLanguage Write SetFLanguage;
 
     property EncryptKey: Word Read FEncrytKey Write FEncrytKey;
     property NotAllowedItems: TUCNotAllowedItems Read FNotAllowedItems Write FNotAllowedItems;
@@ -673,69 +673,69 @@ begin
     with TableUsers do
     begin
       if TableName = '' then
-        TableName := RetornaLingua(fLanguage, 'Const_TableUsers_TableName');
+        TableName := RetornaLingua(FLanguage, 'Const_TableUsers_TableName');
       if FieldUserID = '' then
-        FieldUserID := RetornaLingua(fLanguage, 'Const_TableUsers_FieldUserID');
+        FieldUserID := RetornaLingua(FLanguage, 'Const_TableUsers_FieldUserID');
       if FieldUserName = '' then
-        FieldUserName := RetornaLingua(fLanguage, 'Const_TableUsers_FieldUserName');
+        FieldUserName := RetornaLingua(FLanguage, 'Const_TableUsers_FieldUserName');
       if FieldLogin = '' then
-        FieldLogin := RetornaLingua(fLanguage, 'Const_TableUsers_FieldLogin');
+        FieldLogin := RetornaLingua(FLanguage, 'Const_TableUsers_FieldLogin');
       if FieldPassword = '' then
-        FieldPassword := RetornaLingua(fLanguage, 'Const_TableUsers_FieldPassword');
+        FieldPassword := RetornaLingua(FLanguage, 'Const_TableUsers_FieldPassword');
       if FieldEmail = '' then
-        FieldEmail := RetornaLingua(fLanguage, 'Const_TableUsers_FieldEmail');
+        FieldEmail := RetornaLingua(FLanguage, 'Const_TableUsers_FieldEmail');
       if FieldPrivileged = '' then
-        FieldPrivileged := RetornaLingua(fLanguage, 'Const_TableUsers_FieldPrivileged');
+        FieldPrivileged := RetornaLingua(FLanguage, 'Const_TableUsers_FieldPrivileged');
       if FieldTypeRec = '' then
-        FieldTypeRec := RetornaLingua(fLanguage, 'Const_TableUsers_FieldTypeRec');
+        FieldTypeRec := RetornaLingua(FLanguage, 'Const_TableUsers_FieldTypeRec');
       if FieldProfile = '' then
-        FieldProfile := RetornaLingua(fLanguage, 'Const_TableUsers_FieldProfile');
+        FieldProfile := RetornaLingua(FLanguage, 'Const_TableUsers_FieldProfile');
       if FieldKey = '' then
-        FieldKey := RetornaLingua(fLanguage, 'Const_TableUsers_FieldKey');
+        FieldKey := RetornaLingua(FLanguage, 'Const_TableUsers_FieldKey');
 
       if FieldDateExpired = '' then
-        FieldDateExpired := RetornaLingua(fLanguage, 'Const_TableUsers_FieldDateExpired'); {Vicente Barros Leonel}
+        FieldDateExpired := RetornaLingua(FLanguage, 'Const_TableUsers_FieldDateExpired'); {Vicente Barros Leonel}
 
       if FieldUserExpired = '' then
-        FieldUserExpired := RetornaLingua(fLanguage, 'Const_TableUser_FieldUserExpired');  {Vicente Barros Leonel}
+        FieldUserExpired := RetornaLingua(FLanguage, 'Const_TableUser_FieldUserExpired');  {Vicente Barros Leonel}
 
       if FieldUserDaysSun = '' then
-        FieldUserDaysSun := RetornaLingua(fLanguage, 'Const_TableUser_FieldUserDaysSun'); { Vicente Barros leoenl }
+        FieldUserDaysSun := RetornaLingua(FLanguage, 'Const_TableUser_FieldUserDaysSun'); { Vicente Barros leoenl }
 
       if FieldUserInative = '' then
-        FieldUserInative := RetornaLingua(fLanguage, 'Const_TableUser_FieldUserInative'); { Vicente Barros leoenl }
+        FieldUserInative := RetornaLingua(FLanguage, 'Const_TableUser_FieldUserInative'); { Vicente Barros leoenl }
     end;
 
     with TableRights do
     begin
       if TableName = '' then
-        TableName := RetornaLingua(fLanguage, 'Const_TableRights_TableName');
+        TableName := RetornaLingua(FLanguage, 'Const_TableRights_TableName');
       if FieldUserID = '' then
-        FieldUserID := RetornaLingua(fLanguage, 'Const_TableRights_FieldUserID');
+        FieldUserID := RetornaLingua(FLanguage, 'Const_TableRights_FieldUserID');
       if FieldModule = '' then
-        FieldModule := RetornaLingua(fLanguage, 'Const_TableRights_FieldModule');
+        FieldModule := RetornaLingua(FLanguage, 'Const_TableRights_FieldModule');
       if FieldComponentName = '' then
-        FieldComponentName := RetornaLingua(fLanguage, 'Const_TableRights_FieldComponentName');
+        FieldComponentName := RetornaLingua(FLanguage, 'Const_TableRights_FieldComponentName');
       if FieldFormName = '' then
-        FieldFormName := RetornaLingua(fLanguage, 'Const_TableRights_FieldFormName');
+        FieldFormName := RetornaLingua(FLanguage, 'Const_TableRights_FieldFormName');
       if FieldKey = '' then
-        FieldKey := RetornaLingua(fLanguage, 'Const_TableRights_FieldKey');
+        FieldKey := RetornaLingua(FLanguage, 'Const_TableRights_FieldKey');
     end;
 
     with TableUsersLogged do
     begin
       if TableName = '' then
-        TableName := RetornaLingua(fLanguage, 'Const_TableUsersLogged_TableName');
+        TableName := RetornaLingua(FLanguage, 'Const_TableUsersLogged_TableName');
       if FieldLogonID = '' then
-        FieldLogonID := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldLogonID');
+        FieldLogonID := RetornaLingua(FLanguage, 'Const_TableUsersLogged_FieldLogonID');
       if FieldUserID = '' then
-        FieldUserID := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldUserID');
+        FieldUserID := RetornaLingua(FLanguage, 'Const_TableUsersLogged_FieldUserID');
       if FieldApplicationID = '' then
-        FieldApplicationID := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldApplicationID');
+        FieldApplicationID := RetornaLingua(FLanguage, 'Const_TableUsersLogged_FieldApplicationID');
       if FieldMachineName = '' then
-        FieldMachineName := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldMachineName');
+        FieldMachineName := RetornaLingua(FLanguage, 'Const_TableUsersLogged_FieldMachineName');
       if FieldData = '' then
-        FieldData := RetornaLingua(fLanguage, 'Const_TableUsersLogged_FieldData');
+        FieldData := RetornaLingua(FLanguage, 'Const_TableUsersLogged_FieldData');
     end;
 
 
@@ -778,16 +778,16 @@ begin
   if not (csDesigning in ComponentState) then
   begin
     if not Assigned(DataConnector) then
-      raise Exception.Create(RetornaLingua(fLanguage, 'MsgExceptConnector'));
+      raise Exception.Create(RetornaLingua(FLanguage, 'MsgExceptConnector'));
 
     if ApplicationID = '' then
-      raise Exception.Create(RetornaLingua(fLanguage, 'MsgExceptAppID'));
+      raise Exception.Create(RetornaLingua(FLanguage, 'MsgExceptAppID'));
 
     if ((not Assigned(ControlRight.ActionList)) and
       (not Assigned(ControlRight.ActionManager)) and
       (not Assigned(ControlRight.MainMenu)) and
       (not Assigned(ControlRight.ActionMainMenuBar))) then
-      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['ControlRight']));
+      raise Exception.Create(Format(RetornaLingua(FLanguage, 'MsgExceptPropriedade'), ['ControlRight']));
 
     for Contador := 0 to Pred(Owner.ComponentCount) do
       if Owner.Components[Contador] is TUCSettings then
@@ -803,7 +803,7 @@ begin
       User.Action.OnExecute := ActionCadUser;
 
     if ((not Assigned(User.Action)) and (not Assigned(User.MenuItem))) then
-      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['User']));
+      raise Exception.Create(Format(RetornaLingua(FLanguage, 'MsgExceptPropriedade'), ['User']));
 
     if Assigned(UserPasswordChange.MenuItem) and (not Assigned(UserPasswordChange.MenuItem.OnClick)) then
       UserPasswordChange.MenuItem.OnClick := ActionTrocaSenha;
@@ -819,62 +819,62 @@ begin
       UsersLogoff.Action.OnExecute := ActionLogoff;
 
     if ((not Assigned(UserPasswordChange.Action)) and (not Assigned(UserPasswordChange.MenuItem))) then
-      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['UserPasswordChange']));
+      raise Exception.Create(Format(RetornaLingua(FLanguage, 'MsgExceptPropriedade'), ['UserPasswordChange']));
 
     if ((not Assigned(UsersLogoff.Action)) and (not Assigned(UsersLogoff.MenuItem))) then
-      raise Exception.Create(Format(RetornaLingua(fLanguage, 'MsgExceptPropriedade'), ['UsersLogoff']));
+      raise Exception.Create(Format(RetornaLingua(FLanguage, 'MsgExceptPropriedade'), ['UsersLogoff']));
 
     with TableUsers do
     begin
       if TableName = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable'));
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable'));
       if FieldUserID = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserID***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserID***');
       if FieldUserName = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserName***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserName***');
       if FieldLogin = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldLogin***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldLogin***');
       if FieldPassword = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldPassword***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldPassword***');
       if FieldEmail = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldEmail***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldEmail***');
       if FieldPrivileged = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldPrivileged***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldPrivileged***');
       if FieldTypeRec = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldTypeRec***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldTypeRec***');
       if FieldKey = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldKey***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldKey***');
       if FieldProfile = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldProfile***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldProfile***');
 
       if FieldDateExpired = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldDateExpired***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldDateExpired***');
 
       if FieldUserExpired = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserExpired***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserExpired***');
 
       if FieldUserDaysSun = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserDaysSun***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserDaysSun***');
 
       if FieldUserInative = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserInative***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptUsersTable') + #13 + #10 + 'FieldUserInative***');
 
     end;
 
     with TableRights do
     begin
       if TableName = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable'));
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptRightsTable'));
       if FieldUserID = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldProfile***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldProfile***');
       if FieldModule = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldModule***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldModule***');
       if FieldComponentName = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldComponentName***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldComponentName***');
       if FieldFormName = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldFormName***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldFormName***');
       if FieldKey = '' then
-        Exception.Create(RetornaLingua(fLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldKey***');
+        Exception.Create(RetornaLingua(FLanguage, 'MsgExceptRightsTable') + #13 + #10 + 'FieldKey***');
     end;
 
     if Assigned(OnStartApplication) then
@@ -1093,7 +1093,7 @@ begin
     Exit;
   end;
 
-  if Pos(LowerCase(TTrocaSenha(FFormTrocarSenha).EditNova.Text), 'abcdeasdfqwerzxcv1234567890321654987teste' + LowerCase(CurrentUser.UserName) + LowerCase(CurrentUser.UserLogin)) > 0 then
+  if Pos(LowerCase(TTrocaSenha(FFormTrocarSenha).EditNova.Text), 'abcdeasdfqwerzxcv1234567890321654987FCampo' + LowerCase(CurrentUser.UserName) + LowerCase(CurrentUser.UserLogin)) > 0 then
   begin
     MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
@@ -1145,29 +1145,27 @@ end;
 
 procedure TUserControl.SetfrmLoginWindow(Form: TCustomForm);
 begin
-  with UserSettings.Login, Form as TfrmLoginWindow do
+  with Form as TfrmLoginWindow do
   begin
-    Caption           := WindowCaption;
-    LbUsuario.Caption := LabelUser;
-    LbSenha.Caption   := LabelPassword;
+    Caption           := UserSettings.Login.WindowCaption;
+    LbUsuario.Caption := UserSettings.Login.LabelUser;
+    LbSenha.Caption   := UserSettings.Login.LabelPassword;
     btOK.Caption      := UserSettings.Login.BtOk;
-    BtCancela.Caption := BtCancel;
-    if LeftImage <> nil then
-      ImgLeft.Picture.Assign(LeftImage);
-    if BottomImage <> nil then
-      ImgBottom.Picture.Assign(BottomImage);
-    if TopImage <> nil then
-      ImgTop.Picture.Assign(TopImage);
+    BtCancela.Caption := UserSettings.Login.BtCancel;
+    if UserSettings.Login.LeftImage <> nil then
+      ImgLeft.Picture.Assign(UserSettings.Login.LeftImage);
+    if UserSettings.Login.BottomImage <> nil then
+      ImgBottom.Picture.Assign(UserSettings.Login.BottomImage);
+    if UserSettings.Login.TopImage <> nil then
+      ImgTop.Picture.Assign(UserSettings.Login.TopImage);
 
 
-(*
-      if Assigned(FMailUserControl) then
-      begin
-        lbEsqueci.Visible := FMailUserControl.EsqueceuSenha.Ativo;
-        lbEsqueci.Caption := FMailUserControl.EsqueceuSenha.LabelLoginForm;
-      end;
+    if Assigned(FMailUserControl) then
+    begin
+      lbEsqueci.Visible := FMailUserControl.EsqueceuSenha.Ativo;
+      lbEsqueci.Caption := FMailUserControl.EsqueceuSenha.LabelLoginForm;
+    end;
 
-*)
     StatusBar.Visible        := Login.FMaxLoginAttempts > 0;       // by vicente barros leonel
     StatusBar.Panels[1].Text := '0';                               // by vicente barros leonel
     StatusBar.Panels[3].Text := IntToStr(Login.FMaxLoginAttempts); // by vicente barros leonel
@@ -1606,8 +1604,10 @@ end;
 
 destructor TUserControl.Destroy;
 begin
-  if not (csDesigning in ComponentState) then;
-  fUsersLogged.DelCurrentUser;
+  {
+  if (not (csDesigning in ComponentState)) and (Assigned(Self.FDataConnector)) then
+    FUsersLogged.DelCurrentUser;
+  }
 
   FCurrentUser.Free;
   FControlRight.Free;
@@ -1974,23 +1974,26 @@ end;
 procedure TUserControl.ShowLogin;
 begin
   FRetry := 0;
-  if Assigned(onCustomLoginForm) then
-    OnCustomLoginForm(Self, FFormLogin);
-  if FFormLogin = nil then
-  begin
-    FFormLogin := TfrmLoginWindow.Create(self);
-    with FFormLogin as TfrmLoginWindow do
+  try
+    if Assigned(onCustomLoginForm) then
+      OnCustomLoginForm(Self, FFormLogin);
+    if FFormLogin = nil then
     begin
-      SetfrmLoginWindow(TfrmLoginWindow(FFormLogin));
-      FUserControl      := Self;
-      btOK.onClick      := ActionOKLogin;
-      onCloseQuery      := Testafecha;
-      Position          := Self.UserSettings.WindowsPosition;
-      lbEsqueci.OnClick := ActionEsqueceuSenha;
+      FFormLogin := TfrmLoginWindow.Create(self);
+      with FFormLogin as TfrmLoginWindow do
+      begin
+        SetfrmLoginWindow(TfrmLoginWindow(FFormLogin));
+        FUserControl      := Self;
+        btOK.onClick      := ActionOKLogin;
+        onCloseQuery      := Testafecha;
+        Position          := Self.UserSettings.WindowsPosition;
+        lbEsqueci.OnClick := ActionEsqueceuSenha;
+      end;
     end;
+    FFormLogin.ShowModal;
+  finally
+    FreeAndNil(FFormLogin);
   end;
-  FFormLogin.ShowModal;
-  FreeAndNil(FFormLogin);
 end;
 
 procedure TUserControl.ActionOKLogin(Sender: TObject);
@@ -2510,7 +2513,7 @@ begin
     if DataSetUsuario.IsEmpty then
       IDUsuario := AddUser(UsuarioInicial,
         PasswordInicial,
-        Login.InitialLogin.User,
+        'Administrador',
         Login.InitialLogin.Email,
         0, 0, Login.DaysOfSunExpired,
         True)
@@ -2581,9 +2584,9 @@ begin
   end;
 end;
 
-procedure TUserControl.SetfLanguage(const Value: TUCLanguage);
+procedure TUserControl.SetFLanguage(const Value: TUCLanguage);
 begin
-  fLanguage                  := Value;
+  FLanguage                  := Value;
   Self.UserSettings.Language := Value;
   UCSettings.AlterLanguage(Self.UserSettings);
 end;

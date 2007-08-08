@@ -15,7 +15,7 @@ object UCFrame_Log: TUCFrame_Log
     Left = 0
     Top = 0
     Width = 563
-    Height = 380
+    Height = 394
     Align = alClient
     Ctl3D = True
     DataSource = DataSource1
@@ -54,9 +54,9 @@ object UCFrame_Log: TUCFrame_Log
   end
   object Panel1: TPanel
     Left = 0
-    Top = 380
+    Top = 394
     Width = 563
-    Height = 118
+    Height = 104
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
@@ -92,7 +92,7 @@ object UCFrame_Log: TUCFrame_Log
       Left = 124
       Top = 71
       Width = 101
-      Height = 31
+      Height = 25
       Cursor = crHandPoint
       Caption = 'Aplicar filtro'
       Enabled = False
@@ -155,7 +155,7 @@ object UCFrame_Log: TUCFrame_Log
       Left = 338
       Top = 71
       Width = 101
-      Height = 31
+      Height = 25
       Cursor = crHandPoint
       Caption = 'Fechar'
       TabOrder = 5
@@ -216,7 +216,7 @@ object UCFrame_Log: TUCFrame_Log
       Left = 231
       Top = 71
       Width = 101
-      Height = 31
+      Height = 25
       Cursor = crHandPoint
       Caption = 'Excluir Log'
       TabOrder = 6
