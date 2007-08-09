@@ -1962,7 +1962,7 @@ end;
 
 destructor TUserControl.Destroy;
 begin
-  if not (csDesigning in ComponentState) then;
+  if not (csDesigning in ComponentState) then
     fUsersLogged.DelCurrentUser;
 
   FCurrentUser.Free;
