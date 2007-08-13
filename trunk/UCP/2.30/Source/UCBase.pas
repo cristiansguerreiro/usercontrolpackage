@@ -1215,7 +1215,7 @@ begin
       FDataConnector := nil;
     end;
 
-    //if AComponent = FMailUserControl then FMailUserControl := nil;
+    if AComponent = FMailUserControl then FMailUserControl := nil;
 
   end;
   inherited Notification(AComponent, AOperation);
@@ -2613,6 +2613,7 @@ begin
   Self.UserSettings.Language := Value;
   UCSettings.AlterLanguage(Self.UserSettings);
 end;
+
 
 
 procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
