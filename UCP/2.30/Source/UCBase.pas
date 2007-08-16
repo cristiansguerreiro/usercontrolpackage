@@ -362,8 +362,6 @@ type
     fLanguage:                TUCLanguage;
     FMailUserControl:         TMailUserControl;
     procedure SetExtraRights(Value: TUCExtraRights);
-    //  procedure SetWindow;
-    //  procedure SetWindowProfile;
     procedure ActionCadUser(Sender: TObject);
     procedure ActionTrocaSenha(Sender: TObject);
     procedure ActionOKLogin(Sender: TObject);
@@ -795,7 +793,7 @@ begin
     for Contador := 0 to Pred(Owner.ComponentCount) do
       if Owner.Components[Contador] is TUCSettings then
       begin
-        Language := TUCSettings(Owner.Components[Contador]).Language; // torna a linguage do UCSETTINGS como padrão
+        Language := TUCSettings(Owner.Components[Contador]).Language;// torna a linguage do UCSETTINGS como padrão
         ApplySettings(TUCSettings(Owner.Components[Contador]));
       end;
 
@@ -908,7 +906,7 @@ begin
   with FDataset do
     try
       if not IsEmpty then
-        { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsquceuSenha para usar a criptografia md5 }
+        { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsqueceuSenha para usar a criptografia md5 }
         MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
           FieldByName(TableUsers.FieldLogin).AsString,
           FieldByName(TableUsers.FieldPassword).AsString,
@@ -933,42 +931,6 @@ begin
   FFormTrocarSenha.ShowModal;
   FreeAndNil(FFormTrocarSenha);
 end;
-
-{procedure TUserControl.SetWindowProfile;
-begin
-  with Self.UserSettings.Rights do
-  begin
-    UserPermis.Caption              := WindowCaption;
-    UserPermis.LbDescricao.Caption  := LabelProfile;
-    UserPermis.lbUser.Left          := UserPermis.LbDescricao.Left + UserPermis.LbDescricao.Width + 5;
-    UserPermis.PageMenu.Caption     := PageMenu;
-    UserPermis.PageAction.Caption   := PageActions;
-    UserPermis.PageControls.Caption := PageControls; // By Vicente Barros Leonel
-    UserPermis.BtLibera.Caption     := BtUnlock;
-    UserPermis.BtBloqueia.Caption   := BtLock;
-    UserPermis.BtGrava.Caption      := BtSave;
-    UserPermis.BtCancel.Caption     := BtCancel;
-    UserPermis.Position             := Self.UserSettings.WindowsPosition;
-  end;
-end;
-
-procedure TUserControl.SetWindow;
-begin
-  with Self.UserSettings.Rights do
-  begin
-    UserPermis.Caption              := WindowCaption;
-    UserPermis.LbDescricao.Caption  := LabelUser;
-    UserPermis.lbUser.Left          := UserPermis.LbDescricao.Left + UserPermis.LbDescricao.Width + 5;
-    UserPermis.PageMenu.Caption     := PageMenu;
-    UserPermis.PageAction.Caption   := PageActions;
-    UserPermis.PageControls.Caption := PageControls; // By Vicente Barros Leonel
-    UserPermis.BtLibera.Caption     := BtUnlock;
-    UserPermis.BtBloqueia.Caption   := BtLOck;
-    UserPermis.BtGrava.Caption      := BtSave;
-    UserPermis.BtCancel.Caption     := BtCancel;
-    UserPermis.Position             := Self.UserSettings.WindowsPosition;
-  end;
-end;    }
 
 function TUserControl.ExisteUsuario(Login: String): Boolean;
 var
@@ -1123,7 +1085,6 @@ begin
     TTrocaSenha(FFormTrocarSenha).ForcarTroca := False; // Vicente Barros Leonel
 
 
-(*
      if ( Assigned(FMailUserControl) ) and (FMailUserControl.SenhaTrocada.Ativo) then
      begin
        with CurrentUser do
@@ -1136,7 +1097,6 @@ begin
        end;
      end;
 
-*)
 
   TTrocaSenha(FFormTrocarSenha).Close;
 end;
@@ -1162,15 +1122,12 @@ begin
     if TopImage <> nil then
       ImgTop.Picture.Assign(TopImage);
 
-
-(*
       if Assigned(FMailUserControl) then
       begin
         lbEsqueci.Visible := FMailUserControl.EsqueceuSenha.Ativo;
         lbEsqueci.Caption := FMailUserControl.EsqueceuSenha.LabelLoginForm;
       end;
 
-*)
     StatusBar.Visible        := Login.FMaxLoginAttempts > 0;       // by vicente barros leonel
     StatusBar.Panels[1].Text := '0';                               // by vicente barros leonel
     StatusBar.Panels[3].Text := IntToStr(Login.FMaxLoginAttempts); // by vicente barros leonel

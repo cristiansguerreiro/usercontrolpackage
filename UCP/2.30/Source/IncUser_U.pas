@@ -138,15 +138,13 @@ begin
 
       AddUser(vLogin, vNovaSenha, vNome, vEmail, vPerfil, vUserExpired, SpinExpira.Value, vPrivilegiado);
 
-(*
+
         if (Assigned( fUserControl.MailUserControl)) and (fUserControl.MailUserControl.AdicionaUsuario.Ativo ) then
           try
             fUserControl.MailUserControl.EnviaEmailAdicionaUsuario(vNome, vLogin, Encrypt(vNovaSenha, EncryptKey) , vEmail, IntToStr(vPerfil), EncryptKey);
           except
             on E : Exception do Log(e.Message, 0 );
           end;
-
-*)
 
     end
     else
@@ -164,7 +162,7 @@ begin
       vPrivilegiado := ckPrivilegiado.Checked;
       ChangeUser(vNovoIDUsuario, vLogin, vNome, vEmail, vPerfil, vUserExpired, SpinExpira.Value, ComboStatus.ItemIndex, vPrivilegiado);
 
-(*
+
         if (Assigned(fUserControl.MailUserControl)) and (fUserControl.MailUserControl.AlteraUsuario.Ativo ) then
           try
             fUserControl.MailUserControl.EnviaEmailAlteraUsuario(vNome, vLogin, 'Não Alterada', vEmail, IntToStr(vPerfil), EncryptKey);
@@ -172,7 +170,7 @@ begin
             on E : Exception do Log(e.Message, 2);
           end;
     
-*)
+
     end;
 
 {  With TfrmCadastrarUsuario(Owner) do
