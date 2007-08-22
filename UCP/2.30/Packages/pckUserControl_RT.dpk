@@ -25,6 +25,7 @@ package pckUserControl_RT;
 {$DESCRIPTION 'User Control Package 2'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
+{$I 'Usercontrol.inc'}
 
 requires
   designide,
