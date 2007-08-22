@@ -34,9 +34,26 @@
   {$DEFINE DELPHI10}
 {$ENDIF}
 
+{$IFDEF VER190}
+  {$DEFINE DELPHI11}
+{$ENDIF}
 {------------------------------------------------------------------------------}
 { DELPHIX_UP from DELPHIX mappings                                             }
 {------------------------------------------------------------------------------}
+
+{$IFDEF DELPHI11}
+  {$DEFINE DELPHI11_UP}
+  {$DEFINE DELPHI10_UP}
+  {$DEFINE DELPHI9_UP}
+  {$DEFINE DELPHI8_UP}
+  {$DEFINE DELPHI7_UP}
+  {$DEFINE DELPHI6_UP}
+  {$DEFINE DELPHI5_UP}
+  {$DEFINE DELPHI4_UP}
+  {$DEFINE DELPHI3_UP}
+  {$DEFINE DELPHI2_UP}
+  {$DEFINE DELPHI1_UP}
+{$ENDIF}
 
 {$IFDEF DELPHI10}
   {$DEFINE DELPHI10_UP}

@@ -608,8 +608,8 @@ type
   TUCUsersLogged = class(TPersistent)
     //Cesar: 12/07/2005: classe que armazena os usuarios logados no sistema
   private
-    FUserControl: TUserControl;
-    FAtive:       Boolean;
+    FUserControl:   TUserControl;
+    FAtive:         Boolean;
     fMultipleLogin: Boolean;
     procedure AddCurrentUser;
   public
@@ -618,10 +618,10 @@ type
     procedure Assign(Source: TPersistent); override;
     procedure DelCurrentUser;
     procedure CriaTableUserLogado;
-    function  UsuarioJaLogado( ID : Integer ) : Boolean;
+    function UsuarioJaLogado(ID: Integer): Boolean;
   published
     property Active: Boolean Read FAtive Write FAtive default True;
-    property MultipleLogin: Boolean read fMultipleLogin write fMultipleLogin default true;
+    property MultipleLogin: Boolean Read fMultipleLogin Write fMultipleLogin default True;
   end;
 
 function Decrypt(const S: ansistring; Key: Word): ansistring;
@@ -1085,17 +1085,14 @@ begin
     TTrocaSenha(FFormTrocarSenha).ForcarTroca := False; // Vicente Barros Leonel
 
 
-     if ( Assigned(FMailUserControl) ) and (FMailUserControl.SenhaTrocada.Ativo) then
-     begin
-       with CurrentUser do
-       begin
-         try
-           FMailUserControl.EnviaEmailSenhaTrocada( Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
-         except
-           on e : Exception do Log(e.Message,2);
-         end;
-       end;
-     end;
+  if (Assigned(FMailUserControl)) and (FMailUserControl.SenhaTrocada.Ativo) then
+    with CurrentUser do
+      try
+        FMailUserControl.EnviaEmailSenhaTrocada(Username, CurrentUser.UserLogin, TTrocaSenha(FFormTrocarSenha).EditNova.Text, Email, '', EncryptKey);
+      except
+        on e: Exception do
+          Log(e.Message, 2);
+      end;
 
 
   TTrocaSenha(FFormTrocarSenha).Close;
@@ -1122,11 +1119,11 @@ begin
     if TopImage <> nil then
       ImgTop.Picture.Assign(TopImage);
 
-      if Assigned(FMailUserControl) then
-      begin
-        lbEsqueci.Visible := FMailUserControl.EsqueceuSenha.Ativo;
-        lbEsqueci.Caption := FMailUserControl.EsqueceuSenha.LabelLoginForm;
-      end;
+    if Assigned(FMailUserControl) then
+    begin
+      lbEsqueci.Visible := FMailUserControl.EsqueceuSenha.Ativo;
+      lbEsqueci.Caption := FMailUserControl.EsqueceuSenha.LabelLoginForm;
+    end;
 
     StatusBar.Visible        := Login.FMaxLoginAttempts > 0;       // by vicente barros leonel
     StatusBar.Panels[1].Text := '0';                               // by vicente barros leonel
@@ -1172,7 +1169,8 @@ begin
       FDataConnector := nil;
     end;
 
-    if AComponent = FMailUserControl then FMailUserControl := nil;
+    if AComponent = FMailUserControl then
+      FMailUserControl := nil;
 
   end;
   inherited Notification(AComponent, AOperation);
@@ -1189,13 +1187,15 @@ begin
   // Adicionado ao log a identificação da Aplicação
   if not LogControl.Active then
     Exit;
-  DataConnector.UCExecSQL('INSERT INTO ' + LogControl.TableLog +
-    '(APPLICATIONID, IDUSER, MSG, DATA, NIVEL) VALUES ( ' +
-    QuotedStr(Self.ApplicationID) + ', ' +
-    IntToStr(CurrentUser.UserID) + ', ' +
-    QuotedStr(Copy(MSG, 1, 250)) + ', ' +
-    QuotedStr(FormatDateTime('YYYYMMDDhhmmss', now)) + ', ' +
-    IntToStr(Level) + ')');
+
+  if Assigned(DataConnector) then
+    DataConnector.UCExecSQL('INSERT INTO ' + LogControl.TableLog +
+      '(APPLICATIONID, IDUSER, MSG, DATA, NIVEL) VALUES ( ' +
+      QuotedStr(Self.ApplicationID) + ', ' +
+      IntToStr(CurrentUser.UserID) + ', ' +
+      QuotedStr(Copy(MSG, 1, 250)) + ', ' +
+      QuotedStr(FormatDateTime('YYYYMMDDhhmmss', now)) + ', ' +
+      IntToStr(Level) + ')');
 end;
 
 procedure TUserControl.RegistraCurrentUser(Dados: TDataset);
@@ -1339,29 +1339,28 @@ begin
           if DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 then
           begin
 
-            If ( ( fUsersLogged.Active = true ) and ( fUsersLogged.MultipleLogin = False ) ) then
-              Begin
-                //verifica se o usuário esta logado
-                If fUsersLogged.UsuarioJaLogado( Dataset.FieldByName(TableUsers.FieldUserID).AsInteger ) = True then
-                  Begin
-                    MessageDlg('Atenção: Seu usuário encontra-se logado em outra estação, verifique.', mtInformation, [mbOK], 0);
-                    RegistraCurrentuser(Dataset);
-                    Result := 0;
-                    //Aqui deve-se colocar uma mensagem para derrubar a outra conexão
-                    //Pensando ainda como fazer :)
-                  End
-                else
-                  Begin
-                    RegistraCurrentuser(Dataset);
-                    Result := 0;
-                  End;
-              End
-            else
-              Begin
-                RegistraCurrentuser(Dataset);   {Para voltar o codigo anterior, basta apagar e colocar esta duas linhas :) }
+            if ((fUsersLogged.Active = True) and (fUsersLogged.MultipleLogin = False)) then
+            begin
+              //verifica se o usuário esta logado
+              if fUsersLogged.UsuarioJaLogado(Dataset.FieldByName(TableUsers.FieldUserID).AsInteger) = True then
+              begin
+                MessageDlg('Atenção: Seu usuário encontra-se logado em outra estação, verifique.', mtInformation, [mbOK], 0);
+                RegistraCurrentuser(Dataset);
                 Result := 0;
-              End;
-
+                //Aqui deve-se colocar uma mensagem para derrubar a outra conexão
+                //Pensando ainda como fazer :)
+              end
+              else
+              begin
+                RegistraCurrentuser(Dataset);
+                Result := 0;
+              end;
+            end
+            else
+            begin
+              RegistraCurrentuser(Dataset);   {Para voltar o codigo anterior, basta apagar e colocar esta duas linhas :) }
+              Result := 0;
+            end;
 
           end
           else
@@ -1460,7 +1459,8 @@ begin
       QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FLogin.fDaysOfSunExpired)), {By vicente Barros Leonel }
       UserExpired,
       DaysExpired, '0']); {By vicente Barros Leonel }
-    DataConnector.UCExecSQL(SQLStmt);
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL(SQLStmt);
   end;
 
   if Assigned(OnAddUser) then
@@ -1525,7 +1525,8 @@ begin
         ' Where ' + TableUsers.FieldUserID + ' = ' + IntToStr(IdUser);
   end;
 
-  DataConnector.UCExecSQL(SQLStmt);
+  if Assigned(DataConnector) then
+    DataConnector.UCExecSQL(SQLStmt);
 
   if Assigned(onChangePassword) then
     OnChangePassword(Self, IdUser, Login, Senha, NewPassword);
@@ -1560,37 +1561,39 @@ begin
   end;
 
   with TableUsers do
-    DataConnector.UCExecSQL('Update ' + TableName + ' Set ' +
-      FieldUserName + ' = ' + QuotedStr(Name) + ', ' +
-      FieldLogin + ' = ' + QuotedStr(Login) + ', ' +
-      FieldEmail + ' = ' + QuotedStr(Mail) + ', ' +
-      FieldPrivileged + ' = ' + BooltoStr(PrivUser) + ', ' +
-      FieldProfile + ' = ' + IntToStr(Profile) + ', ' +
-      FieldKey + ' = ' + QuotedStr(Key) + ', ' +
-      FieldUserExpired + ' = ' + IntToStr(UserExpired) + ' , ' + // vicente barros leonel
-      FieldUserDaysSun + ' = ' + IntToStr(UserDaysSun) + ' , ' +
-      FieldUSerInative + ' = ' + IntToStr(Status) +
-      ' where ' + FieldUserID + ' = ' + IntToStr(IdUser));
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL('Update ' + TableName + ' Set ' +
+        FieldUserName + ' = ' + QuotedStr(Name) + ', ' +
+        FieldLogin + ' = ' + QuotedStr(Login) + ', ' +
+        FieldEmail + ' = ' + QuotedStr(Mail) + ', ' +
+        FieldPrivileged + ' = ' + BooltoStr(PrivUser) + ', ' +
+        FieldProfile + ' = ' + IntToStr(Profile) + ', ' +
+        FieldKey + ' = ' + QuotedStr(Key) + ', ' +
+        FieldUserExpired + ' = ' + IntToStr(UserExpired) + ' , ' + // vicente barros leonel
+        FieldUserDaysSun + ' = ' + IntToStr(UserDaysSun) + ' , ' +
+        FieldUSerInative + ' = ' + IntToStr(Status) +
+        ' where ' + FieldUserID + ' = ' + IntToStr(IdUser));
   if Assigned(OnChangeUser) then
     OnChangeUser(Self, IdUser, Login, Name, Mail, Profile, PrivUser);
 end;
 
 procedure TUserControl.CriaTabelaMsgs(const TableName: String);
 begin
-  DataConnector.UCExecSQL('CREATE TABLE ' + TableName + ' ( ' +
-    'IdMsg   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
-    'UsrFrom ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
-    'UsrTo   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
-    'Subject ' + UserSettings.TypeFieldsDB.Type_VarChar + '(50),' +
-    'Msg     ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255),' +
-    'DtSend  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12),' +
-    'DtReceive  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12) )');
+  if Assigned(DataConnector) then
+    DataConnector.UCExecSQL('CREATE TABLE ' + TableName + ' ( ' +
+      'IdMsg   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
+      'UsrFrom ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
+      'UsrTo   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
+      'Subject ' + UserSettings.TypeFieldsDB.Type_VarChar + '(50),' +
+      'Msg     ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255),' +
+      'DtSend  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12),' +
+      'DtReceive  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12) )');
 end;
 
 destructor TUserControl.Destroy;
 begin
-  if not (csDesigning in ComponentState) then;
-  fUsersLogged.DelCurrentUser;
+  if not (csDesigning in ComponentState) then
+    fUsersLogged.DelCurrentUser;
 
   FCurrentUser.Free;
   FControlRight.Free;
@@ -1687,13 +1690,15 @@ begin
         FTableUsers.FieldDateExpired,
         UserSettings.TypeFieldsDB.Type_Char]);
 
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
       Sql := Format('update %s set %s = %s where %s = ''U''',
         [FTableUsers.TableName,
         FTableUsers.FieldDateExpired,
         QuotedStr(FormatDateTime('dd/mm/yyyy', Date + FLogin.fDaysOfSunExpired)),
         FTableUsers.FieldTypeRec]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
     end;
 
     if DataSet.FindField(FTableUsers.FieldUserExpired) = nil then
@@ -1702,12 +1707,14 @@ begin
         [FTableUsers.TableName,
         FTableUsers.FieldUserExpired,
         UserSettings.TypeFieldsDB.Type_Int]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
       Sql := Format('update %s set %s = 1 where %s = ''U''',
         [FTableUsers.TableName,
         FTableUsers.FieldUserExpired,
         FTableUsers.FieldTypeRec]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
     end;
 
     if DataSet.FindField(FTableUsers.FieldUserDaysSun) = nil then
@@ -1716,12 +1723,14 @@ begin
         [FTableUsers.TableName,
         FTableUsers.FieldUserDaysSun,
         UserSettings.TypeFieldsDB.Type_Int]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
       Sql := Format('update %s set %s = 30 where %s = ''U''',
         [FTableUsers.TableName,
         FTableUsers.FieldUserDaysSun,
         FTableUsers.FieldTypeRec]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
     end;
 
 
@@ -1731,13 +1740,15 @@ begin
         [FTableUsers.TableName,
         FTableUsers.FieldUserInative,
         UserSettings.TypeFieldsDB.Type_Int]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
 
       Sql := Format('update %s set %s = 0 where %s = ''U''',
         [FTableUsers.TableName,
         FTableUsers.FieldUserInative,
         FTableUsers.FieldTypeRec]);
-      DataConnector.UCExecSQL(Sql);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(Sql);
     end;
 
   finally
@@ -1759,7 +1770,8 @@ begin
 
   if TempDS.FindField(TableUsers.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1778,12 +1790,13 @@ begin
             Key   := MD5Sum(IntToStr(UserID) + Login + Senha);
           end;
         end;
-        DataConnector.UCExecSQL(Format('UPDATE %s SET %s = %s WHERE %s = %d',
-          [TableUsers.TableName,
-          TableUsers.FieldKey,
-          QuotedStr(Key),
-          TableUsers.FieldUserID,
-          TempDS.FieldByName(TableUsers.FieldUserID).AsInteger]));
+        if Assigned(DataConnector) then
+          DataConnector.UCExecSQL(Format('UPDATE %s SET %s = %s WHERE %s = %d',
+            [TableUsers.TableName,
+            TableUsers.FieldKey,
+            QuotedStr(Key),
+            TableUsers.FieldUserID,
+            TempDS.FieldByName(TableUsers.FieldUserID).AsInteger]));
         Next;
       end;
   end;
@@ -1796,7 +1809,8 @@ begin
 
   if TempDS.FindField(TableRights.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1807,16 +1821,17 @@ begin
           cPadrao: Key := Encrypt(IntToStr(UserID) + Login, EncryptKey);
           cMD5: Key    := MD5Sum(IntToStr(UserID) + Login);
         end;
-        DataConnector.UCExecSQL(Format('UPDATE %s SET %s = %s where %s = %d and %s = %s and %s = %s',
-          [TableRights.TableName,
-          TableRights.FieldKey,
-          QuotedStr(Key),
-          TableRights.FieldUserID,
-          TempDS.FieldByName(TableRights.FieldUserID).AsInteger,
-          TableRights.FieldModule,
-          QuotedStr(ApplicationID),
-          TableRights.FieldComponentName,
-          QuotedStr(Login)]));
+        if Assigned(DataConnector) then
+          DataConnector.UCExecSQL(Format('UPDATE %s SET %s = %s where %s = %d and %s = %s and %s = %s',
+            [TableRights.TableName,
+            TableRights.FieldKey,
+            QuotedStr(Key),
+            TableRights.FieldUserID,
+            TempDS.FieldByName(TableRights.FieldUserID).AsInteger,
+            TableRights.FieldModule,
+            QuotedStr(ApplicationID),
+            TableRights.FieldComponentName,
+            QuotedStr(Login)]));
         Next;
       end;
   end;
@@ -1827,8 +1842,9 @@ begin
   TempDS := DataConnector.UCGetSQLDataset('SELECT * FROM ' + TableRights.TableName + 'EX');
   if TempDS.FindField(TableRights.FieldKey) = nil then
   begin
-    DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + 'EX ADD ' +
-      TableUsers.FieldKey + '' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + 'EX ADD ' +
+        TableUsers.FieldKey + '' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1840,21 +1856,22 @@ begin
           cPadrao: Key := Encrypt(IntToStr(UserID) + Login, EncryptKey);
           cMD5: Key    := MD5Sum(IntToStr(UserID) + Login);
         end;
-        DataConnector.UCExecSQL(Format('UPDATE %s SET %s = %s' +
-          ' WHERE %s = %d AND' +
-          ' %s = %s AND %s = %s AND' +
-          ' %s = %s',
-          [TableRights.TableName + 'EX',
-          TableRights.FieldKey,
-          QuotedStr(Key),
-          TableRights.FieldUserID,
-          TempDS.FieldByName(TableRights.FieldUserID).AsInteger,
-          TableRights.FieldModule,
-          QuotedStr(ApplicationID),
-          TableRights.FieldComponentName,
-          QuotedStr(Login), // componente name
-          TableRights.FieldFormName,
-          QuotedStr(Senha)])); // formname
+        if Assigned(DataConnector) then
+          DataConnector.UCExecSQL(Format('UPDATE %s SET %s = %s' +
+            ' WHERE %s = %d AND' +
+            ' %s = %s AND %s = %s AND' +
+            ' %s = %s',
+            [TableRights.TableName + 'EX',
+            TableRights.FieldKey,
+            QuotedStr(Key),
+            TableRights.FieldUserID,
+            TempDS.FieldByName(TableRights.FieldUserID).AsInteger,
+            TableRights.FieldModule,
+            QuotedStr(ApplicationID),
+            TableRights.FieldComponentName,
+            QuotedStr(Login), // componente name
+            TableRights.FieldFormName,
+            QuotedStr(Senha)])); // formname
         Next;
       end;
   end;
@@ -2262,7 +2279,8 @@ begin
         UserSettings.TypeFieldsDB.Type_Varchar,
         FieldKey,
         TipoCampo]);
-      DataConnector.UCExecSQL(SQLStmt);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(SQLStmt);
     end
     else
     begin
@@ -2278,7 +2296,8 @@ begin
         UserSettings.TypeFieldsDB.Type_VarChar,
         FieldKey,
         TipoCampo]);
-      DataConnector.UCExecSQL(SQLStmt);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(SQLStmt);
     end;
 end;
 
@@ -2306,7 +2325,8 @@ begin
       QuotedStr(ObjName),
       QuotedStr(KeyField)]);
 
-  DataConnector.UCExecSQL(SQLStmt);
+  if Assigned(DataConnector) then
+    DataConnector.UCExecSQL(SQLStmt);
 end;
 
 procedure TUserControl.AddRight(idUser: Integer; ItemRight: String);
@@ -2333,7 +2353,8 @@ begin
     QuotedStr(ItemRight),
     QuotedStr(KeyField)]);
 
-  DataConnector.UCExecSQL(SQLStmt);
+  if Assigned(DataConnector) then
+    DataConnector.UCExecSQL(SQLStmt);
 end;
 
 procedure TUserControl.AddRight(idUser: Integer; ItemRight: TObject; FullPath: Boolean = True);
@@ -2360,16 +2381,17 @@ end;
 
 procedure TUserControl.CriaTabelaLog;
 begin
-  DataConnector.UCExecSQL(
-    Format('CREATE TABLE %S  (APPLICATIONID %s(250), IDUSER %s , MSG %s(250), DATA %s(14), NIVEL %s)',
-    [
-    LogControl.TableLog,
-    UserSettings.TypeFieldsDB.Type_VarChar,
-    UserSettings.TypeFieldsDB.Type_Int,
-    UserSettings.TypeFieldsDB.Type_Varchar,
-    UserSettings.TypeFieldsDB.Type_Varchar,
-    UserSettings.TypeFieldsDB.Type_Int
-    ]));
+  if Assigned(DataConnector) then
+    DataConnector.UCExecSQL(
+      Format('CREATE TABLE %S  (APPLICATIONID %s(250), IDUSER %s , MSG %s(250), DATA %s(14), NIVEL %s)',
+      [
+      LogControl.TableLog,
+      UserSettings.TypeFieldsDB.Type_VarChar,
+      UserSettings.TypeFieldsDB.Type_Int,
+      UserSettings.TypeFieldsDB.Type_Varchar,
+      UserSettings.TypeFieldsDB.Type_Varchar,
+      UserSettings.TypeFieldsDB.Type_Int
+      ]));
 end;
 
 {.$IFDEF UCACTMANAGER}
@@ -2467,7 +2489,8 @@ begin
         UserSettings.TypeFieldsDB.Type_Int
         ]);
 
-      DataConnector.UCExecSQL(SQLstmt);
+      if Assigned(DataConnector) then
+        DataConnector.UCExecSQL(SQLstmt);
     end;
 
   case Self.Login.CharCaseUser of
@@ -2570,7 +2593,6 @@ begin
   Self.UserSettings.Language := Value;
   UCSettings.AlterLanguage(Self.UserSettings);
 end;
-
 
 
 procedure TUserControl.SetFMailUserControl(const Value: TMailUserControl);
@@ -3300,9 +3322,10 @@ begin
       MsgRecForm.stData.Caption    := FmtDtHr(FieldByName('DtSend').AsString);
       MsgRecForm.stAssunto.Caption := FieldByName('Subject').AsString;
       MsgRecForm.MemoMsg.Text      := FieldByName('msg').AsString;
-      Self.UserControl.DataConnector.UCExecSQL('Update ' + Self.TableMessages + ' set DtReceive =  ' +
-        QuotedStr(FormatDateTime('YYYYMMDDhhmm', now)) +
-        ' Where  idMsg = ' + FieldByName('idMsg').AsString);
+      if Assigned(Self.UserControl.DataConnector) then
+        Self.UserControl.DataConnector.UCExecSQL('Update ' + Self.TableMessages + ' set DtReceive =  ' +
+          QuotedStr(FormatDateTime('YYYYMMDDhhmm', now)) +
+          ' Where  idMsg = ' + FieldByName('idMsg').AsString);
       MsgRecForm.Show;
       Next;
     end;
@@ -3343,7 +3366,8 @@ procedure TUCApplicationMessage.DeleteAppMessage(IdMsg: Integer);
 begin
   if MessageDlg(FUserControl.UserSettings.AppMessages.MsgsForm_PromptDelete, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
-  UserControl.DataConnector.UCExecSQL('Delete from ' + TableMessages + ' where IdMsg = ' + IntToStr(idMsg));
+  if Assigned(UserControl.DataConnector) then
+    UserControl.DataConnector.UCExecSQL('Delete from ' + TableMessages + ' where IdMsg = ' + IntToStr(idMsg));
 end;
 
 procedure TUCApplicationMessage.Loaded;
@@ -3381,13 +3405,14 @@ begin
     Close;
     Free;
   end;
-  UserControl.DataConnector.UCExecSQL('Insert into ' + TableMessages + '( idMsg, UsrFrom, UsrTo, Subject, Msg, DtSend) Values (' +
-    IntToStr(UltId) + ', ' +
-    IntToStr(UserControl.CurrentUser.UserID) + ', ' +
-    IntToStr(toUser) + ', ' +
-    QuotedStr(Subject) + ', ' +
-    QuotedStr(Msg) + ', ' +
-    QuotedStr(FormatDateTime('YYYYMMDDHHMM', now)) + ')');
+  if Assigned(UserControl.DataConnector) then
+    UserControl.DataConnector.UCExecSQL('Insert into ' + TableMessages + '( idMsg, UsrFrom, UsrTo, Subject, Msg, DtSend) Values (' +
+      IntToStr(UltId) + ', ' +
+      IntToStr(UserControl.CurrentUser.UserID) + ', ' +
+      IntToStr(toUser) + ', ' +
+      QuotedStr(Subject) + ', ' +
+      QuotedStr(Msg) + ', ' +
+      QuotedStr(FormatDateTime('YYYYMMDDHHMM', now)) + ')');
 
 end;
 
@@ -3831,7 +3856,7 @@ var
 begin
   if not Active then
     Exit;
-    
+
   with FUserControl do
   begin
     CurrentUser.IDLogon := TUCGUID.NovoGUIDString;
@@ -3847,17 +3872,18 @@ begin
       QuotedStr(ApplicationID),
       QuotedStr(GetLocalComputerName),
       QuotedStr(FormatDateTime('dd/mm/yy hh:mm', now))]);
-    DataConnector.UCExecSQL(SQLStmt);
+    if Assigned(DataConnector) then
+      DataConnector.UCExecSQL(SQLStmt);
   end;
 end;
 
 procedure TUCUsersLogged.Assign(Source: TPersistent);
 begin
   if Source is TUCUsersLogged then
-    Begin
-      Self.Active        := TUCUsersLogged(Source).Active;
-      Self.MultipleLogin := TUCUsersLogged(Source).MultipleLogin;
-    End
+  begin
+    Self.Active        := TUCUsersLogged(Source).Active;
+    Self.MultipleLogin := TUCUsersLogged(Source).MultipleLogin;
+  end
   else
     inherited;
 end;
@@ -3894,7 +3920,8 @@ begin
 
       FieldData,
       FUserControl.UserSettings.TypeFieldsDB.Type_VarChar]);
-  FUserControl.DataConnector.UCExecSQL(SQLStmt);
+  if Assigned(FUserControl.DataConnector) then
+    FUserControl.DataConnector.UCExecSQL(SQLStmt);
 end;
 
 procedure TUCUsersLogged.DelCurrentUser;
@@ -3924,12 +3951,12 @@ begin
   inherited Destroy;
 end;
 
-function TUCUsersLogged.UsuarioJaLogado( ID : Integer ): Boolean;
+function TUCUsersLogged.UsuarioJaLogado(ID: Integer): Boolean;
 var
-  SQLStmt: String;
+  SQLStmt:  String;
   FDataset: TDataset;
 begin
-  result := False;
+  Result := False;
   if Assigned(FUserControl.DataConnector) = False then
     Exit;
 
@@ -3938,13 +3965,13 @@ begin
     SQLStmt := Format('SELECT * FROM %s WHERE %s = %s',
       [TableUsersLogged.TableName,
       TableUsersLogged.FieldUserID,
-      QuotedStr( IntToStr(ID) )]);
+      QuotedStr(IntToStr(ID))]);
 
     if Assigned(DataConnector) then
-      Begin
-        fDataSet := DataConnector.UCGetSQLDataset(SQLStmt);
-        Result   := Not ( fDataSet.IsEmpty );
-      End;
+    begin
+      fDataSet := DataConnector.UCGetSQLDataset(SQLStmt);
+      Result   := not (fDataSet.IsEmpty);
+    end;
   end;
 end;
 
