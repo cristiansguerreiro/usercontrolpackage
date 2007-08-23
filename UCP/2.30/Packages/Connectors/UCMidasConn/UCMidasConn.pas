@@ -5,8 +5,7 @@
  Purpose  : Midas Suporte ( DataSnap )
  E-mail   : luiz@siffra.com
  URL      : www.siffra.com
- UC       : www.usercontrol.com.br
- Forum    : http://www.usercontrol.com.br/modules.php?name=Forums
+ UC       : www.usercontrol.net
 
  registered in UCMidasConnReg.pas
 -----------------------------------------------------------------------------}
