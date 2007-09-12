@@ -24,8 +24,8 @@ type
   private
     FConnection:  TIBDatabase;
     FTransaction: TIBTransaction;
-    procedure SetFTransaction(const Value: TIBTransaction);
-    procedure SetIBXConnection(const Value: TIBDatabase);
+    procedure SetTransaction(const Value: TIBTransaction);
+    procedure SetConnection(const Value: TIBDatabase);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -36,8 +36,8 @@ type
     function UCGetSQLDataset(FSQL: String): TDataset; override;
     procedure UCExecSQL(FSQL: String); override;
   published
-    property Connection: TIBDatabase read FConnection write SetIBXConnection;
-    property Transaction: TIBTransaction read FTransaction write SetFTransaction;
+    property Connection: TIBDatabase read FConnection write SetConnection;
+    property Transaction: TIBTransaction read FTransaction write SetTransaction;
   end;
 
 implementation
@@ -57,13 +57,13 @@ function TUCIBXConn.UCFindTable(const TableName: String): Boolean;
 var
   TempList: TStringList;
 begin
+  TempList := TStringList.Create;
   try
-    TempList := TStringList.Create;
     FConnection.GetTableNames(TempList, False);
     TempList.Text := UpperCase(TempList.Text);
     Result        := TempList.IndexOf(UpperCase(TableName)) > -1;
   finally
-    FreeAndNil(TempList);
+    SysUtils.FreeAndNil(TempList);
   end;
 end;
 
@@ -103,17 +103,20 @@ begin
 end;
 
 procedure TUCIBXConn.UCExecSQL(FSQL: String);
+var
+  Qry: TIBQuery;
 begin
-  with TIBQuery.Create(nil) do
-  begin
-    Database    := FConnection;
-    Transaction := FTransaction;
-    if not Transaction.Active then
-      Transaction.Active := True;
-    SQL.Text := FSQL;
-    ExecSQL;
-    FTransaction.Commit;
-    Free;
+  Qry := TIBQuery.Create(nil);
+  try
+    Qry.Database    := FConnection;
+    Qry.Transaction := FTransaction;
+    if not Qry.Transaction.Active then
+      Qry.Transaction.Active := True;
+    Qry.SQL.Text := FSQL;
+    Qry.ExecSQL;
+    Qry.Transaction.Commit;
+  finally
+    Qry.Free;
   end;
 end;
 
@@ -130,14 +133,14 @@ begin
 end;
 
 
-procedure TUCIBXConn.SetFTransaction(const Value: TIBTransaction);
+procedure TUCIBXConn.SetTransaction(const Value: TIBTransaction);
 begin
   FTransaction := Value;
   if Value <> nil then
     Value.FreeNotification(Self);
 end;
 
-procedure TUCIBXConn.SetIBXConnection(const Value: TIBDatabase);
+procedure TUCIBXConn.SetConnection(const Value: TIBDatabase);
 begin
   if FConnection <> Value then
     FConnection := Value;
