@@ -28,17 +28,13 @@ interface
 {$I 'UserControl.inc'}
 
 uses
-  ExtActns,
-  Variants,
-  Windows,
-  {.$IFDEF UCACTMANAGER}
+  ActnList,
   ActnMan,
   ActnMenus,
-  {.$ENDIF}
-  ActnList,
   Classes,
   Controls,
   DB,
+  ExtActns,
   Forms,
   Graphics,
   md5,
@@ -50,7 +46,9 @@ uses
   UCDataInfo,
   UCMail,
   UCMessages,
-  UCSettings;
+  UCSettings,
+  Variants,
+  Windows;
 
 const
   llBaixo   = 0;
@@ -103,10 +101,12 @@ type
     Privileged:      Boolean;
     UserNotExpired:  Boolean;
     UserDaysExpired: Integer;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     { TODO 1 -oLuiz -cUpgrade : Terminar a implementação dos DataSets para os Perfis de Usuario Loggado }
-    property PerfilUsuario: TDataSet Read FPerfilUsuario Write FPerfilUsuario;
-    property PerfilGrupo: TDataSet Read FPerfilGrupo Write FPerfilGrupo;
+    property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;
+    property PerfilGrupo: TDataSet read FPerfilGrupo write FPerfilGrupo;
   end;
 
   TUCUser = class(TPersistent) // armazenar menuitem ou action responsavel pelo controle de usuarios
@@ -122,10 +122,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Action: TAction Read FAction Write SetAction;
-    property MenuItem: TMenuItem Read FMenuItem Write SetMenuItem;
-    property UsePrivilegedField: Boolean Read FUsePrivilegedField Write FUsePrivilegedField default False;
-    property ProtectAdministrator: Boolean Read FProtectAdministrator Write FProtectAdministrator default True;
+    property Action: TAction read FAction write SetAction;
+    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
+    property UsePrivilegedField: Boolean read FUsePrivilegedField write FUsePrivilegedField default False;
+    property ProtectAdministrator: Boolean read FProtectAdministrator write FProtectAdministrator default True;
   end;
 
   TUCUserProfile = class(TPersistent) // armazenar menuitem ou action responsavel pelo Perfil de usuarios
@@ -136,7 +136,7 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Active: Boolean Read FAtive Write FAtive default True;
+    property Active: Boolean read FAtive write FAtive default True;
   end;
 
   TUCUserPasswordChange = class(TPersistent) // armazenar menuitem ou action responsavel pelo Form trocar senha
@@ -152,10 +152,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Action: TAction Read FAction Write SetAction;
-    property MenuItem: TMenuItem Read FMenuItem Write SetMenuItem;
-    property ForcePassword: Boolean Read FForcePassword Write FForcePassword default False;
-    property MinPasswordLength: Integer Read FMinPasswordLength Write FMinPasswordLength default 0;
+    property Action: TAction read FAction write SetAction;
+    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
+    property ForcePassword: Boolean read FForcePassword write FForcePassword default False;
+    property MinPasswordLength: Integer read FMinPasswordLength write FMinPasswordLength default 0;
   end;
 
   TUCUserLogoff = class(TPersistent) // armazenar menuitem ou action responsavel pelo logoff
@@ -169,8 +169,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Action: TAction Read FAction Write SetAction;
-    property MenuItem: TMenuItem Read FMenuItem Write SetMenuItem;
+    property Action: TAction read FAction write SetAction;
+    property MenuItem: TMenuItem read FMenuItem write SetMenuItem;
   end;
 
   TUCAutoLogin = class(TPersistent) // armazenar configuracao de Auto-Logon
@@ -184,10 +184,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Active: Boolean Read FActive Write FActive default False;
-    property User: String Read FUser Write FUser;
-    property Password: String Read FPassword Write FPassword;
-    property MessageOnError: Boolean Read FMessageOnError Write FMessageOnError default True;
+    property Active: Boolean read FActive write FActive default False;
+    property User: String read FUser write FUser;
+    property Password: String read FPassword write FPassword;
+    property MessageOnError: Boolean read FMessageOnError write FMessageOnError default True;
   end;
 
   TUCInitialLogin = class(TPersistent) // armazenar Dados do Login que sera criado na primeira execucao do programa.
@@ -202,10 +202,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property User: String Read FUser Write FUser;
-    property Email: String Read FEmail Write FEmail;
-    property Password: String Read FPassword Write FPassword;
-    property InitialRights: TStrings Read FInitialRights Write SetInitialRights;
+    property User: String read FUser write FUser;
+    property Email: String read FEmail write FEmail;
+    property Password: String read FPassword write FPassword;
+    property InitialRights: TStrings read FInitialRights write SetInitialRights;
   end;
 
   TUCGetLoginName = (lnNone, lnUserName, lnMachineName);
@@ -225,14 +225,14 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property AutoLogin: TUCAutoLogin Read FAutoLogin Write FAutoLogin;
-    property InitialLogin: TUCInitialLogin Read FInitialLogin Write FInitialLogin;
-    property MaxLoginAttempts: Integer Read FMaxLoginAttempts Write FMaxLoginAttempts;
-    property GetLoginName: TUCGetLoginName Read FGetLoginName Write FGetLoginName default lnNone;
-    property CharCaseUser: TEditCharCase Read fCharCaseUser Write fCharCaseUser default ecNormal; { By Vicente Barros leonel }
-    property CharCasePass: TEditCharCase Read fCharCasePass Write fCharCasePass default ecNormal; { By Vicente Barros leonel }
-    property ActiveDateExpired: Boolean Read fDateExpireActive Write fDateExpireActive default False; { By Vicente Barros leonel }
-    property DaysOfSunExpired: Word Read fDaysOfSunExpired Write fDaysOfSunExpired default 30;    { By Vicente Barros leonel }
+    property AutoLogin: TUCAutoLogin read FAutoLogin write FAutoLogin;
+    property InitialLogin: TUCInitialLogin read FInitialLogin write FInitialLogin;
+    property MaxLoginAttempts: Integer read FMaxLoginAttempts write FMaxLoginAttempts;
+    property GetLoginName: TUCGetLoginName read FGetLoginName write FGetLoginName default lnNone;
+    property CharCaseUser: TEditCharCase read fCharCaseUser write fCharCaseUser default ecNormal; { By Vicente Barros leonel }
+    property CharCasePass: TEditCharCase read fCharCasePass write fCharCasePass default ecNormal; { By Vicente Barros leonel }
+    property ActiveDateExpired: Boolean read fDateExpireActive write fDateExpireActive default False; { By Vicente Barros leonel }
+    property DaysOfSunExpired: Word read fDaysOfSunExpired write fDaysOfSunExpired default 30;    { By Vicente Barros leonel }
   end;
 
   TUCNotAllowedItems = class(TPersistent) // Ocultar e/ou Desabilitar os itens que o usuario nao tem acesso
@@ -244,8 +244,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property MenuVisible: Boolean Read FMenuVisible Write FMenuVisible default True;
-    property ActionVisible: Boolean Read FActionVisible Write FActionVisible default True;
+    property MenuVisible: Boolean read FMenuVisible write FMenuVisible default True;
+    property ActionVisible: Boolean read FActionVisible write FActionVisible default True;
   end;
 
   TUCLogControl = class(TPersistent) // Responsavel pelo Controle de Log
@@ -257,8 +257,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property Active: Boolean Read FActive Write FActive default True;
-    property TableLog: String Read FTableLog Write FTableLog;
+    property Active: Boolean read FActive write FActive default True;
+    property TableLog: String read FTableLog write FTableLog;
   end;
 
   TUCControlRight = class(TPersistent) // Menu / ActionList/ActionManager ou ActionMainMenuBar a serem Controlados
@@ -276,10 +276,10 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property ActionList: TActionList Read FActionList Write SetActionList;
-    property MainMenu: TMenu Read FMainMenu Write SetMainMenu;
-    property ActionManager: TActionManager Read FActionManager Write SetActionManager;
-    property ActionMainMenuBar: TActionMainMenuBar Read FActionMainMenuBar Write SetActionMainMenuBar;
+    property ActionList: TActionList read FActionList write SetActionList;
+    property MainMenu: TMenu read FMainMenu write SetMainMenu;
+    property ActionManager: TActionManager read FActionManager write SetActionManager;
+    property ActionMainMenuBar: TActionMainMenuBar read FActionMainMenuBar write SetActionMainMenuBar;
   end;
 
   TOnLogin = procedure(Sender: TObject; var User, Password: String) of object;
@@ -438,62 +438,62 @@ type
     function GetLocalComputerName: String;
     function AddUser(Login, Password, Name, Mail: String; Profile, UserExpired, DaysExpired: Integer; PrivUser: Boolean): Integer;
     function ExisteUsuario(Login: String): Boolean;
-    property CurrentUser: TUCCurrentUser Read FCurrentUser Write FCurrentUser;
-    property UserSettings: TUCUserSettings Read FUserSettings Write SetUserSettings;
+    property CurrentUser: TUCCurrentUser read FCurrentUser write FCurrentUser;
+    property UserSettings: TUCUserSettings read FUserSettings write SetUserSettings;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property About: TUCAboutVar Read FAbout Write FAbout;
-    property Criptografia: TUCCriptografia Read FCriptografia Write FCriptografia default cPadrao;
-    property AutoStart: Boolean Read FAutoStart Write FAutoStart default False;
-    property ApplicationID: String Read FApplicationID Write FApplicationID;
-    property ControlRight: TUCControlRight Read FControlRight Write FControlRight;
+    property About: TUCAboutVar read FAbout write FAbout;
+    property Criptografia: TUCCriptografia read FCriptografia write FCriptografia default cPadrao;
+    property AutoStart: Boolean read FAutoStart write FAutoStart default False;
+    property ApplicationID: String read FApplicationID write FApplicationID;
+    property ControlRight: TUCControlRight read FControlRight write FControlRight;
     // Controle dos formularios
-    property User: TUCUser Read FUser Write FUser;
-    property UserProfile: TUCUserProfile Read FUserProfile Write FUserProfile;
-    property UserPasswordChange: TUCUserPasswordChange Read FUserPasswordChange Write FUserPasswordChange;
-    property UsersLogged: TUCUsersLogged Read FUsersLogged Write FUsersLogged;
-    property UsersLogoff: TUCUserLogoff Read FUsersLogoff Write FUsersLogoff; //by vicente barros leonel
-    property LogControl: TUCLogControl Read FLogControl Write FLogControl;
+    property User: TUCUser read FUser write FUser;
+    property UserProfile: TUCUserProfile read FUserProfile write FUserProfile;
+    property UserPasswordChange: TUCUserPasswordChange read FUserPasswordChange write FUserPasswordChange;
+    property UsersLogged: TUCUsersLogged read FUsersLogged write FUsersLogged;
+    property UsersLogoff: TUCUserLogoff read FUsersLogoff write FUsersLogoff; //by vicente barros leonel
+    property LogControl: TUCLogControl read FLogControl write FLogControl;
 
-    property MailUserControl: TMailUserControl Read FMailUserControl Write SetFMailUserControl; // by vicente barros leonel
+    property MailUserControl: TMailUserControl read FMailUserControl write SetFMailUserControl; // by vicente barros leonel
 
-    property Language: TUCLanguage Read fLanguage Write SetfLanguage;
+    property Language: TUCLanguage read fLanguage write SetfLanguage;
 
-    property EncryptKey: Word Read FEncrytKey Write FEncrytKey;
-    property NotAllowedItems: TUCNotAllowedItems Read FNotAllowedItems Write FNotAllowedItems;
-    property Login: TUCLogin Read FLogin Write FLogin;
-    property ExtraRights: TUCExtraRights Read FExtraRights Write SetExtraRights;
-    property LoginMode: TUCLoginMode Read FLoginMode Write FLoginMode default lmActive;
+    property EncryptKey: Word read FEncrytKey write FEncrytKey;
+    property NotAllowedItems: TUCNotAllowedItems read FNotAllowedItems write FNotAllowedItems;
+    property Login: TUCLogin read FLogin write FLogin;
+    property ExtraRights: TUCExtraRights read FExtraRights write SetExtraRights;
+    property LoginMode: TUCLoginMode read FLoginMode write FLoginMode default lmActive;
     // Tabelas
-    property TableUsers: TUCTableUsers Read FTableUsers Write FTableUsers;
-    property TableRights: TUCTableRights Read FTableRights Write FTableRights;
-    property TableUsersLogged: TUCTableUsersLogged Read FTableUsersLogged Write FTableUsersLogged;
+    property TableUsers: TUCTableUsers read FTableUsers write FTableUsers;
+    property TableRights: TUCTableRights read FTableRights write FTableRights;
+    property TableUsersLogged: TUCTableUsersLogged read FTableUsersLogged write FTableUsersLogged;
 
-    property DataConnector: TUCDataConnector Read FDataConnector Write SetDataConnector;
-    property CheckValidationKey: Boolean Read FCheckValidationKey Write FCheckValidationKey default False;
+    property DataConnector: TUCDataConnector read FDataConnector write SetDataConnector;
+    property CheckValidationKey: Boolean read FCheckValidationKey write FCheckValidationKey default False;
     // Eventos
-    property OnLogin: TOnLogin Read FOnLogin Write FOnLogin;
-    property OnStartApplication: TNotifyEvent Read FOnStartApplication Write FOnStartApplication;
-    property OnLoginSucess: TOnLoginSucess Read FOnLoginSucess Write FOnLoginSucess;
-    property OnLoginError: TOnLoginError Read FOnLoginError Write FOnLoginError;
-    property OnApplyRightsMenuIt: TOnApplyRightsMenuItem Read FOnApplyRightsMenuIt Write FOnApplyRightsMenuIt;
-    property OnApplyRightsActionIt: TOnApllyRightsActionItem Read FOnApplyRightsActionIt Write FOnApplyRightsActionIt;
-    property OnCustomUsersForm: TCustomUserForm Read FOnCustomCadUsuarioForm Write FOnCustomCadUsuarioForm;
-    property OnCustomUsersProfileForm: TCustomUserProfileForm Read FCustomPerfilUsuarioForm Write FCustomPerfilUsuarioForm;
-    property OnCustomLoginForm: TCustomLoginForm Read FCustomLoginForm Write FCustomLoginForm;
-    property OnCustomChangePasswordForm: TCustomUserPasswordChangeForm Read FCustomTrocarSenhaForm Write FCustomTrocarSenhaForm;
-    property OnCustomLogControlForm: TCustomLogControlForm Read FCustomLogControlForm Write FCustomLogControlForm;
-    property OnCustomInitialMsg: TCustomInitialMessage Read FCustomInicialMsg Write FCustomInicialMsg;
-    property OnCustomUserLoggedForm: TCustomUserForm Read FOnCustomCadUsuarioForm Write FOnCustomCadUsuarioForm; //Cesar: 13/07/2005
-    property OnAddUser: TOnAddUser Read FOnAddUser Write FOnAddUser;
-    property OnChangeUser: TOnChangeUser Read FOnChangeUser Write FOnChangeUser;
-    property OnDeleteUser: TOnDeleteUser Read FOnDeleteUser Write FOnDeleteUser;
-    property OnAddProfile: TOnAddProfile Read FOnAddProfile Write FOnAddProfile;
-    property OnDeleteProfile: TOnDeleteProfile Read FOnDeleteProfile Write FOnDeleteProfile;
-    property OnChangePassword: TOnChangePassword Read FOnChangePassword Write FOnChangePassword;
-    property OnLogoff: TOnLogoff Read FOnLogoff Write FOnLogoff;
-    property OnAfterLogin: TNotifyEvent Read FAfterLogin Write FAfterLogin;
+    property OnLogin: TOnLogin read FOnLogin write FOnLogin;
+    property OnStartApplication: TNotifyEvent read FOnStartApplication write FOnStartApplication;
+    property OnLoginSucess: TOnLoginSucess read FOnLoginSucess write FOnLoginSucess;
+    property OnLoginError: TOnLoginError read FOnLoginError write FOnLoginError;
+    property OnApplyRightsMenuIt: TOnApplyRightsMenuItem read FOnApplyRightsMenuIt write FOnApplyRightsMenuIt;
+    property OnApplyRightsActionIt: TOnApllyRightsActionItem read FOnApplyRightsActionIt write FOnApplyRightsActionIt;
+    property OnCustomUsersForm: TCustomUserForm read FOnCustomCadUsuarioForm write FOnCustomCadUsuarioForm;
+    property OnCustomUsersProfileForm: TCustomUserProfileForm read FCustomPerfilUsuarioForm write FCustomPerfilUsuarioForm;
+    property OnCustomLoginForm: TCustomLoginForm read FCustomLoginForm write FCustomLoginForm;
+    property OnCustomChangePasswordForm: TCustomUserPasswordChangeForm read FCustomTrocarSenhaForm write FCustomTrocarSenhaForm;
+    property OnCustomLogControlForm: TCustomLogControlForm read FCustomLogControlForm write FCustomLogControlForm;
+    property OnCustomInitialMsg: TCustomInitialMessage read FCustomInicialMsg write FCustomInicialMsg;
+    property OnCustomUserLoggedForm: TCustomUserForm read FOnCustomCadUsuarioForm write FOnCustomCadUsuarioForm; //Cesar: 13/07/2005
+    property OnAddUser: TOnAddUser read FOnAddUser write FOnAddUser;
+    property OnChangeUser: TOnChangeUser read FOnChangeUser write FOnChangeUser;
+    property OnDeleteUser: TOnDeleteUser read FOnDeleteUser write FOnDeleteUser;
+    property OnAddProfile: TOnAddProfile read FOnAddProfile write FOnAddProfile;
+    property OnDeleteProfile: TOnDeleteProfile read FOnDeleteProfile write FOnDeleteProfile;
+    property OnChangePassword: TOnChangePassword read FOnChangePassword write FOnChangePassword;
+    property OnLogoff: TOnLogoff read FOnLogoff write FOnLogoff;
+    property OnAfterLogin: TNotifyEvent read FAfterLogin write FAfterLogin;
   end;
 
   TUCExtraRightsItem = class(TCollectionItem)
@@ -510,10 +510,10 @@ type
     function GetDisplayName: String; override;
   public
   published
-    property FormName: String Read FFormName Write SetFormName;
-    property CompName: String Read FCompName Write SetCompName;
-    property Caption: String Read FCaption Write SetCaption;
-    property GroupName: String Read FGroupName Write SetGroupName;
+    property FormName: String read FFormName write SetFormName;
+    property CompName: String read FCompName write SetCompName;
+    property Caption: String read FCaption write SetCaption;
+    property GroupName: String read FGroupName write SetGroupName;
   end;
 
   TUCExtraRights = class(TCollection)
@@ -526,7 +526,7 @@ type
   public
     constructor Create(UCBase: TUserControl);
     function Add: TUCExtraRightsItem;
-    property Items[Index: Integer]: TUCExtraRightsItem Read GetItem Write SetItem; default;
+    property Items[Index: Integer]: TUCExtraRightsItem read GetItem write SetItem; default;
   end;
 
   TUCVerificaMensagemThread = class(TThread)
@@ -568,10 +568,10 @@ type
     procedure DeleteAppMessage(IdMsg: Integer);
     procedure CheckMessages;
   published
-    property Active: Boolean Read FActive Write SetActive;
-    property Interval: Integer Read FInterval Write FInterval;
-    property TableMessages: String Read FTableMessages Write FTableMessages;
-    property UserControl: TUserControl Read FUserControl Write SetUserControl;
+    property Active: Boolean read FActive write SetActive;
+    property Interval: Integer read FInterval write FInterval;
+    property TableMessages: String read FTableMessages write FTableMessages;
+    property UserControl: TUserControl read FUserControl write SetUserControl;
   end;
 
   TUCComponentsVar = String;
@@ -597,12 +597,12 @@ type
     procedure LockControls;
     procedure ListComponents(Form: String; List: TStrings);
   published
-    property AccessType: String Read GetAccessType;
-    property ActiveForm: String Read GetActiveForm;
-    property GroupName: String Read FGroupName Write SetGroupName;
-    property UserControl: TUserControl Read FUserControl Write SetUserControl;
-    property Components: TUCComponentsVar Read FComponents Write FComponents;
-    property NotAllowed: TUCNotAllowed Read FNotAllowed Write FNotAllowed default naInvisible;
+    property AccessType: String read GetAccessType;
+    property ActiveForm: String read GetActiveForm;
+    property GroupName: String read FGroupName write SetGroupName;
+    property UserControl: TUserControl read FUserControl write SetUserControl;
+    property Components: TUCComponentsVar read FComponents write FComponents;
+    property NotAllowed: TUCNotAllowed read FNotAllowed write FNotAllowed default naInvisible;
   end;
 
   TUCUsersLogged = class(TPersistent)
@@ -620,8 +620,8 @@ type
     procedure CriaTableUserLogado;
     function UsuarioJaLogado(ID: Integer): Boolean;
   published
-    property Active: Boolean Read FAtive Write FAtive default True;
-    property MultipleLogin: Boolean Read fMultipleLogin Write fMultipleLogin default True;
+    property Active: Boolean read FAtive write FAtive default True;
+    property MultipleLogin: Boolean read fMultipleLogin write fMultipleLogin default True;
   end;
 
 function Decrypt(const S: ansistring; Key: Word): ansistring;
@@ -652,7 +652,7 @@ uses
 constructor TUserControl.Create(AOwner: TComponent);
 begin
   inherited;
-  FCurrentUser        := TUCCurrentUser.Create(self);
+  FCurrentUser        := TUCCurrentUser.Create(Self);
   FControlRight       := TUCControlRight.Create(Self);
   FLogin              := TUCLogin.Create(Self);
   FLogControl         := TUCLogControl.Create(Self);
@@ -903,21 +903,20 @@ var
 begin
   FDataset := DataConnector.UCGetSQLDataset('Select * from ' + TableUsers.TableName + ' Where ' +
     TableUsers.FieldLogin + ' = ' + QuotedStr(TfrmLoginWindow(FFormLogin).EditUsuario.Text));
-  with FDataset do
-    try
-      if not IsEmpty then
-        { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsqueceuSenha para usar a criptografia md5 }
-        MailUserControl.EnviaEsqueceuSenha(FieldByName(TableUsers.FieldUserName).AsString,
-          FieldByName(TableUsers.FieldLogin).AsString,
-          FieldByName(TableUsers.FieldPassword).AsString,
-          FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
+  try
+    if not FDataset.IsEmpty then
+      { TODO -oLuiz -cUpgrade : Consertar o método EnviarEsqueceuSenha para usar a criptografia md5 }
+      MailUserControl.EnviaEsqueceuSenha(FDataset.FieldByName(TableUsers.FieldUserName).AsString,
+        FDataset.FieldByName(TableUsers.FieldLogin).AsString,
+        FDataset.FieldByName(TableUsers.FieldPassword).AsString,
+        FDataset.FieldByName(TableUsers.FieldEmail).AsString, '', EncryptKey)
 
-      else
-        MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
-    finally
-      Close;
-      Free;
-    end;
+    else
+      MessageDlg(UserSettings.CommonMessages.InvalidLogin, mtWarning, [mbOK], 0);
+  finally
+    FDataset.Close;
+    FDataset.Free;
+  end;
 end;
 
 procedure TUserControl.ActionTrocaSenha(Sender: TObject);
@@ -945,9 +944,9 @@ begin
     Self.TableUsers.FieldLogin,
     QuotedStr(Login)]);
 
+  DataSet := Self.DataConnector.UCGetSQLDataset(SQLstmt);
   try
-    DataSet := Self.DataConnector.UCGetSQLDataset(SQLstmt);
-    Result  := (Dataset.RecordCount > 0);
+    Result := (Dataset.RecordCount > 0);
   finally
     SysUtils.FreeAndNil(DataSet);
   end;
@@ -2054,6 +2053,10 @@ var
 begin
   //Permissao de Menus QMD
   Encontrado := False;
+
+  if ADataset.State = dsInactive then
+    ADataset.Open;
+
   if Assigned(ControlRight.MainMenu) then
   begin
     OwnerMenu := ControlRight.MainMenu.Owner;
@@ -2891,7 +2894,7 @@ begin
   for I := 1 to Length(Result) do
   begin
     Result[I] := char(byte(Result[I]) xor (Seed shr 8));
-    Seed      := (byte(S[I]) + Seed) * word(C1) + word(C2);
+    Seed      := (byte(S[I]) + Seed) * Word(C1) + Word(C2);
   end;
 end;
 
@@ -2936,7 +2939,7 @@ begin
   for I := 1 to Length(Result) do
   begin
     Result[I] := char(byte(Result[I]) xor (Seed shr 8));
-    Seed      := (byte(Result[I]) + Seed) * word(C1) + word(C2);
+    Seed      := (byte(Result[I]) + Seed) * Word(C1) + Word(C2);
   end;
 end;
 
@@ -3977,10 +3980,9 @@ end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
 
+{$IFDEF DELPHI9_UP} {$REGION 'TUCUserLogoff'} {$ENDIF}
 
 { TUCUserLogoff Por Vicente Barros Leonel }
-
-{$IFDEF DELPHI9_UP} {$REGION 'TUCUserLogoff'} {$ENDIF}
 
 procedure TUCUserLogoff.Assign(Source: TPersistent);
 begin
@@ -4021,6 +4023,25 @@ begin
     Self.Action := nil;
     Value.FreeNotification(Self.MenuItem);
   end;
+end;
+
+{$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
+
+{$IFDEF DELPHI9_UP} {$REGION 'TUCCurrentUser'} {$ENDIF}
+{ TUCCurrentUser }
+
+constructor TUCCurrentUser.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+end;
+
+destructor TUCCurrentUser.Destroy;
+begin
+  if Assigned(FPerfilUsuario) then
+    SysUtils.FreeAndNil(FPerfilUsuario);
+  if Assigned(FPerfilGrupo) then
+    SysUtils.FreeAndNil(FPerfilGrupo);
+  inherited;
 end;
 
 {$IFDEF DELPHI9_UP} {$ENDREGION} {$ENDIF}
