@@ -1,11 +1,12 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{a30f53db-e475-4ad9-a852-f9ebf338bf98}</ProjectGuid>
     <MainSource>pckUserControl_DT.dpk</MainSource>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documentos\RAD Studio\5.0\Bpl\pckUserControl_DT.bpl</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\pckUserControl_DT.bpl</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>
@@ -30,12 +31,6 @@
     <DelphiCompile Include="pckUserControl_DT.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
-    <DCCReference Include="..\Source\dbrtl.dcp" />
-    <DCCReference Include="..\Source\designide.dcp" />
-    <DCCReference Include="..\Source\inet.dcp" />
-    <DCCReference Include="..\Source\pckMD5.dcp" />
-    <DCCReference Include="..\Source\pckUCDataConnector.dcp" />
-    <DCCReference Include="..\Source\pckUSerControl_RT.dcp" />
     <DCCReference Include="..\Source\UCAbout.pas" />
     <DCCReference Include="..\Source\UCAboutXpStyle_U.pas" />
     <DCCReference Include="..\Source\UCEditorForm_U.pas" />
@@ -46,8 +41,14 @@
     <DCCReference Include="..\Source\UCReg.pas" />
     <DCCReference Include="..\Source\UCXPSettings.pas" />
     <DCCReference Include="..\Source\UCXPStyle.pas" />
-    <DCCReference Include="..\Source\vcldb.dcp" />
-    <DCCReference Include="..\Source\vcljpg.dcp" />
-    <DCCReference Include="..\Source\VclSmp.dcp" />
+    <DCCReference Include="dbrtl.dcp" />
+    <DCCReference Include="designide.dcp" />
+    <DCCReference Include="inet.dcp" />
+    <DCCReference Include="pckMD5.dcp" />
+    <DCCReference Include="pckUCDataConnector.dcp" />
+    <DCCReference Include="pckUSerControl_RT.dcp" />
+    <DCCReference Include="vcldb.dcp" />
+    <DCCReference Include="vcljpg.dcp" />
+    <DCCReference Include="VclSmp.dcp" />
   </ItemGroup>
 </Project>
