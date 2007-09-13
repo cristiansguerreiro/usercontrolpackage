@@ -2032,14 +2032,17 @@ end;
 
 procedure TUserControl.ApplyRights;
 begin
-  ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
+  if Self.CurrentUser.UserID <> 0 then
+    Begin
+      ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
 
-  // Aplica Permissoes do Perfil do usuario
-  if CurrentUser.Profile > 0 then
-    ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True);
+      // Aplica Permissoes do Perfil do usuario
+      if CurrentUser.Profile > 0 then
+        ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True);
 
-  if Assigned(FAfterLogin) then
-    FAfterLogin(Self);
+      if Assigned(FAfterLogin) then
+        FAfterLogin(Self);
+    End;
 end;
 
 procedure TUserControl.ApplyRightsObj(ADataset: TDataset; FProfile: Boolean = False);
