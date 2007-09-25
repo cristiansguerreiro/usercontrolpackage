@@ -59,7 +59,7 @@ begin
       QuotedStr( FormCaption ),
       QuotedStr( Event ),
       QuotedStr( Obs ) ,
-      QuotedStr( Form + '.' + TableName )
+      QuotedStr( TableName )
     ]));
 end;
 
@@ -169,10 +169,10 @@ begin
                   If fControl.Options.TypeSavePostEdit = tpSaveModifiedFields then
                     Begin
                       If Value <> AFields[ Aux ] then
-                      try Result := Result + Format('%s||%s||%s',[FieldNAme, Value ,  AFields[ Aux ] ] ) + #13#10; except end;
+                      try Result := Result + Format('%s||%s||%s',[FieldNAme, AFields[ Aux ] , Value ] ) + #13#10; except end;
                     End
                   else
-                    try Result := Result + Format('%s||%s||%s',[FieldNAme, Value , AFields[ Aux ] ] )+ #13#10; except end;
+                    try Result := Result + Format('%s||%s||%s',[FieldNAme, AFields[ Aux ] , Value  ] )+ #13#10; except end;
                 End;
             End;
         end;
