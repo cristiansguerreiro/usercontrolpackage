@@ -1411,7 +1411,11 @@ begin
 
   with DataConnector.UCGetSQLDataset('Select Max(' + TableUsers.FieldUserID + ') as IdUser from ' + TableUsers.TableName) do
   begin
-    Result := FieldByName('idUser').AsInteger + 1;
+    if (FieldByName('idUser').AsString = '') or (FieldByName('idUser').IsNull) then
+      Result := 1
+    else
+      Result := FieldByName('idUser').AsInteger + 1;
+
     Close;
     Free;
   end;
@@ -2033,16 +2037,16 @@ end;
 procedure TUserControl.ApplyRights;
 begin
   if Self.CurrentUser.UserID <> 0 then
-    Begin
-      ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
+  begin
+    ApplyRightsObj(Self.CurrentUser.PerfilUsuario);
 
-      // Aplica Permissoes do Perfil do usuario
-      if CurrentUser.Profile > 0 then
-        ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True);
+    // Aplica Permissoes do Perfil do usuario
+    if CurrentUser.Profile > 0 then
+      ApplyRightsObj(Self.CurrentUser.PerfilGrupo, True);
 
-      if Assigned(FAfterLogin) then
-        FAfterLogin(Self);
-    End;
+    if Assigned(FAfterLogin) then
+      FAfterLogin(Self);
+  end;
 end;
 
 procedure TUserControl.ApplyRightsObj(ADataset: TDataset; FProfile: Boolean = False);
