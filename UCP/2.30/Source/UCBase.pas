@@ -1411,11 +1411,7 @@ begin
 
   with DataConnector.UCGetSQLDataset('Select Max(' + TableUsers.FieldUserID + ') as IdUser from ' + TableUsers.TableName) do
   begin
-    if (FieldByName('idUser').AsString = '') or (FieldByName('idUser').IsNull) then
-      Result := 1
-    else
-      Result := FieldByName('idUser').AsInteger + 1;
-
+    Result := StrToIntDef(FieldByName('idUser').AsString, 0) + 1;
     Close;
     Free;
   end;
