@@ -1659,9 +1659,11 @@ begin
     //Atualizador de Versoes  By vicente barros leonel
     AtualizarVersao;
 
+
     // testa campo KEY qmd 28-02-2005
     if FCheckValidationKey then
       DoCheckValidationField;
+
   finally
     if LoginMode = lmActive then
       if not Login.AutoLogin.Active then
