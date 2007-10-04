@@ -11,9 +11,11 @@ object FormUserPerf: TFormUserPerf
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
+  OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -30,7 +32,7 @@ object FormUserPerf: TFormUserPerf
       Left = 41
       Top = 0
       Width = 183
-      Height = 18
+      Height = 41
       Align = alLeft
       Caption = 'Controle de Usu'#225'rios'
       Font.Charset = ANSI_CHARSET
@@ -40,6 +42,7 @@ object FormUserPerf: TFormUserPerf
       Font.Style = [fsBold]
       ParentFont = False
       Layout = tlCenter
+      ExplicitHeight = 18
     end
     object Image1: TImage
       Left = 0

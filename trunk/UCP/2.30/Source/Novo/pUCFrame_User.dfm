@@ -403,6 +403,7 @@ object UCFrame_User: TUCFrame_User
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnDblClick = BtAltClick
     Columns = <
       item
         Expanded = False

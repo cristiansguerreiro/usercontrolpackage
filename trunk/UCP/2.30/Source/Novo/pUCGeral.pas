@@ -40,6 +40,7 @@ type
     procedure SpeedUserLogClick(Sender: TObject);
     procedure SpeedUserMouseEnter(Sender: TObject);
     procedure SpeedUserMouseLeave(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   protected
     FrmFrame: TCustomFrame;
   private
@@ -73,6 +74,12 @@ begin
   if Assigned(FrmFrame) then
     FreeAndNil(FrmFrame);
   Action := caFree;
+end;
+
+procedure TFormUserPerf.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #27 then
+    FormuserPerf.Close;
 end;
 
 procedure TFormUserPerf.FormShow(Sender: TObject);

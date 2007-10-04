@@ -23,6 +23,7 @@ object Frame_Profile: TFrame_Profile
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnDblClick = BtnAcePerClick
     Columns = <
       item
         Expanded = False
