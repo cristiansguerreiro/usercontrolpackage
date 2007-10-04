@@ -79,7 +79,7 @@ end;
 procedure TFormUserPerf.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #27 then
-    FormuserPerf.Close;
+    Close;
 end;
 
 procedure TFormUserPerf.FormShow(Sender: TObject);
