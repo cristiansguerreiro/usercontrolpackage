@@ -25,7 +25,7 @@ package pckUserControl_RT;
 {$DESCRIPTION 'User Control Package 2'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
-{$I 'Usercontrol.inc'}
+{%TogetherDiagram 'ModelSupport_pckUserControl_RT\default.txaPackage'}
 
 requires
   designide,

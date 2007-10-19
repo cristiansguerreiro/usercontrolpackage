@@ -170,5 +170,3 @@
 (*
   Definições do Usuario
 *)
-
-//$DEFINE INDY

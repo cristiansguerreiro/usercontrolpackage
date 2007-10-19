@@ -43,9 +43,6 @@ contains
   UCObjSel_U in '..\Source\UCObjSel_U.pas',
   UCAbout in '..\Source\UCAbout.pas',
   UCIdle in '..\Source\UCIdle.pas',
-  UCEditorForm_U in '..\Source\UCEditorForm_U.pas',
-  UCXPSettings in '..\Source\UCXPSettings.pas',
-  UCXPStyle in '..\Source\UCXPStyle.pas',
-  UCAboutXpStyle_U in '..\Source\UCAboutXpStyle_U.pas';
+  UCEditorForm_U in '..\Source\UCEditorForm_U.pas';
 
 end.

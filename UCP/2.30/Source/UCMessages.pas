@@ -461,13 +461,15 @@ type
     property MsgSystem    : String read fMsgSystem write fMsgSystem;
   End;
 
-  TUCFieldType = class(TPersistent) // classe serve para controlar os tipos de campos
+  TUCTypeBancoDados = ( Interbase , Firebird , MySql , BDE );
+
+ { TUCFieldType = class(TPersistent) // classe serve para controlar os tipos de campos
                                   // no comando sql de create e alter table
   private
     fTypeChar: String;
     fTypeVarChar: String;
     fTypeInt: String;
-    fTypeMemo: String;
+   // fTypeMemo: String; removido, colocado no historico
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
@@ -476,8 +478,8 @@ type
     Property Type_VarChar   : String read fTypeVarChar write fTypeVarChar;
     property Type_Char      : String read fTypeChar write fTypeChar;
     property Type_Int       : String read fTypeInt write fTypeInt;
-    Property Type_MemoField : String read fTypeMemo write fTypeMemo;
-  end;
+   // Property Type_MemoField : String read fTypeMemo write fTypeMemo; removido colocado no historico
+  end;      }
 
   TUCUserSettings = class(TPersistent)
   private
@@ -493,15 +495,16 @@ type
     FLogControlFormMSG:  TUCLogControlFormMSG;
     FAppMessagesMSG:     TUCAppMessagesMSG;
     FPosition:           TPosition;
-    fTypeFields: TUCFieldType;
     fLanguage: TUCLanguage;
     fUsersLogged: TUCCadUserLoggedMSG;
+    fBancoDados: TUCTypeBancoDados;
     procedure SetFResetPassword(const Value: TUCResetPassword);
     procedure SetFProfileUserFormMSG(const Value: TUCProfileUserFormMSG);
     procedure SetFAddProfileFormMSG(const Value: TUCAddProfileFormMSG);
     procedure SetFLogControlFormMSG(const Value: TUCLogControlFormMSG);
     procedure SetAppMessagesMSG(const Value: TUCAppMessagesMSG);
     procedure SetfUsersLogged(const Value: TUCCadUserLoggedMSG);
+    procedure SetfBancoDados(const Value: TUCTypeBancoDados);
   protected
     procedure SetFUserCommonMsg(const Value: TUCUserCommonMSG);
     procedure SetFFormLoginMsg(const Value: TUCLoginFormMSG);
@@ -510,6 +513,10 @@ type
     procedure SetFPermissFormMSG(const Value: TUCPermissFormMSG);
     procedure SetFTrocaSenhaFormMSG(const Value: TUCTrocaSenhaFormMSG);
   public
+    Type_Int     ,
+    Type_Char    ,
+    Type_VarChar ,
+    Type_Memo    : String;
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
@@ -527,13 +534,15 @@ type
     property ChangePassword: TUCTrocaSenhaFormMSG read FTrocaSenhaFormMSG write SetFTrocaSenhaFormMSG;
     property ResetPassword: TUCResetPassword read FResetPassword write SetFResetPassword;
     property WindowsPosition: TPosition read FPosition write FPosition;
-    Property TypeFieldsDB : TUCFieldType read fTypeFields write fTypeFields;
+    Property BancoDados  : TUCTypeBancoDados read fBancoDados write SetfBancoDados;
     property Language : TUCLanguage read fLanguage write fLanguage;
     property UsersLogged : TUCCadUserLoggedMSG read fUsersLogged write SetfUsersLogged;
   end;
 
 
 implementation
+
+uses UCSettings;
 
 { TUserSettings }
 
@@ -560,8 +569,9 @@ begin
   FResetPassword      := TUCResetPassword.Create(nil);
   FLogControlFormMSG  := TUCLogControlFormMSG.Create(nil);
   FPosition           := poMainFormCenter;
-  fTypeFields         := TUCFieldType.Create(Nil);
+  fBancoDados         := FireBird;
   fUsersLogged        := TUCCadUserLoggedMSG.Create(nil);
+  RetornaSqlBancoDados( fBancoDados, Type_Int,Type_Char,Type_VarChar,Type_Memo );
 end;
 
 destructor TUCUserSettings.Destroy;
@@ -577,7 +587,6 @@ begin
   SysUtils.FreeAndNil(FTrocaSenhaFormMSG);
   SysUtils.FreeAndNil(FResetPassword);
   SysUtils.FreeAndNil(FLogControlFormMSG);
-  SysUtils.FreeAndNil(fTypeFields);
   SysUtils.FreeAndNil(fUsersLogged);
   inherited;
 end;
@@ -595,6 +604,12 @@ end;
 procedure TUCUserSettings.SetFAddUserFormMSG(const Value: TUCAddUserFormMSG);
 begin
   AddChangeUser := Value;
+end;
+
+procedure TUCUserSettings.SetfBancoDados(const Value: TUCTypeBancoDados);
+begin
+  fBancoDados := Value;
+  RetornaSqlBancoDados( fBancoDados , Type_Int,Type_Char,Type_VarChar,Type_Memo );
 end;
 
 procedure TUCUserSettings.SetFCadUserFormMSG(const Value: TUCCadUserFormMSG);
@@ -1079,7 +1094,7 @@ end;
 { TUCHistoryMSG }
 
 { TUCFieldType }
-
+ {
 procedure TUCFieldType.Assign(Source: TPersistent);
 begin
   if Source is TUCFieldType then
@@ -1087,7 +1102,6 @@ begin
       Self.Type_VarChar   := TUCFieldType(Source).Type_VarChar;
       Self.Type_Char      := TUCFieldType(Source).Type_Char;
       Self.Type_Int       := TUCFieldType(Source).Type_Int;
-      Self.Type_MemoField := TUCFieldType(Source).Type_MemoField;
     end
   else
     inherited;
@@ -1102,7 +1116,7 @@ destructor TUCFieldType.Destroy;
 begin
 
   inherited;
-end;
+end;          }
 
 { TUCCadUserLoggedMSG }
 

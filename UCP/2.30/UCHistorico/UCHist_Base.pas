@@ -9,6 +9,7 @@ uses
   UCHist_Type,
   UCBase;
 
+
 type
   TUCControlHistorico = class(TComponent)
   private
@@ -109,31 +110,31 @@ begin
            Format('CREATE TABLE %s ( %s %s(250), %s %s , %s %s(10), %s %s(8), %s %s(250), %s %s(100), %s %s(50) , %s %s, %s %s(50) )  ',
              [ TableHistory.TableName,
                TableHistory.FieldApplicationID,
-               fUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+               fUserControl.UserSettings.Type_VarChar,
 
                TableHistory.FieldUserID,
-               fUserControl.UserSettings.TypeFieldsDB.Type_Int,
+               fUserControl.UserSettings.Type_Int,
 
                TableHistory.FieldEventDate,
-               fUserControl.UserSettings.TypeFieldsDB.Type_Char,
+               fUserControl.UserSettings.Type_Char,
 
                TableHistory.FieldEventTime,
-               fUserControl.UserSettings.TypeFieldsDB.Type_Char,
+               fUserControl.UserSettings.Type_Char,
 
                TableHistory.FieldForm,
-               fUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+               fUserControl.UserSettings.Type_VarChar,
 
                TableHistory.FieldCaptionForm,
-               fUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+               fUserControl.UserSettings.Type_VarChar,
 
                TableHistory.FieldEvent,
-               fUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+               fUserControl.UserSettings.Type_VarChar,
 
                TableHistory.FieldObs,
-               fUserControl.UserSettings.TypeFieldsDB.Type_MemoField,
+               fUserControl.UserSettings.Type_Memo,
 
                TableHistory.FieldTableName,
-               fUserControl.UserSettings.TypeFieldsDB.Type_VarChar]));
+               fUserControl.UserSettings.Type_VarChar]));
 
 
       if Assigned(fUsersHistory.MenuItem) and (not Assigned(fUsersHistory.MenuItem.OnClick)) then
