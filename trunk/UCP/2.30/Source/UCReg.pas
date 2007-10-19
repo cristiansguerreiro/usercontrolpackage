@@ -41,14 +41,6 @@ type
     function GetValue: String; override;
   end;
 
-  {.$IFDEF DELPHI7}
-  TUCAboutXpStyleVarProperty = class(TStringProperty)
-    function GetAttributes: TPropertyAttributes; override;
-    procedure Edit; override;
-    function GetValue: String; override;
-  end;
-  {.$ENDIF}
-
 procedure Register;
 procedure ShowControlsEditor(Componente: TUCControls);
 procedure ShowUserControlsEditor(Componente: TUserControl);
@@ -62,10 +54,6 @@ uses
   UCAbout,
   UCIdle,
   UCObjSel_U,
-  {.$IFDEF DELPHI7}
-  UCAboutXPStyle_U,
-  UCXPStyle,
-  {.$ENDIF}
   UCEditorForm_U,
   ActnList,
   ActnMan,
@@ -85,14 +73,7 @@ begin
     TUCApplicationMessage,
     TUCIdle,
     TMailUserControl
-    {.$IFDEF DELPHI7}
-    , TUCXPStyle
-    {.$ENDIF}
     ]);
-
-  {.$IFDEF DELPHI7}
-  RegisterPropertyEditor(TypeInfo(TUCAboutXpStyleVar), nil, '', TUCAboutXpStyleVarProperty);
-  {.$ENDIF}
 
   RegisterPropertyEditor(TypeInfo(TUCAboutVar), TUserControl, 'About', TUCAboutVarProperty);
   RegisterPropertyEditor(TypeInfo(TUCComponentsVar), TUserControl, 'Components', TUCComponentsVarProperty);
@@ -227,16 +208,6 @@ begin
             User.Action := TAction(FormularioDono.Components[I]);
           if (FormularioDono.Components[I].Name = UserActionMenuItem) and (Formulario.cbUserMenuItem.ItemIndex >= 0) then
             User.MenuItem := TMenuItem(FormularioDono.Components[I]);
-
-{          if (FormularioDono.Components[I].Name = UserProfileActionMenuItem) and (Formulario.cbUserProfileAction.ItemIndex >= 0) then
-            UserProfile.Action := TAction(FormularioDono.Components[I]);
-          if (FormularioDono.Components[I].Name = UserProfileActionMenuItem) and (Formulario.cbUserProfileMenuItem.ItemIndex >= 0) then
-            UserProfile.MenuItem := TMenuItem(FormularioDono.Components[I]);
-          if (FormularioDono.Components[I].Name = LogControlActionMeuItem) and (Formulario.cbLogControlAction.ItemIndex >= 0) then
-            LogControl.Action := TAction(FormularioDono.Components[I]);
-          if (FormularioDono.Components[I].Name = LogControlActionMeuItem) and (Formulario.cbLogControlMenuItem.ItemIndex >= 0) then
-            LogControl.MenuItem := TMenuItem(FormularioDono.Components[I]); }
-
           if (FormularioDono.Components[I].Name = UserPasswordChangeActionMenuItem) and (Formulario.cbUserPasswordChangeAction.ItemIndex >= 0) then
             UserPasswordChange.Action := TAction(FormularioDono.Components[I]);
           if (FormularioDono.Components[I].Name = UserPasswordChangeActionMenuItem) and (Formulario.cbUserPasswordChangeMenuItem.ItemIndex >= 0) then
@@ -313,7 +284,7 @@ begin
   FModulo := (BorlandIDEServices as IOTAModuleServices).FindFormModule(FUCControl.UserControl.Owner.Name);
   if FModulo = nil then
   begin
-    ShowMessage('Modulo ' + FUCControl.UserControl.Owner.Name + ' nao encontrado!');
+    ShowMessage('Modulo ' + FUCControl.UserControl.Owner.Name + ' não encontrado!');
     Exit;
   end
   else
@@ -329,30 +300,8 @@ begin
     end;
 end;
 
-{.$IFDEF DELPHI7}
- { TUCAboutXpStyleVarProperty }
-
-procedure TUCAboutXpStyleVarProperty.Edit;
-begin
-  with TUCAboutXpStyle.Create(nil) do
-  begin
-    ShowModal;
-    Free;
-  end;
-end;
-
-function TUCAboutXpStyleVarProperty.GetAttributes: TPropertyAttributes;
-begin
-  Result := [paDialog, paReadOnly];
-end;
-
-function TUCAboutXpStyleVarProperty.GetValue: String;
-begin
-  Result := 'About...';
-end;
-{.$ENDIF}
-
 {TUCControlsEditor}
+
 procedure TUCControlsEditor.Edit;
 begin
   ShowControlsEditor(TUCControls(Component));
@@ -365,7 +314,7 @@ end;
 
 function TUCControlsEditor.GetVerb(Index: Integer): String;
 begin
-  Result := '&Select Components...';
+  Result := '&Selecionar Componentes...';
 end;
 
 function TUCControlsEditor.GetVerbCount: Integer;

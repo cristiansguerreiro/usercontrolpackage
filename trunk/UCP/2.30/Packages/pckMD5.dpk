@@ -24,6 +24,7 @@ package pckMD5;
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'MD5SUM Package'}
 {$IMPLICITBUILD OFF}
+{%TogetherDiagram 'ModelSupport_pckMD5\default.txaPackage'}
 
 requires
   rtl;

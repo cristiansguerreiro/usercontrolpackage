@@ -23,9 +23,9 @@ type
     FUserCommomMSG:      TUCUserCommonMSG;
     FAppMessagesMSG:     TUCAppMessagesMSG;
     FPosition:           TPosition;
-    fTypeFields: TUCFieldType;
     fLanguage: TUCLanguage;
     fUsersLogged: TUCCadUserLoggedMSG;
+    fBancoDados: TUCTypeBancoDados;
     procedure SetFAddProfileFormMSG(const Value: TUCAddProfileFormMSG);
     procedure SetFAddUserFormMSG(const Value: TUCAddUserFormMSG);
     procedure SetFCadUserFormMSG(const Value: TUCCadUserFormMSG);
@@ -39,8 +39,13 @@ type
     procedure SetAppMessagesMSG(const Value: TUCAppMessagesMSG);
     procedure SetfLanguage(const Value: TUCLanguage);
     procedure SetfUsersLogged(const Value: TUCCadUserLoggedMSG);
+    procedure SetfBancoDados(const Value: TUCTypeBancoDados);
   protected
   public
+    Type_Int     ,
+    Type_Char    ,
+    Type_VarChar ,
+    Type_Memo    : String;  
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
@@ -56,7 +61,7 @@ type
     property Rights: TUCPermissFormMSG read FPermissFormMSG write SetFPermissFormMSG;
     property ChangePassword: TUCTrocaSenhaFormMSG read FTrocaSenhaFormMSG write SetFTrocaSenhaFormMSG;
     property ResetPassword: TUCResetPassword read FResetPassword write SetFResetPassword;
-    Property TypeFieldsDB : TUCFieldType read fTypeFields write fTypeFields;
+    Property BancoDados  : TUCTypeBancoDados read fBancoDados write SetfBancoDados;
     property WindowsPosition: TPosition read FPosition write FPosition default poMainFormCenter;
     Property Language : TUCLanguage read fLanguage write SetfLanguage;
     property UsersLogged : TUCCadUserLoggedMSG read fUsersLogged write SetfUsersLogged;    
@@ -67,6 +72,8 @@ procedure IniSettings2(DestSettings: TUCSettings);
 
 procedure AlterLanguage(DestSettings: TUCUserSettings);
 procedure AlterLanguage2(DestSettings: TUCSettings);
+procedure RetornaSqlBancoDados( fBanco : TUCTypeBancoDados ; var Int, Char, VarChar,
+  Memo: String);
 
 implementation
 
@@ -77,6 +84,21 @@ uses
 //  UCConsts;
 
 {$IFDEF DELPHI9_UP} {$REGION 'Inicializacao'} {$ENDIF}
+
+procedure RetornaSqlBancoDados( fBanco : TUCTypeBancoDados ; var Int, Char, VarChar,
+  Memo: String);
+begin
+  Int     := 'INT';
+  Char    := 'CHAR';
+  VarChar := 'VARCHAR';
+
+  Case fBanco of
+    Firebird  : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
+    Interbase : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
+    MySql     : Memo := 'MEDIUMBLOB';
+    BDE       : Memo := 'BLOB(1024,1)';
+  End;
+end;
 
 procedure IniSettings(DestSettings: TUCUserSettings);
 var
@@ -423,7 +445,7 @@ begin
   end;
 
   DestSettings.WindowsPosition := poMainFormCenter;
-
+ { mudar aqui
     With DestSettings.TypeFieldsDB do
      Begin
        If Type_VarChar = '' then
@@ -432,9 +454,7 @@ begin
          Type_Char      := 'Char';
        if Type_Int = '' then
          Type_Int       := 'Int';
-       if Type_MemoField = '' then
-         Type_MemoField := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
-     end;
+     end;   }
 
 
     with DestSettings.UsersLogged do
@@ -809,7 +829,7 @@ begin
 
   DestSettings.WindowsPosition := poMainFormCenter;
 
-   With DestSettings.TypeFieldsDB do
+ {  With DestSettings.TypeFieldsDB do
      Begin
        If Type_VarChar = '' then
          Type_VarChar   := 'VarChar';
@@ -817,9 +837,7 @@ begin
          Type_Char      := 'Char';
        if Type_Int = '' then
          Type_Int       := 'Int';
-       if Type_MemoField = '' then
-         Type_MemoField := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
-     end;
+     end;   mudar aqui }
 
   with DestSettings.UsersLogged do
       Begin
@@ -1301,7 +1319,8 @@ begin
   FTrocaSenhaFormMSG  := TUCTrocaSenhaFormMSG.Create(nil);
   FResetPassword      := TUCResetPassword.Create(nil);
   FLogControlFormMSG  := TUCLogControlFormMSG.Create(nil);
-  fTypeFields         := TUCFieldType.Create(Nil);
+  fBancoDados         := FireBird;
+  RetornaSqlBancoDados( fBancoDados, Type_Int,Type_Char,Type_VarChar,Type_Memo );
   fUsersLogged        := TUCCadUserLoggedMSG.Create(Nil);
   if csDesigning in ComponentState then
     IniSettings2(Self);
@@ -1321,7 +1340,6 @@ begin
   FTrocaSenhaFormMSG.Free;
   FResetPassword.Free;
   FLogControlFormMSG.Free;
-  fTypeFields.Free;
   fUsersLogged.Free;
   inherited;
 end;
@@ -1339,6 +1357,12 @@ end;
 procedure TUCSettings.SetFAddUserFormMSG(const Value: TUCAddUserFormMSG);
 begin
   FAddUserFormMSG := Value;
+end;
+
+procedure TUCSettings.SetfBancoDados(const Value: TUCTypeBancoDados);
+begin
+  fBancoDados := Value;
+  RetornaSqlBancoDados( fBancoDados, Type_Int,Type_Char,Type_VarChar,Type_Memo );  
 end;
 
 procedure TUCSettings.SetFCadUserFormMSG(const Value: TUCCadUserFormMSG);

@@ -58,7 +58,7 @@ const
 
 // Version
 const
-  UCVersion = '2.30 RC 2';
+  UCVersion = '3.00 RC1';
 
 type
   // Pensando em usar GUID para gerar a chave das tabelas !!!!
@@ -1580,13 +1580,13 @@ procedure TUserControl.CriaTabelaMsgs(const TableName: String);
 begin
   if Assigned(DataConnector) then
     DataConnector.UCExecSQL('CREATE TABLE ' + TableName + ' ( ' +
-      'IdMsg   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
-      'UsrFrom ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
-      'UsrTo   ' + UserSettings.TypeFieldsDB.Type_Int + ' , ' +
-      'Subject ' + UserSettings.TypeFieldsDB.Type_VarChar + '(50),' +
-      'Msg     ' + UserSettings.TypeFieldsDB.Type_Varchar + '(255),' +
-      'DtSend  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12),' +
-      'DtReceive  ' + UserSettings.TypeFieldsDB.Type_Varchar + '(12) )');
+      'IdMsg   ' + UserSettings.Type_Int + ' , ' +
+      'UsrFrom ' + UserSettings.Type_Int + ' , ' +
+      'UsrTo   ' + UserSettings.Type_Int + ' , ' +
+      'Subject ' + UserSettings.Type_VarChar + '(50),' +
+      'Msg     ' + UserSettings.Type_Varchar + '(255),' +
+      'DtSend  ' + UserSettings.Type_Varchar + '(12),' +
+      'DtReceive  ' + UserSettings.Type_Varchar + '(12) )');
 end;
 
 destructor TUserControl.Destroy;
@@ -1689,7 +1689,7 @@ begin
       Sql := Format('alter table %s add %s %s(10)',
         [FTableUsers.TableName,
         FTableUsers.FieldDateExpired,
-        UserSettings.TypeFieldsDB.Type_Char]);
+        UserSettings.Type_Char]);
 
       if Assigned(DataConnector) then
         DataConnector.UCExecSQL(Sql);
@@ -1707,7 +1707,7 @@ begin
       Sql := Format('alter table %s add %s %s',
         [FTableUsers.TableName,
         FTableUsers.FieldUserExpired,
-        UserSettings.TypeFieldsDB.Type_Int]);
+        UserSettings.Type_Int]);
       if Assigned(DataConnector) then
         DataConnector.UCExecSQL(Sql);
       Sql := Format('update %s set %s = 1 where %s = ''U''',
@@ -1723,7 +1723,7 @@ begin
       Sql := Format('alter table %s add %s %s',
         [FTableUsers.TableName,
         FTableUsers.FieldUserDaysSun,
-        UserSettings.TypeFieldsDB.Type_Int]);
+        UserSettings.Type_Int]);
       if Assigned(DataConnector) then
         DataConnector.UCExecSQL(Sql);
       Sql := Format('update %s set %s = 30 where %s = ''U''',
@@ -1740,7 +1740,7 @@ begin
       Sql := Format('alter table %s add %s %s',
         [FTableUsers.TableName,
         FTableUsers.FieldUserInative,
-        UserSettings.TypeFieldsDB.Type_Int]);
+        UserSettings.Type_Int]);
       if Assigned(DataConnector) then
         DataConnector.UCExecSQL(Sql);
 
@@ -1772,7 +1772,7 @@ begin
   if TempDS.FindField(TableUsers.FieldKey) = nil then
   begin
     if Assigned(DataConnector) then
-      DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+      DataConnector.UCExecSQL('ALTER TABLE ' + TableUsers.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1811,7 +1811,7 @@ begin
   if TempDS.FindField(TableRights.FieldKey) = nil then
   begin
     if Assigned(DataConnector) then
-      DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+      DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + ' ADD ' + TableUsers.FieldKey + ' ' + UserSettings.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -1845,7 +1845,7 @@ begin
   begin
     if Assigned(DataConnector) then
       DataConnector.UCExecSQL('ALTER TABLE ' + TableRights.TableName + 'EX ADD ' +
-        TableUsers.FieldKey + '' + UserSettings.TypeFieldsDB.Type_VarChar + ' (255)');
+        TableUsers.FieldKey + '' + UserSettings.Type_VarChar + ' (255)');
     TempDS.First;
     with TempDS do
       while not EOF do
@@ -2270,8 +2270,8 @@ var
   TipoCampo: String;
 begin
   case Self.Criptografia of
-    cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_Varchar + '(250)';
-    cMD5: TipoCampo    := UserSettings.TypeFieldsDB.Type_Varchar + '(32)';
+    cPadrao: TipoCampo := UserSettings.Type_Varchar + '(250)';
+    cMD5: TipoCampo    := UserSettings.Type_Varchar + '(32)';
   end;
 
   with TableRights do
@@ -2280,11 +2280,11 @@ begin
       SQLStmt := Format('CREATE TABLE %s( %s %s, %s %s(50), %s %s(50), %s %s )',
         [TableName,
         FieldUserID,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
         FieldModule,
-        UserSettings.TypeFieldsDB.Type_VarChar,
+        UserSettings.Type_VarChar,
         FieldComponentName,
-        UserSettings.TypeFieldsDB.Type_Varchar,
+        UserSettings.Type_Varchar,
         FieldKey,
         TipoCampo]);
       if Assigned(DataConnector) then
@@ -2295,13 +2295,13 @@ begin
       SQLStmt := Format('CREATE TABLE %sEX( %s %s, %s %s(50), %s %s(50), %s %s(50), %s %s )',
         [TableName,
         FieldUserID,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
         FieldModule,
-        UserSettings.TypeFieldsDB.Type_VarChar,
+        UserSettings.Type_VarChar,
         FieldComponentName,
-        UserSettings.TypeFieldsDB.Type_VarChar,
+        UserSettings.Type_VarChar,
         FieldFormName,
-        UserSettings.TypeFieldsDB.Type_VarChar,
+        UserSettings.Type_VarChar,
         FieldKey,
         TipoCampo]);
       if Assigned(DataConnector) then
@@ -2394,11 +2394,11 @@ begin
       Format('CREATE TABLE %S  (APPLICATIONID %s(250), IDUSER %s , MSG %s(250), DATA %s(14), NIVEL %s)',
       [
       LogControl.TableLog,
-      UserSettings.TypeFieldsDB.Type_VarChar,
-      UserSettings.TypeFieldsDB.Type_Int,
-      UserSettings.TypeFieldsDB.Type_Varchar,
-      UserSettings.TypeFieldsDB.Type_Varchar,
-      UserSettings.TypeFieldsDB.Type_Int
+      UserSettings.Type_VarChar,
+      UserSettings.Type_Int,
+      UserSettings.Type_Varchar,
+      UserSettings.Type_Varchar,
+      UserSettings.Type_Int
       ]));
 end;
 
@@ -2434,8 +2434,8 @@ var
   PasswordInicial:  String;
 begin
   case Self.Criptografia of
-    cPadrao: TipoCampo := UserSettings.TypeFieldsDB.Type_VarChar + '(250)';
-    cMD5: TipoCampo    := UserSettings.TypeFieldsDB.Type_Varchar + '(32)';
+    cPadrao: TipoCampo := UserSettings.Type_VarChar + '(250)';
+    cMD5: TipoCampo    := UserSettings.Type_Varchar + '(32)';
   end;
 
   if not TableExists then
@@ -2458,43 +2458,43 @@ begin
         '%s %s )',
         [TableName,
         FieldUserID,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
 
         FieldUserName,
-        UserSettings.TypeFieldsDB.Type_VarChar,
+        UserSettings.Type_VarChar,
 
         FieldLogin,
-        UserSettings.TypeFieldsDB.Type_VarChar,
+        UserSettings.Type_VarChar,
 
         FieldPassword,
         TipoCampo,
 
         FieldDateExpired,
-        UserSettings.TypeFieldsDB.Type_Char,
+        UserSettings.Type_Char,
 
         FieldUserExpired,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
 
         FieldUserDaysSun,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
 
         FieldEmail,
-        UserSettings.TypeFieldsDB.Type_Varchar,
+        UserSettings.Type_Varchar,
 
         FieldPrivileged,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
 
         FieldTypeRec,
-        UserSettings.TypeFieldsDB.Type_Char,
+        UserSettings.Type_Char,
 
         FieldProfile,
-        UserSettings.TypeFieldsDB.Type_Int,
+        UserSettings.Type_Int,
 
         FieldKey,
         TipoCampo,
 
         FieldUserInative,
-        UserSettings.TypeFieldsDB.Type_Int
+        UserSettings.Type_Int
         ]);
 
       if Assigned(DataConnector) then
@@ -2809,13 +2809,12 @@ begin
     MsgSend_LabelMessageText := SourceSettings.AppMessages.MsgSend_LabelMessageText; //added by fduenas
   end;
 
-  with UserSettings.TypeFieldsDB do
+{  with UserSettings.TypeFieldsDB do
   begin
-    Type_VarChar   := SourceSettings.TypeFieldsDB.Type_VarChar;
-    Type_Char      := SourceSettings.TypeFieldsDB.Type_Char;
-    Type_Int       := SourceSettings.TypeFieldsDB.Type_Int;
-    Type_MemoField := SourceSettings.TypeFieldsDB.Type_MemoField;
-  end;
+    Type_VarChar   := SourceSettings.Type_VarChar;
+    Type_Char      := SourceSettings.Type_Char;
+    Type_Int       := SourceSettings.Type_Int;
+  end;  atenção mudar aqui  }
 
   UserSettings.WindowsPosition := SourceSettings.WindowsPosition;
 end;
@@ -3915,19 +3914,19 @@ begin
     SQLStmt := Format('CREATE TABLE %s (%s %s(38), %s %s, %s %s(50), %s %s(50), %s %s(14))',
       [TableName,
       FieldLogonID,
-      FUserControl.UserSettings.TypeFieldsDB.Type_Char,
+      FUserControl.UserSettings.Type_Char,
 
       FieldUserID,
-      FUserControl.UserSettings.TypeFieldsDB.Type_Int,
+      FUserControl.UserSettings.Type_Int,
 
       FieldApplicationID,
-      FUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+      FUserControl.UserSettings.Type_VarChar,
 
       FieldMachineName,
-      FUserControl.UserSettings.TypeFieldsDB.Type_VarChar,
+      FUserControl.UserSettings.Type_VarChar,
 
       FieldData,
-      FUserControl.UserSettings.TypeFieldsDB.Type_VarChar]);
+      FUserControl.UserSettings.Type_VarChar]);
   if Assigned(FUserControl.DataConnector) then
     FUserControl.DataConnector.UCExecSQL(SQLStmt);
 end;
