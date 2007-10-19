@@ -58,7 +58,7 @@ const
 
 // Version
 const
-  UCVersion = '3.00 RC1';
+  UCVersion = '2.30 RC3';
 
 type
   // Pensando em usar GUID para gerar a chave das tabelas !!!!
