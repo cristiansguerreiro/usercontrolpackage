@@ -96,7 +96,7 @@ begin
     Firebird  : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
     Interbase : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
     MySql     : Memo := 'MEDIUMBLOB';
-    BDE       : Memo := 'BLOB(1024,1)';
+    PARADOX   : Memo := 'BLOB(1024,1)';
   End;
 end;
 

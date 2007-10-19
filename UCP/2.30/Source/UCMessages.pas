@@ -461,7 +461,7 @@ type
     property MsgSystem    : String read fMsgSystem write fMsgSystem;
   End;
 
-  TUCTypeBancoDados = ( Interbase , Firebird , MySql , BDE );
+  TUCTypeBancoDados = ( Interbase , Firebird , MySql , PARADOX );
 
  { TUCFieldType = class(TPersistent) // classe serve para controlar os tipos de campos
                                   // no comando sql de create e alter table
