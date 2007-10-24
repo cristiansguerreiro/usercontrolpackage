@@ -1,4 +1,4 @@
-unit UCMyDACReg;
+unit UCMyDACConnReg;
 
 interface
 
