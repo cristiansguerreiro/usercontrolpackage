@@ -461,25 +461,7 @@ type
     property MsgSystem    : String read fMsgSystem write fMsgSystem;
   End;
 
-  TUCTypeBancoDados = ( Interbase , Firebird , MySql , PARADOX );
-
- { TUCFieldType = class(TPersistent) // classe serve para controlar os tipos de campos
-                                  // no comando sql de create e alter table
-  private
-    fTypeChar: String;
-    fTypeVarChar: String;
-    fTypeInt: String;
-   // fTypeMemo: String; removido, colocado no historico
-  public
-    constructor Create(AOwner: TComponent);
-    destructor Destroy; override;
-    procedure Assign(Source: TPersistent); override;
-  published
-    Property Type_VarChar   : String read fTypeVarChar write fTypeVarChar;
-    property Type_Char      : String read fTypeChar write fTypeChar;
-    property Type_Int       : String read fTypeInt write fTypeInt;
-   // Property Type_MemoField : String read fTypeMemo write fTypeMemo; removido colocado no historico
-  end;      }
+  TUCTypeBancoDados = ( Interbase , Firebird , MySql , PARADOX, Oracle );
 
   TUCUserSettings = class(TPersistent)
   private
