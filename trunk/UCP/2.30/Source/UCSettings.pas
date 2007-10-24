@@ -72,6 +72,7 @@ procedure IniSettings2(DestSettings: TUCSettings);
 
 procedure AlterLanguage(DestSettings: TUCUserSettings);
 procedure AlterLanguage2(DestSettings: TUCSettings);
+
 procedure RetornaSqlBancoDados( fBanco : TUCTypeBancoDados ; var Int, Char, VarChar,
   Memo: String);
 
@@ -97,6 +98,7 @@ begin
     Interbase : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
     MySql     : Memo := 'MEDIUMBLOB';
     PARADOX   : Memo := 'BLOB(1024,1)';
+    Oracle    : Memo := 'LONG RAW';
   End;
 end;
 
