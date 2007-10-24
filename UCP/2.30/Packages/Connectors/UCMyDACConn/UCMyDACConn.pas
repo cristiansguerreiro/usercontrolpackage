@@ -12,10 +12,10 @@ unit UCMyDACConn;
 interface
 
 uses
-  SysUtils, Classes, UCBase, DB, DBAccess, MyAccess, MemDS;
+  UCDataConnector,SysUtils, Classes, UCBase, DB, DBAccess, MyAccess, MemDS;
 
 type
-  TUCMyDACConn = class(TUCDataConn)
+  TUCMyDACConn = class(TUCDataConnector)
   private
     FConnection : TMyConnection;
     procedure SetFConnection(Value : TMyConnection);
