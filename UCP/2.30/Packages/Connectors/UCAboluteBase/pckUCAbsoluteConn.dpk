@@ -22,6 +22,7 @@ package pckUCAbsoluteConn;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DESCRIPTION 'User Control Absolute DataBase Connectors'}
 {$IMPLICITBUILD ON}
 
 requires
