@@ -793,7 +793,8 @@ begin
     for Contador := 0 to Pred(Owner.ComponentCount) do
       if Owner.Components[Contador] is TUCSettings then
       begin
-        Language := TUCSettings(Owner.Components[Contador]).Language;// torna a linguage do UCSETTINGS como padrão
+        Language                 := TUCSettings(Owner.Components[Contador]).Language;// torna a linguage do UCSETTINGS como padrão
+        FUserSettings.BancoDados := TUCSettings(Owner.Components[Contador]).BancoDados;
         ApplySettings(TUCSettings(Owner.Components[Contador]));
       end;
 
