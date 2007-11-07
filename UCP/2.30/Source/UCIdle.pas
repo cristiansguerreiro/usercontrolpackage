@@ -36,6 +36,7 @@ type
       AOperation: TOperation); override; //added by fduenas
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     procedure DoIdle;
   published
     property UserControl : TUserControl read FUserControl write SetUserControl; //changed by fduenas
@@ -52,6 +53,12 @@ implementation
 constructor TUCIdle.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+end;
+
+destructor TUCIdle.Destroy;
+begin
+  FreeAndNil( FThIdle );
+  inherited;
 end;
 
 procedure TUCIdle.DoIdle;
