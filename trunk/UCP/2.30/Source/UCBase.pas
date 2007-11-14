@@ -3366,7 +3366,7 @@ begin
       Usercontrol.DeleteLoginMonitor(Self);
 
   Self.FVerifThread.Terminate;
-
+  FreeAndNil(FVerifThread);
   inherited Destroy;
 end;
 
