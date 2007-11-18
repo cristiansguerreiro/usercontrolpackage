@@ -99,6 +99,7 @@ begin
     MySql     : Memo := 'MEDIUMBLOB';
     PARADOX   : Memo := 'BLOB(1024,1)';
     Oracle    : Memo := 'LONG RAW';
+    SqlServer : Memo := 'NTEXT';
   End;
 end;
 
