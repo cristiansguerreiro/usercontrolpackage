@@ -461,7 +461,7 @@ type
     property MsgSystem    : String read fMsgSystem write fMsgSystem;
   End;
 
-  TUCTypeBancoDados = ( Interbase , Firebird , MySql , PARADOX, Oracle , SqlServer );
+  TUCTypeBancoDados = ( Interbase , Firebird , MySql , PARADOX, Oracle , SqlServer, PostgreSQL );
 
   TUCUserSettings = class(TPersistent)
   private

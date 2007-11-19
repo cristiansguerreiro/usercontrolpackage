@@ -94,12 +94,13 @@ begin
   VarChar := 'VARCHAR';
 
   Case fBanco of
-    Firebird  : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
-    Interbase : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
-    MySql     : Memo := 'MEDIUMBLOB';
-    PARADOX   : Memo := 'BLOB(1024,1)';
-    Oracle    : Memo := 'LONG RAW';
-    SqlServer : Memo := 'NTEXT';
+    Firebird   : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
+    Interbase  : Memo := 'BLOB SUB_TYPE 1 SEGMENT SIZE 1024';
+    MySql      : Memo := 'MEDIUMBLOB';
+    PARADOX    : Memo := 'BLOB(1024,1)';
+    Oracle     : Memo := 'LONG RAW';
+    SqlServer  : Memo := 'NTEXT';
+    PostgreSQL : Memo := 'TEXT';
   End;
 end;
 
