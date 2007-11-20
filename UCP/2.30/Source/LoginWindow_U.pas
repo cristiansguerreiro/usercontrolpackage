@@ -126,7 +126,10 @@ end;
 procedure TfrmLoginWindow.FormKeyPress(Sender: TObject; var Key: char);
 begin
   if Key = #13 then
-    btOK.Click;
+    Begin
+      Key := #0;
+      Perform(WM_NEXTDLGCTL,0,0);
+    End;
 end;
 
 procedure TfrmLoginWindow.FormActivate(Sender: TObject);

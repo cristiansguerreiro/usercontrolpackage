@@ -3388,9 +3388,6 @@ begin
     Usercontrol.AddLoginMonitor(Self);
     if not FUserControl.DataConnector.UCFindTable(TableMessages) then
       FUserControl.CriaTabelaMsgs(TableMessages);
-  {    FVerifThread := TVerifThread.Create(True);
-      FVerifThread.AOwner := Self;
-      FVerifThread.FreeOnTerminate := True;}
   end;
   FReady := True;
 end;
