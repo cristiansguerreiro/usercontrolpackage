@@ -15,6 +15,7 @@ object FormUserPerf: TFormUserPerf
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
+  OnDestroy = FormDestroy
   OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96

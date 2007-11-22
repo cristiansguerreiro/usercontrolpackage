@@ -409,7 +409,7 @@ object UCFrame_User: TUCFrame_User
         Expanded = False
         FieldName = 'Nome'
         Title.Alignment = taCenter
-        Width = 251
+        Width = 239
         Visible = True
       end
       item

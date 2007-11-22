@@ -58,6 +58,7 @@ type
     FUsercontrol:            TUserControl;
     FDataSetCadastroUsuario: TDataset;
     procedure SetWindow;
+    destructor Destroy; override;    
     { Public declarations }
   end;
 
@@ -165,6 +166,13 @@ begin
       FUsercontrol.ChangePassword(FDataSetCadastroUsuario.FieldByName('IDUser').AsInteger, TSenhaForm(FormSenha).edtSenha.Text);
     End;
   FreeAndNil(FormSenha);
+end;
+
+destructor TUCFrame_User.Destroy;
+begin
+   //nada a destruir
+  //não destruir o FDataSetCadastroUsuario o USERCONTROL toma conta dele
+  inherited;
 end;
 
 procedure TUCFrame_User.BtAcessClick(Sender: TObject);

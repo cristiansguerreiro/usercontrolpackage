@@ -51,6 +51,7 @@ type
   public
     fUserControl:          TUserControl;
     FDataSetPerfilUsuario: TDataset;
+    destructor Destroy; override;    
     { Public declarations }
   end;
 
@@ -233,6 +234,13 @@ begin
   end;
   FDataSetPerfilUsuario.Close;
   FDataSetPerfilUsuario.Open;
+end;
+
+destructor TFrame_Profile.Destroy;
+begin
+  //nada a destruir
+  //não destruir o FDataSetPerfilUsuario o USERCONTROL toma conta dele
+  inherited;
 end;
 
 end.

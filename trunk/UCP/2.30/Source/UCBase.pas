@@ -105,8 +105,8 @@ type
     destructor Destroy; override;
   published
     { TODO 1 -oLuiz -cUpgrade : Terminar a implementação dos DataSets para os Perfis de Usuario Loggado }
-    property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;
-    property PerfilGrupo: TDataSet read FPerfilGrupo write FPerfilGrupo;
+    property PerfilUsuario: TDataSet read FPerfilUsuario write FPerfilUsuario;  //Cadastro de Usuarios
+    property PerfilGrupo: TDataSet read FPerfilGrupo write FPerfilGrupo;        //Cadastro de Perfil
   end;
 
   TUCUser = class(TPersistent) // armazenar menuitem ou action responsavel pelo controle de usuarios
@@ -647,7 +647,7 @@ uses
 
 {$IFDEF DELPHI9_UP} {$REGION 'TUSerControl'} {$ENDIF}
 
-{ TUserControl }
+{ TUserControl } 
 
 constructor TUserControl.Create(AOwner: TComponent);
 begin

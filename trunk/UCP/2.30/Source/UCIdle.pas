@@ -2,7 +2,7 @@ unit UCIdle;
 
 interface
 
-uses Classes, UCBase, Dialogs, Windows, Forms, ExtCtrls, Messages;
+uses Classes, UCBase, Dialogs, Windows, Forms, ExtCtrls, Messages,SysUtils;
 
 type
 
