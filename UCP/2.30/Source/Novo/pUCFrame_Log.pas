@@ -57,6 +57,7 @@ type
     DSLog, DSCmd: TDataset;
     FUsercontrol: TUserControl;
     procedure SetWindow;
+    destructor Destroy; override;
   end;
 
 implementation
@@ -65,6 +66,13 @@ uses
   UCDataInfo;
 
 {$R *.dfm}
+destructor TUCFrame_Log.Destroy;
+begin
+  FreeAndnil( DSLog );
+  FreeAndnil( DSCmd );
+  FreeAndNil( ListIdUser );
+  inherited;
+end;
 
 procedure TUCFrame_Log.ComboNivelDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
 var
@@ -203,7 +211,11 @@ begin
   ComboUsuario.Items.Clear;
   data1.Date     := EncodeDate(StrToInt(FormatDateTime('yyyy', Date)), 1, 1);
   data2.DateTime := Now;
-  ListIdUser     := TStringList.Create;
+  
+  if Assigned( ListIdUser ) = False then
+    ListIdUser     := TStringList.Create
+  else ListIdUser.Clear;
+
   try
     with FUsercontrol do
       if ((FUsercontrol.CurrentUser.Privileged = True) or
@@ -241,7 +253,7 @@ begin
       DSCmd.Next;
     end;
   finally
-    SysUtils.FreeAndNil(ListIdUser);
+
   end;
 
 

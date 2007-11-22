@@ -41,14 +41,13 @@ type
     procedure SpeedUserMouseEnter(Sender: TObject);
     procedure SpeedUserMouseLeave(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure FormDestroy(Sender: TObject);
   protected
     FrmFrame: TCustomFrame;
   private
     { Private declarations }
   public
     FUsercontrol:            TUserControl;
-    FDataSetPerfilUsuario:   TDataset;
-    FDataSetCadastroUsuario: TDataset;
     { Public declarations }
   end;
 
@@ -76,6 +75,11 @@ begin
   Action := caFree;
 end;
 
+procedure TFormUserPerf.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil( FrmFrame );
+end;
+
 procedure TFormUserPerf.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #27 then
@@ -86,15 +90,10 @@ procedure TFormUserPerf.FormShow(Sender: TObject);
 begin
   with FUsercontrol do
   begin
-    FDataSetCadastroUsuario := DataConnector.UCGetSQLDataset(
+    FUsercontrol.CurrentUser.PerfilUsuario := DataConnector.UCGetSQLDataset(
       Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Email, %s as Perfil, %s as Privilegiado, %s as Tipo, %s as Senha, %s as UserNaoExpira, %s as DaysOfExpire , %s as UserInative from %s Where %s  = %s ORDER BY %s', [TableUsers.FieldUserID, TableUsers.FieldLogin, TableUsers.FieldUserName, TableUsers.FieldEmail, TableUsers.FieldProfile, TableUsers.FieldPrivileged, TableUsers.FieldTypeRec, TableUsers.FieldPassword, TableUsers.FieldUserExpired, TableUsers.FieldUserDaysSun, TableUsers.FieldUserInative, TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('U'), TableUsers.FieldLogin]));
 
-    FDataSetPerfilUsuario := DataConnector.UCGetSQLDataset(
-      Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Tipo from %s Where %s  = %s ORDER BY %s',
-      [TableUsers.FieldUserID, TableUsers.FieldLogin, TableUsers.FieldUserName, TableUsers.FieldTypeRec,
-      TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('P'), TableUsers.FieldUserName]));
-
-    FDataSetPerfilUsuario := DataConnector.UCGetSQLDataset(
+    FUsercontrol.CurrentUser.PerfilGrupo := DataConnector.UCGetSQLDataset(
       Format('Select %s as IdUser, %s as Login, %s as Nome, %s as Tipo from %s Where %s  = %s ORDER BY %s',
       [TableUsers.FieldUserID, TableUsers.FieldLogin, TableUsers.FieldUserName, TableUsers.FieldTypeRec,
       TableUsers.TableName, TableUsers.FieldTypeRec, QuotedStr('P'), TableUsers.FieldUserName]));
@@ -108,7 +107,6 @@ begin
 
   SpeedUser.Caption    := FUsercontrol.UserSettings.Log.ColUser;
   SpeedPerfil.Caption  := FUsercontrol.UserSettings.UsersProfile.ColProfile;
-  //  SpeedLog.Caption    := FUsercontrol.UserSettings.Log;
   SpeedUserLog.Caption := FUsercontrol.UserSettings.UsersLogged.LabelDescricao;
 
 end;
@@ -121,11 +119,11 @@ begin
     FreeAndNil(FrmFrame);
 
   FrmFrame                                                     := TFrame_Profile.Create(Self);
-  TFrame_Profile(FrmFrame).DataPerfil.DataSet                  := FDataSetPerfilUsuario;
+  TFrame_Profile(FrmFrame).DataPerfil.DataSet                  := FUsercontrol.CurrentUser.PerfilGrupo;
   TFrame_Profile(FrmFrame).BtnClose.ModalResult                := mrOk;
   TFrame_Profile(FrmFrame).Height                              := Panel3.Height;
   TFrame_Profile(FrmFrame).Width                               := Panel3.Width;
-  TFrame_Profile(FrmFrame).FDataSetPerfilUsuario               := FDataSetPerfilUsuario;
+  TFrame_Profile(FrmFrame).FDataSetPerfilUsuario               := FUsercontrol.CurrentUser.PerfilGrupo;
   TFrame_Profile(FrmFrame).FUsercontrol                        := FUsercontrol;
   TFrame_Profile(FrmFrame).DbGridPerf.Columns[0].Title.Caption := FUsercontrol.UserSettings.UsersProfile.ColProfile;
   with FUsercontrol.UserSettings.UsersProfile, TFrame_Profile(FrmFrame) do
@@ -149,9 +147,9 @@ begin
     FreeAndNil(FrmFrame);
 
   FrmFrame                                        := TUCFrame_User.Create(Self);
-  TUCFrame_User(FrmFrame).FDataSetCadastroUsuario := FDataSetCadastroUsuario;
+  TUCFrame_User(FrmFrame).FDataSetCadastroUsuario := FUsercontrol.CurrentUser.PerfilUsuario;
   TUCFrame_User(FrmFrame).DataUser.DataSet        := TUCFrame_User(FrmFrame).FDataSetCadastroUsuario;
-  TUCFrame_User(FrmFrame).DataPerfil.DataSet      := FDataSetPerfilUsuario;
+  TUCFrame_User(FrmFrame).DataPerfil.DataSet      := FUsercontrol.CurrentUser.PerfilGrupo;
   TUCFrame_User(FrmFrame).BtnClose.ModalResult    := mrOk;
   TUCFrame_User(FrmFrame).FUsercontrol            := FUsercontrol;
   TUCFrame_User(FrmFrame).Height                  := Panel3.Height;
@@ -202,12 +200,13 @@ procedure TFormUserPerf.SpeedLogClick(Sender: TObject);
 begin
   if FrmFrame is TUCFrame_Log then
     Exit;
+
   if Assigned(FrmFrame) then
     FreeAndNil(FrmFrame);
 
-  FrmFrame                            := TUCFrame_Log.Create(Self);
-  lbDescricao.Caption                 := FUsercontrol.UserSettings.Log.LabelDescription;
-  TUCFrame_Log(FrmFrame).FUsercontrol := FUsercontrol;
+  FrmFrame                                   := TUCFrame_Log.Create(Self);
+  lbDescricao.Caption                        := FUsercontrol.UserSettings.Log.LabelDescription;
+  TUCFrame_Log(FrmFrame).FUsercontrol        := FUsercontrol;
   TUCFrame_Log(FrmFrame).SetWindow;
   TUCFrame_Log(FrmFrame).Height              := Panel3.Height;
   TUCFrame_Log(FrmFrame).Width               := Panel3.Width;

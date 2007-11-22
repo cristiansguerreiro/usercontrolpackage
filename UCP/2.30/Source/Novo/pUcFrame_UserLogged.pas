@@ -43,6 +43,7 @@ type
   public
     FUserControl: TUserControl;
     procedure SetWindow;
+    destructor Destroy; override;
   end;
 
 implementation
@@ -107,6 +108,13 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
+end;
+
+destructor TUCFrame_UsersLogged.Destroy;
+begin
+  FreeAndNil(DSUserLogados);
+  FreeAndNil(UCMes);
+  inherited;
 end;
 
 procedure TUCFrame_UsersLogged.BitMsgClick(Sender: TObject);
