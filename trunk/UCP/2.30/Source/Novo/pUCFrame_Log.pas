@@ -216,7 +216,7 @@ begin
     ListIdUser     := TStringList.Create
   else ListIdUser.Clear;
 
-  try
+
     with FUsercontrol do
       if ((FUsercontrol.CurrentUser.Privileged = True) or
         (FUsercontrol.CurrentUser.UserLogin = FUsercontrol.Login.InitialLogin.User)) then
@@ -252,9 +252,6 @@ begin
       ListIdUser.Append(DSCmd.FieldByName('idUser').AsString);
       DSCmd.Next;
     end;
-  finally
-
-  end;
 
 
   DSCmd.Close;
