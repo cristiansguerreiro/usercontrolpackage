@@ -2023,7 +2023,7 @@ begin
     if (Login.MaxLoginAttempts > 0) and (FRetry = Login.MaxLoginAttempts) then
     begin
       MessageDlg(Format(UserSettings.CommonMessages.MaxLoginAttemptsError, [Login.MaxLoginAttempts]), mtError, [mbOK], 0);
-      Halt;
+      Application.Terminate;
     end;
   end;
 end;
@@ -3366,7 +3366,7 @@ begin
       Usercontrol.DeleteLoginMonitor(Self);
 
   Self.FVerifThread.Terminate;
-  FreeAndNil(FVerifThread);
+ // FreeAndNil(FVerifThread);
   inherited Destroy;
 end;
 
