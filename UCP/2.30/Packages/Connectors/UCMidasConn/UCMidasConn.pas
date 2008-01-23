@@ -71,7 +71,7 @@ const
 
   SQL_MSSQL = '';
 
-  SQL_Oracle = '';
+  SQL_Oracle = 'select UPPER(object_name) as TableName from all_objects where object_type in (''TABLE'',''VIEW'') ';
 
   SQL_PostgreSQL =
     'SELECT ' +
@@ -82,7 +82,7 @@ const
     '  PG_CLASS.RELKIND = ''r'' AND ' +
     '  UPPER(PG_CLASS.RELNAME) LIKE UPPER(''%s'')';
 
-  SQL_MySQL = '';
+  SQL_MySQL = 'SHOW TABLE';
 
   SQL_Paradox = '';
 
