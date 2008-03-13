@@ -66,7 +66,12 @@ var
 begin
   try
     TempList := TStringList.Create;
-    FConnection.GetTableNames('', TempList);
+
+    if Pos('ORACLE',UpperCase(FConnection.Protocol)) > 0 then
+      FConnection.GetTableNames(UpperCase(TableName),TempList)
+    else
+      FConnection.GetTableNames('', TempList);
+      
     TempList.Text := UpperCase(TempList.Text);
     Result        := TempList.IndexOf(UpperCase(TableName)) > -1;
   finally
