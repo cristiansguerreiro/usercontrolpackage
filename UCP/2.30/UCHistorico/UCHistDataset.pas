@@ -148,6 +148,8 @@ end;
 
 destructor TUCHist_DataSet.Destroy;
 begin
+  fDataSet   := Nil;
+  fControl   := Nil;
   FreeAndNil( fOptions );
   inherited;
 end;
