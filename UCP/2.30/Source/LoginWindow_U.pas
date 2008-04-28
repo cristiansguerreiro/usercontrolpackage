@@ -58,7 +58,6 @@ implementation
 procedure TfrmLoginWindow.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
-
 end;
 
 procedure TfrmLoginWindow.BotoesClickVisualizacao(Sender: TObject);
@@ -68,7 +67,8 @@ end;
 
 procedure TfrmLoginWindow.BtCancelaClick(Sender: TObject);
 begin
-  Application.Terminate;
+  Self.ModalResult := mrCancel; //Application.Terminate;
+  Close;
 end;
 
 procedure TfrmLoginWindow.FormShow(Sender: TObject);
