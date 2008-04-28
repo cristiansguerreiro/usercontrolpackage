@@ -66,17 +66,13 @@ var
 begin
   try
     TempList := TStringList.Create;
-
-    if Pos('ORACLE',UpperCase(FConnection.Protocol)) > 0 then
-      FConnection.GetTableNames(UpperCase(TableName),TempList)
-    else
-      FConnection.GetTableNames('', TempList);
-      
+    FConnection.GetTableNames('', TempList);
     TempList.Text := UpperCase(TempList.Text);
     Result        := TempList.IndexOf(UpperCase(TableName)) > -1;
-  finally
-    FreeAndNil(TempList);
+  Except
+    Result        := false;
   end;
+  FreeAndNil(TempList);  
 end;
 
 function TUCZEOSConn.UCFindDataConnection: Boolean;
@@ -110,8 +106,8 @@ begin
   begin
     Connection := FConnection;
     SQL.Text   := FSQL;
-    ExecSQL;
-    If FConnection.AutoCommit = False then  // By vicente barros leonel
+    try ExecSQL; except end;
+    If FConnection.AutoCommit = False then
       FConnection.Commit;
     Free;
   end;

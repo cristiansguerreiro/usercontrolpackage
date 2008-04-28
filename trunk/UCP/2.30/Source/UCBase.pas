@@ -1978,6 +1978,7 @@ begin
   FRetry := 0;
   if Assigned(onCustomLoginForm) then
     OnCustomLoginForm(Self, FFormLogin);
+
   if FFormLogin = nil then
   begin
     FFormLogin := TfrmLoginWindow.Create(self);
@@ -1991,7 +1992,9 @@ begin
       lbEsqueci.OnClick := ActionEsqueceuSenha;
     end;
   end;
-  FFormLogin.ShowModal;
+  If FFormLogin.ShowModal <>  mrOk then
+    Halt(0);
+
   FreeAndNil(FFormLogin);
 end;
 
@@ -2030,7 +2033,8 @@ end;
 
 procedure TUserControl.TestaFecha(Sender: TObject; var CanClose: Boolean);
 begin
-  CanClose := (CurrentUser.UserID > 0);
+  if FFormLogin.ModalResult = mrOk then
+    CanClose := (CurrentUser.UserID > 0);
 end;
 
 procedure TUserControl.ApplyRights;
