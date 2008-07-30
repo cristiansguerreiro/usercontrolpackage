@@ -1207,7 +1207,7 @@ begin
     UserName        := Dados.FieldByName(TableUsers.FieldUserName).AsString;
     UserLogin       := Dados.FieldByName(TableUsers.FieldLogin).AsString;
     DateExpiration  := StrToDateDef(Dados.FieldByName(TableUsers.FieldDateExpired).AsString, Now);
-    UserNotExpired  := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = 1; //by vicente barros leonel
+    UserNotExpired  := Dados.FieldByName(TableUsers.FieldUserExpired).AsInteger = -1; //by vicente barros leonel
     UserDaysExpired := Dados.FieldByName(TableUsers.FieldUserDaysSun).AsInteger;
 
     case Self.Criptografia of
@@ -1339,7 +1339,7 @@ begin
         end
         else
         begin
-          if ( ( DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 ) and ( fUsersLogged.Active = True ) ) then
+          if ( DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 ) then
             begin
               RegistraCurrentuser(Dataset);
               Result := 0;
