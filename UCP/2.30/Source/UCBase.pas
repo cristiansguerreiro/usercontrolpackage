@@ -1,4 +1,4 @@
-{
+ {
 -----------------------------------------------------------------------------
  Unit Name: UCBase
  Author:    QmD
@@ -610,7 +610,6 @@ type
   private
     FUserControl:   TUserControl;
     FAtive:         Boolean;
-    fMultipleLogin: Boolean;
     procedure AddCurrentUser;
   public
     constructor Create(AOwner: TComponent);
@@ -621,7 +620,6 @@ type
     function UsuarioJaLogado(ID: Integer): Boolean;
   published
     property Active: Boolean read FAtive write FAtive default True;
-    property MultipleLogin: Boolean read fMultipleLogin write fMultipleLogin default True;
   end;
 
 function Decrypt(const S: ansistring; Key: Word): ansistring;
@@ -778,6 +776,9 @@ begin
   inherited;
   if not (csDesigning in ComponentState) then
   begin
+    If UpperCase(Owner.ClassParent.ClassName) = Uppercase('TDataModule') then
+      raise Exception.Create('O Componente "TUserControl" não pode ser definido em um "TDataModulo"');
+
     if not Assigned(DataConnector) then
       raise Exception.Create(RetornaLingua(fLanguage, 'MsgExceptConnector'));
 
@@ -1010,7 +1011,7 @@ begin
   { Pelo que eu analizei, a gravação da senha no Banco de Dados e feita criptografada
     Qdo a criptografia e padrão, a funcao RegistraCurrentUser descriptografa a senha atual
     agora quando criptografia e MD5SUM, devemos criptografar a senha atual vinda do formulario de
-    troca de senha para podemoscomparar com a senha atual da classe TUCCurrentUser
+    troca de senha para podemos comparar com a senha atual da classe TUCCurrentUser
     Modificação Feita por Vicente Barros Leonel
   }
   case Self.Criptografia of     // por Vicente Barros Leonel
@@ -1018,14 +1019,14 @@ begin
     cMD5: AuxPass    := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text);
   end;
 
-  if CurrentUser.Password <> AuxPass then //MD5Sum(TTrocaSenha(FFormTrocarSenha).EditAtu.Text) then  Vicente Barros Leonel
+  if CurrentUser.Password <> AuxPass then
   begin
     MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidCurrentPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditAtu.SetFocus;
     Exit;
   end;
 
-  if TTrocaSenha(FFormTrocarSenha).EditNova.Text <> TTrocaSenha(FFormTrocarSenha).EditConfirma.Text then
+ if TTrocaSenha(FFormTrocarSenha).EditNova.Text <> TTrocaSenha(FFormTrocarSenha).EditConfirma.Text then
   begin
     MessageDlg(UserSettings.CommonMessages.ChangePasswordError.InvalidNewPassword, mtWarning, [mbOK], 0);
     TTrocaSenha(FFormTrocarSenha).EditNova.SetFocus;
@@ -1034,7 +1035,7 @@ begin
 
   case Self.Criptografia of     // por Vicente Barros Leonel
     cPadrao: AuxPass := TTrocaSenha(FFormTrocarSenha).EditNova.Text;
-    cMD5: AuxPass    := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
+    cMD5   : AuxPass := MD5Sum(TTrocaSenha(FFormTrocarSenha).EditNova.Text);
   end;
 
   if AuxPass = CurrentUser.Password then
@@ -1093,8 +1094,6 @@ begin
         on e: Exception do
           Log(e.Message, 2);
       end;
-
-
   TTrocaSenha(FFormTrocarSenha).Close;
 end;
 
@@ -1269,7 +1268,9 @@ begin
   ApplyRightsUCControlMonitor;
   NotificationLoginMonitor;
 
-  if ((FLogin.fDateExpireActive = True) and (Date > CurrentUser.DateExpiration) and (CurrentUser.UserNotExpired = False)) then
+  if ( ( FLogin.fDateExpireActive = True  ) and
+       ( Date > CurrentUser.DateExpiration ) and
+       ( CurrentUser.UserNotExpired = False) ) then
   begin { By Vicente Barros Leonel }
     MessageDlg(UserSettings.CommonMessages.PasswordExpired, mtInformation, [mbOK], 0);
 
@@ -1278,6 +1279,8 @@ begin
     TTrocaSenha(FFormTrocarSenha).ForcarTroca := True;
     FFormTrocarSenha.ShowModal;
     FreeAndNil(FFormTrocarSenha);
+    {Incrementa a Data de Expiração em x dias após a troca de senha }
+    CurrentUser.DateExpiration := CurrentUser.DateExpiration + CurrentUser.UserDaysExpired;
   end;
 end;
 
@@ -1336,33 +1339,11 @@ begin
         end
         else
         begin
-          if DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 then
-          begin
-
-            if ((fUsersLogged.Active = True) and (fUsersLogged.MultipleLogin = False)) then
+          if ( ( DataSet.FieldByName(TableUsers.FieldUserInative).AsInteger = 0 ) and ( fUsersLogged.Active = True ) ) then
             begin
-              //verifica se o usuário esta logado
-              if fUsersLogged.UsuarioJaLogado(Dataset.FieldByName(TableUsers.FieldUserID).AsInteger) = True then
-              begin
-                MessageDlg('Atenção: Seu usuário encontra-se logado em outra estação, verifique.', mtInformation, [mbOK], 0);
-                RegistraCurrentuser(Dataset);
-                Result := 0;
-                //Aqui deve-se colocar uma mensagem para derrubar a outra conexão
-                //Pensando ainda como fazer :)
-              end
-              else
-              begin
-                RegistraCurrentuser(Dataset);
-                Result := 0;
-              end;
-            end
-            else
-            begin
-              RegistraCurrentuser(Dataset);   {Para voltar o codigo anterior, basta apagar e colocar esta duas linhas :) }
+              RegistraCurrentuser(Dataset);
               Result := 0;
-            end;
-
-          end
+            end
           else
             Result := 2;
         end;
@@ -1992,8 +1973,7 @@ begin
       lbEsqueci.OnClick := ActionEsqueceuSenha;
     end;
   end;
-  If FFormLogin.ShowModal <>  mrOk then
-    Halt(0);
+  FFormLogin.ShowModal;
 
   FreeAndNil(FFormLogin);
 end;
@@ -2010,8 +1990,9 @@ begin
   if Assigned(OnLogin) then
     Onlogin(Self, TempUser, TempPassword);
   retorno := VerificaLogin(TempUser, TempPassword);
+
   if retorno = 0 then
-    TfrmLoginWindow(FFormLogin).Close
+      TfrmLoginWindow(FFormLogin).Close
   else
   begin
     if Retorno = 1 then
@@ -2033,7 +2014,7 @@ end;
 
 procedure TUserControl.TestaFecha(Sender: TObject; var CanClose: Boolean);
 begin
-  if FFormLogin.ModalResult = mrOk then
+//  if FFormLogin.ModalResult = mrOk then
     CanClose := (CurrentUser.UserID > 0);
 end;
 
@@ -3891,7 +3872,6 @@ begin
   if Source is TUCUsersLogged then
   begin
     Self.Active        := TUCUsersLogged(Source).Active;
-    Self.MultipleLogin := TUCUsersLogged(Source).MultipleLogin;
   end
   else
     inherited;
@@ -3902,7 +3882,6 @@ begin
   inherited Create;
   FUserControl        := TUserControl(AOwner);
   Self.FAtive         := True;
-  Self.fMultipleLogin := True;
 end;
 
 procedure TUCUsersLogged.CriaTableUserLogado;
