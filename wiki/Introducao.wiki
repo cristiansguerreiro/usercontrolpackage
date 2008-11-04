@@ -1,14 +1,12 @@
-#Conhecendo o pacote UserControl
-
+=Conhecendo o pacote UserControl=
 =Introdução=
 
-#  - Componentes e suas funcionalidades
-#  - Relacionamento entre componentes
-#  - Propriendades dos componentes
+O que você poderá acompanhar na seqüência desse material, é justamente a forma de como trabalhar com os componentes da paleta *UserControl*. _É importante deixar claro, que esse conteúdo não busca ensinar a programar em Pascal usando a *ferramenta Delphi*_; têm como exclusivo objetivo, demonstrar como usar os componentes e na medida que forem sendo incrementados novos recursos e propriedades, os mesmos serem continuadamente adicionados a esse conjunto de documentos.
 
-= Details =
+  #  Componentes e suas funcionalidades
+  #  Relacionamento entre componentes
+  #  Propriendades dos componentes
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+==Componentes e suas funcionalidades==
+==Relacionamentos entre conponentes==
+==Propriedades dos compoentes==
