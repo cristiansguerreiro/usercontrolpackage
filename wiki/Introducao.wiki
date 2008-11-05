@@ -1,4 +1,4 @@
-# Propriedades, Métodos, Eventos e Usabilidade #
+=Propriedades, Métodos, Eventos e Usabilidade=
 =Finalidade do Pacote =
 
 Os componentes do UserControl fornecem os principais recursos (infelizmente ainda não podemos dizer " _todos_ ") necessários para limitar ou "personalizar" o acesso de usuários a uma aplicação. O acesso pode se dar de maneiras distintas, sendo: através dos limites em menus, limites nos elementos (componentes visíveis) da janela e de uma maneira mais global, combinado-se as duas formas.   
