@@ -12,5 +12,18 @@ O que você poderá acompanhar na seqüência desse material, é justamente a fo
   #  Propriendades dos componentes
 
 ==Componentes e suas funcionalidades==
+
+  *  *TUserControl* : é o componente que dá o nome ao pacote. Sua finalidade principal é estabelecer a conexão entre o seu banco de dados e os demais componentes. É um elemento de junção. Além disso, tem a responsabilidade de definir a forma como os nomes das tabelas serão definidos e as principais propriedades de acesso a aplicação. É o responsável por lhe apresentar a janela de acesso ao sistema.
+
+  *  *TUCSetting* : 
+
+  *  *TUCControls* : 
+
+  *  *TUCApplicationMessage* : 
+
+  *  *TUCIdle* : 
+
+  *  *TUCMailUserControl* :
+
 ==Relacionamentos entre conponentes==
 ==Propriedades dos componentes==
