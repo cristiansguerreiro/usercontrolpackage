@@ -25,5 +25,5 @@ O que você poderá acompanhar na seqüência desse material, é justamente a fo
 
   *  *TUCMailUserControl* :
 
-==Relacionamentos entre conponentes==
+==Relacionamentos entre componentes==
 ==Propriedades dos componentes==
